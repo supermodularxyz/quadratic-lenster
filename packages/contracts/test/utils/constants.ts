@@ -48,7 +48,7 @@ export const lensPolygonAddresses = {
   mockProfileCreationProxy: "0x1eeC6ecCaA4625da3Fa6Cd6339DBcc2418710E8a",
   uiDataProvider: "0x8b0A28a8DE1de77668260A876c6DCF0330183742",
 };
-//zkevm test net is bridge to goerli
+//zkevm test net is bridged to goerli
 export const lenszkEVMAddresses = {
     //use lenshubproxy for interactions
     LensHubProxy: "0x28af365578586eD5Fd500A1Dc0a3E20Fc7b2Cffa",
