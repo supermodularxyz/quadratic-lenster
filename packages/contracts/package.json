@@ -1,10 +1,10 @@
 {
-  "name": "@prb/hardhat-template",
-  "description": "Hardhat-based template for developing Solidity smart contracts",
+  "name": "@MrDeadCe11/quadratic-lenster-contracts",
+  "description": "",
   "version": "1.0.0",
   "author": {
-    "name": "Paul Razvan Berg",
-    "url": "https://github.com/paulrberg"
+    "name": "MrDeadCe11",
+    "url": "https://github.com/MrDeadCe11"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
@@ -89,5 +89,8 @@
     "prettier:write": "prettier --write \"**/*.{js,json,md,sol,ts,yml}\"",
     "test": "hardhat test",
     "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
+  },
+  "dependencies": {
+    "@openzeppelin/hardhat-upgrades": "^1.22.0"
   }
 }
