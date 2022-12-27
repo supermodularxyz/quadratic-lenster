@@ -1,5 +1,5 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-import { lensMumbaiAddresses } from "../utils/constants";
+//import { lensMumbaiAddresses } from "../utils/constants";
 import { ethers } from "hardhat";
 
 import type { Greeter } from "../../types/Greeter";
