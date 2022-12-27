@@ -101,7 +101,11 @@ const config: HardhatUserConfig = {
     tests: "./test",
   },
   solidity: {
-    version: "0.8.17",
+   compilers:[
+    {
+    version: "0.8.10"
+   }
+  ],
     settings: {
       metadata: {
         // Not including the metadata hash
