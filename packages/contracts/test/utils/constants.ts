@@ -1,6 +1,6 @@
-//objects that contain all the deployed addresses for lens
+/*objects that contain all the deployed contract addresses for lens */
 export const lensMumbaiAddresses = {
-  //use lenshubproxy for interactions
+  /* use lenshubproxy for interactions */
   LensHubProxy: "0x60Ae865ee4C725cd04353b5AAb364553f56ceF82",
   lensHubImplementation: "0x45cf9Ba12b43F6c8B7148E06A6f84c5B9ad3Dd44",
   publishingLogic: "0x7f9bfF8493F821111741b93429A6A6F79DC546F0",
@@ -25,7 +25,7 @@ export const lensMumbaiAddresses = {
 };
 
 export const lensPolygonAddresses = {
-  //use lenshubproxy for interactions
+  /* use lenshubproxy for interactions */
   LensHubProxy: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d",
   lensHubImplementation: "0x96f1ba24294ffe0dfcd832d8376da4a4645a4cd6",
   publishingLogic: "0x931519D41797C73b9CE993B52c1af900373b5b43",
@@ -48,9 +48,9 @@ export const lensPolygonAddresses = {
   mockProfileCreationProxy: "0x1eeC6ecCaA4625da3Fa6Cd6339DBcc2418710E8a",
   uiDataProvider: "0x8b0A28a8DE1de77668260A876c6DCF0330183742",
 };
-//zkevm test net is bridged to goerli
+/* zkevm test net is bridged to goerli */
 export const lenszkEVMAddresses = {
-    //use lenshubproxy for interactions
+    /* use lenshubproxy for interactions */
     LensHubProxy: "0x28af365578586eD5Fd500A1Dc0a3E20Fc7b2Cffa",
     lensHubImplementation: "0x1b30F214c192EF4B7F8c9926c47C4161016955DA",
     publishingLogic: "0xfAAdCf7EA45FDE28FC05d584B8bc206C79f7c4cA",
@@ -74,7 +74,7 @@ export const lenszkEVMAddresses = {
     uiDataProvider: "0x1e20C5D968C543245Ab4f6749e5f863a82842337",
   };
 
-//gitcoin addresses
+/* gitcoin addresses */
 
 export const gitcoinGoerliAddresses = {
     programFactory: '0x548c775c4Bd61d873a445ee4E769cf1A18d60eA9',
