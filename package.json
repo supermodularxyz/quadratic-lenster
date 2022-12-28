@@ -5,16 +5,16 @@
   "repository": "https://github.com/MrDeadCe11/quadratic-lenster-monorepo.git",
   "author": "MrDeadCe11 <mister.deadce11@gmail.com>",
   "license": "MIT",
-  "private": "true",
-  "workspaces": [    
-      "packages/**"
-    ],
+  "private": true,
+  "workspaces": [
+    "packages/**"
+  ],
   "devDependencies": {
     "lerna": "^6.1.0"
   },
   "dependencies": {
     "@types/node": "^18.11.17",
-    "typescript": "^4.9.4",
-    "contracts": "file:packages/contracts"
+    "contracts": "file:packages/contracts",
+    "typescript": "^4.9.4"
   }
 }
