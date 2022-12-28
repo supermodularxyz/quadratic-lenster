@@ -11,6 +11,11 @@
       "kind": "transparent"
     },
     {
+      "address": "0xA86837773d8167C20f648Fcc11dB7eA4B95B4b7A",
+      "txHash": "0x368b10505a6ae361fdb34f9e410213512b73d3ed27d41d8e8f8fd4a26acd805f",
+      "kind": "transparent"
+    },
+    {
       "address": "0x4Aea85D9a99a8389dF3C55db746260C060989C07",
       "txHash": "0x9f42ecf5d6b6d4730eef1c121a1470ee948d188f7a267f17b9315a275ce919dc",
       "kind": "transparent"
@@ -28,6 +33,11 @@
     {
       "address": "0x0eF1F32757CD98159D1512FED36d2d13350114f2",
       "txHash": "0x37b78354a1ca4db998f2c734569bb4feb8b988311f51a16300354a4002c06008",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x54eF677eac9056F7aa5bA7CF5C9e2F4d6072e64c",
+      "txHash": "0xd31c5d1c38e2af0dbb7f2eba2ee697f4451573ce82ca8d90855ae1b43253f52f",
       "kind": "transparent"
     }
   ],
@@ -271,7 +281,7 @@
     },
     "983031bce3c9908e90e4097636273ab26b625f6f1407060092c213292c7dcd91": {
       "address": "0xe22FdDa2BD00084e9DeFD15875e70876f8eb3BbC",
-      "txHash": "0x0804ff9c2b363b1691588452a7bd8126de7ab719d3ef802c57503ac5500af01d",
+      "txHash": "0xcae4efa024ec6d06ae369446a593fe4c0f927417ffdc260c950a11ce072ff9f6",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -322,7 +332,7 @@
             "slot": "101",
             "type": "t_address",
             "contract": "RoundFactory",
-            "src": "contracts/gitcoin/round/RoundFactory.sol:25"
+            "src": "contracts/gitcoin/round/RoundFactory.sol:24"
           }
         ],
         "types": {

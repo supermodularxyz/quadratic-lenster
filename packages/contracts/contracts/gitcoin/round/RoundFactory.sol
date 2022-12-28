@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.17;
-
 import "./RoundImplementation.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -64,7 +63,7 @@ contract RoundFactory is OwnableUpgradeable {
     bytes calldata encodedParameters,
     address ownedBy
   ) external returns (address) {
-
+    
     address clone = ClonesUpgradeable.clone(roundContract);
 
     emit RoundCreated(clone, ownedBy, roundContract);

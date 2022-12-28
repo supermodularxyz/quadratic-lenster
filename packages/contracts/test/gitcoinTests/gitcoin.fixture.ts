@@ -67,14 +67,11 @@ export async function deployGitcoinMumbaiFixture() {
     .withArgs(quadraticFundingVotingStrategyImplementation.address);
 
     /* deploy payout strategy */
-    const MerklePayoutStrategyFactory = await ethers.getContractFactory("MerklePayoutStrategy");
-    const merklePayoutStrategyFactory = await upgrades.deployProxy(MerklePayoutStrategyFactory);
-    await merklePayoutStrategyFactory.deployed();
-    
-    /* initialize merkle payout strategy factory */
-    await merklePayoutStrategyFactory.init();
-
-    expect(isAddress(merklePayoutStrategyFactory.address), 'Failed to deploy merklePayoutStrategyFactory').to.be.true;
+    const MerklePayoutStrategy = await ethers.getContractFactory("MerklePayoutStrategy");
+    const merklePayoutStrategy = await upgrades.deployProxy(MerklePayoutStrategy);
+    await merklePayoutStrategy.deployed();
+    await merklePayoutStrategy.init();
+    expect(isAddress(merklePayoutStrategy.address), 'Failed to deploy merklePayoutStrategyFactory').to.be.true;
 
     /* deploy round factory */
     const RoundFactory = await ethers.getContractFactory("RoundFactory");
@@ -101,7 +98,7 @@ export async function deployGitcoinMumbaiFixture() {
     programImplementation,
     quadraticFundingVotingStrategyFactory,
     quadraticFundingVotingStrategyImplementation,
-    merklePayoutStrategyFactory,
+    merklePayoutStrategy,
     roundFactory,
     roundImplementation
     };

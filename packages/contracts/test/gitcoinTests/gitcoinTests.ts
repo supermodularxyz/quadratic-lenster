@@ -27,14 +27,14 @@ describe("gitcoin Unit tests", function () {
         programImplementation,
         quadraticFundingVotingStrategyFactory,
         quadraticFundingVotingStrategyImplementation,
-        merklePayoutStrategyFactory,
+        merklePayoutStrategy,
         roundFactory,
         roundImplementation } = await this.loadFixture(deployGitcoinMumbaiFixture);
       this.programFactory = <ProgramFactory> programFactory;
       this.programImplementation = <ProgramImplementation>programImplementation;
       this.quadraticFundingVotingStrategyFactory = quadraticFundingVotingStrategyFactory;
       this.quadraticFundingVotingStrategyImplementation = quadraticFundingVotingStrategyImplementation;
-      this.merklePayoutStrategyFactory = <MerklePayoutStrategy>merklePayoutStrategyFactory;
+      this.merklePayoutStrategy = <MerklePayoutStrategy>merklePayoutStrategy;
       this.roundFactory = <RoundFactory>roundFactory;
       this.roundImplementation = <RoundImplementation>roundImplementation;
 

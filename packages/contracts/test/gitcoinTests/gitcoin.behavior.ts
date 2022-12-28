@@ -1,7 +1,9 @@
+import { ProgramCreatedEvent } from './../../types/contracts/gitcoin/program/ProgramFactory';
 import { expect } from "chai";
 import { Wallet } from "ethers";
+import { ethers, upgrades } from "hardhat";
 import { isAddress } from "ethers/lib/utils";
-import { encodeProgramParameters } from "../utils/utils";
+import { encodeProgramParameters, encodeRoundParameters } from "../utils/utils";
 
 
 export function shouldBehaveLikeGitCoinMumbai(): void {
@@ -44,7 +46,7 @@ export function shouldBehaveLikeGitCoinMumbai(): void {
     
             const receipt = await txn.wait();
             if (receipt.events) {
-              const event = receipt.events.find((e:any) => e.event === 'ProgramCreated');
+              const event = receipt.events.find((e:ProgramCreatedEvent) => e.event === 'ProgramCreated');
               if (event && event.args) {
                 programAddress = event.args.programContractAddress;
                 programImplementation = event.args.programImplementation;
@@ -59,17 +61,15 @@ export function shouldBehaveLikeGitCoinMumbai(): void {
             expect(isAddress(programImplementation)).to.be.true;
     });
     it('MerklePayout: invoking init once SHOULD set the round address', async function () {
-      expect(await this.merklePayoutStrategyFactory.connect(this.signers.admin).roundAddress()).to.equal(this.signers.admin.address);
+    
+      expect(await this.merklePayoutStrategy.connect(this.signers.admin).roundAddress()).to.equal(this.signers.admin.address);
     });
 
     it('MerklePayout: invoking init more than once SHOULD revert the transaction ', async function (){
-     await expect(this.merklePayoutStrategyFactory.connect(this.signers.admin).init()).to.revertedWith('init: roundAddress already set')
+     await expect(this.merklePayoutStrategy.connect(this.signers.admin).init()).to.revertedWith('init: roundAddress already set')
     });
 
-    it("RoundContract: SHOULD have round address after invoking updateRoundContract", async function () {
-        const roundContract = await this.roundFactory.connect(this.signers.admin).roundContract();
-        expect(roundContract).to.be.equal(this.roundImplementation.address);
-    });  
+
     it("QFcontract: SHOULD have voting contract address after invoking updateVotingContract", async function () {
         const votingContract = await this.quadraticFundingVotingStrategyFactory.connect(this.signers.admin).votingContract();
         expect(votingContract).to.be.equal(this.quadraticFundingVotingStrategyImplementation.address);
@@ -85,5 +85,51 @@ export function shouldBehaveLikeGitCoinMumbai(): void {
         expect(txn.hash).to.not.be.empty;
         expect(receipt.status).equals(1);
       });
+
+      it("RoundFactory: SHOULD have round address after invoking updateRoundContract", async function () {
+        const roundContract = await this.roundFactory.connect(this.signers.admin).roundContract();
+        expect(roundContract).to.be.equal(this.roundImplementation.address);
+    }); 
+
+      const applicationsStartTime = Math.round(new Date().getTime() / 1000 + 3600); // 1 hour later
+      const applicationsEndTime = Math.round(new Date().getTime() / 1000 + 7200); // 2 hours later
+      const roundStartTime = Math.round(new Date().getTime() / 1000 + 10800); // 3 hours later
+      const roundEndTime = Math.round(new Date().getTime() / 1000 + 14400); // 4 hours later
+
+        
+    it("RoundFactory: invoking create SHOULD have a successful transaction", async function () {
+      const roundContract = await this.roundFactory.connect(this.signers.admin).roundContract();
+        expect(roundContract).to.be.equal(this.roundImplementation.address, "incorrect round contract address.");
+       
+        /* deploy new merkle payout strategy (must re-deploy every time a round is created) */
+        const NewMerklePayoutStrategy = await ethers.getContractFactory("MerklePayoutStrategy");
+        const newMerklePayoutStrategy = await upgrades.deployProxy(NewMerklePayoutStrategy);
+        await newMerklePayoutStrategy.deployed();
+
+        const params = [
+          this.quadraticFundingVotingStrategyImplementation.address, // _votingStrategyAddress
+          newMerklePayoutStrategy.address, // _payoutStrategyAddress
+          applicationsStartTime, // _applicationsStartTime
+          applicationsEndTime, // _applicationsEndTime
+          roundStartTime, // _roundStartTime
+          roundEndTime, // _roundEndTime
+          Wallet.createRandom().address, // _token
+          { protocol: 1, pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi" }, // _roundMetaPtr
+          { protocol: 1, pointer: "bafybeiaoakfoxjwi2kwh43djbmomroiryvhv5cetg74fbtzwef7hzzvrnq" }, // _applicationMetaPtr
+          [ Wallet.createRandom().address ], // _adminRoles
+          [ Wallet.createRandom().address, Wallet.createRandom().address ] // _roundOperators
+        ];
+
+        const txn = await this.roundFactory.create(
+          encodeRoundParameters(params),
+          this.signers.admin.address, // _ownedBy (Program)
+        );
+
+        const receipt = await txn.wait();
+
+     expect(txn.hash).to.not.be.empty;
+     expect(receipt.status).equals(1);
+    });
+
 }
 
