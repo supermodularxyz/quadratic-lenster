@@ -1,3 +1,5 @@
+import { ethers } from "hardhat";
+
 /*objects that contain all the deployed contract addresses for lens */
 export const lensMumbaiAddresses = {
   /* use lenshubproxy for interactions */
@@ -101,3 +103,51 @@ export const gitcoinEthMainnetAddresses = {
     sampleMerklePayoutContract: '0xC068C0EAF90533D3817a1782847eAA6719ABB6c7',
     sampleRound: '0x3172a6cCE26529e7DD2B533e7c3622a0b544f349'
 }
+
+/* Gitcoin test constants */
+
+export const projectApplications  = [
+  {
+    project: "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
+    metaPtr: {
+      protocol: 1,
+      pointer: "bafybeiekytxwrrfzxvuq3ge5glfzlhkuxjgvx2qb4swodhqd3c3mtc5jay"
+    }
+  },
+
+  {
+    project: "0x1bCD46B724fD4C08995CEC46ffd51bD45feDE200",
+    metaPtr: {
+      protocol: 1,
+      pointer: "bafybeih2pise44gkkzj7fdws3knwotppnh4x2gifnbxjtttuv7okw4mjzu"
+    }
+  },
+
+  {
+    project: "0x500Df079BEBE24A9f6FFa2c70fb58000A4722784",
+    metaPtr: {
+      protocol: 1,
+      pointer: "bafybeiceggy6uzfxsn3z6b2rraptp3g2kx2nrwailkjnx522yah43g5tyu"
+    }
+  }
+];
+
+/* lens test constants */
+export const CURRENCY_MINT_AMOUNT = ethers.utils.parseEther('100');
+export const BPS_MAX = 10000;
+export const TREASURY_FEE_BPS = 50;
+export const REFERRAL_FEE_BPS = 250;
+export const MAX_PROFILE_IMAGE_URI_LENGTH = 6000;
+export const LENS_HUB_NFT_NAME = 'Lens Protocol Profiles';
+export const LENS_HUB_NFT_SYMBOL = 'LPP';
+export const MOCK_PROFILE_HANDLE = 'plant1ghost.eth';
+export const LENS_PERIPHERY_NAME = 'LensPeriphery';
+export const FIRST_PROFILE_ID = 1;
+export const MOCK_URI = 'https://ipfs.io/ipfs/QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR';
+export const OTHER_MOCK_URI = 'https://ipfs.io/ipfs/QmSfyMcnh1wnJHrAWCBjZHapTS859oNSsuDFiAPPdAHgHP';
+export const MOCK_PROFILE_URI =
+  'https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu';
+export const MOCK_FOLLOW_NFT_URI =
+  'https://ipfs.fleek.co/ipfs/ghostplantghostplantghostplantghostplantghostplantghostplan';
+  export const FAKE_PRIVATEKEY = '0xa2e0097c961c67ec197b6865d7ecea6caffc68ebeb00e6050368c8f67fc9c588';
+export const testWallet = new ethers.Wallet(FAKE_PRIVATEKEY).connect(ethers.provider);

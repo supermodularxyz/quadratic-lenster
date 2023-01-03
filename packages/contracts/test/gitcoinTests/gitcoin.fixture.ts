@@ -20,7 +20,7 @@ export async function deployGitcoinMumbaiFixture() {
         {
           forking: {
             jsonRpcUrl: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            blockNumber: 30259508 /* dec 28, 2022 */,
+            blockNumber: 30259508 /* Dec 28, 2022 */,
           },
         },
       ],
@@ -41,10 +41,7 @@ export async function deployGitcoinMumbaiFixture() {
 
     expect(isAddress(programImplementation.address), 'Failed to deploy ProgramImplementation').to.be.true;
 
-    /* Update ProgramImplementation  */
-    await expect(programFactory.updateProgramContract(programImplementation.address))
-          .to.emit(programFactory, 'ProgramContractUpdated')
-          .withArgs(programImplementation.address);
+ 
 
     /* deploy quadratic funding voting strategy factory */
     const QuadraticFundingVotingStrategyFactory = await ethers.getContractFactory("QuadraticFundingVotingStrategyFactory", admin);

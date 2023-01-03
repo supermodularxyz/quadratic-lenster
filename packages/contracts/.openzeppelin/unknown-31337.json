@@ -6,21 +6,6 @@
   },
   "proxies": [
     {
-      "address": "0xe22FdDa2BD00084e9DeFD15875e70876f8eb3BbC",
-      "txHash": "0x61ebade633dd7e34b52cede1eb6fe69f0c11de9b0ac49fba74378f7cf8cd2074",
-      "kind": "transparent"
-    },
-    {
-      "address": "0xA86837773d8167C20f648Fcc11dB7eA4B95B4b7A",
-      "txHash": "0x368b10505a6ae361fdb34f9e410213512b73d3ed27d41d8e8f8fd4a26acd805f",
-      "kind": "transparent"
-    },
-    {
-      "address": "0x4Aea85D9a99a8389dF3C55db746260C060989C07",
-      "txHash": "0x9f42ecf5d6b6d4730eef1c121a1470ee948d188f7a267f17b9315a275ce919dc",
-      "kind": "transparent"
-    },
-    {
       "address": "0x8cd38278f77582df6C4d68F5a98271614C6177DF",
       "txHash": "0xf9652ca2050065de4a84e3bb01771e5811772bd55f00d06f94c1a60abeead5e7",
       "kind": "transparent"
@@ -36,8 +21,48 @@
       "kind": "transparent"
     },
     {
+      "address": "0xAB7799ce7064a893BC5Dc2224EE5Af11B2033247",
+      "txHash": "0x862a3bf8bff99f89a295d0bb5fdce7f38ca4721552de1d96e73cb3443ee8a378",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x5508ae1dCD23D32543ca39021f6F96615ba4B001",
+      "txHash": "0x7984329f3be9b0ee723fbd16e0cbb6f38b546d8b136fd02ae47872b782ae7556",
+      "kind": "transparent"
+    },
+    {
       "address": "0x54eF677eac9056F7aa5bA7CF5C9e2F4d6072e64c",
-      "txHash": "0xd31c5d1c38e2af0dbb7f2eba2ee697f4451573ce82ca8d90855ae1b43253f52f",
+      "txHash": "0xb12d3a2286694e20e00bb231b342b60f414599266721067ef1cfacba3f09c5f0",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x4Aea85D9a99a8389dF3C55db746260C060989C07",
+      "txHash": "0x9f42ecf5d6b6d4730eef1c121a1470ee948d188f7a267f17b9315a275ce919dc",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x1Cd7552B0242179366E72044312caab2396AE8E4",
+      "txHash": "0x040ed044e0bbe8f4facd7f78d227ba4640110167911bce8bbf2812f1ecf08da5",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0A7A0118f66b1bA198581029FC02c4bf887EFC44",
+      "txHash": "0xf53948a949332f87abff24864fe87ed8e2b5fa85d859cb46f35b5d8cb273f7a1",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xe22FdDa2BD00084e9DeFD15875e70876f8eb3BbC",
+      "txHash": "0x61ebade633dd7e34b52cede1eb6fe69f0c11de9b0ac49fba74378f7cf8cd2074",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xB133482e6c80F93881ef4661ee373a253874389d",
+      "txHash": "0x0fe0ca68cfe3851c7c744043a37c9e2717bfe85394421bbfe34e251e3481c3ac",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xA86837773d8167C20f648Fcc11dB7eA4B95B4b7A",
+      "txHash": "0x81d619ecd44e98dafe6574729a118a02727e86186efd5c81cc27e5cfa86672d7",
       "kind": "transparent"
     }
   ],
@@ -127,8 +152,8 @@
       }
     },
     "9aeddf0d429311eda152f435428ba62eea09afa0af1dbc99afd068d9c9ebef3e": {
-      "address": "0x1Cd7552B0242179366E72044312caab2396AE8E4",
-      "txHash": "0x74ecc08ac07a4adb69e3f446bf5672ceca552387f636cdb9a73b3566688ed032",
+      "address": "0x68dD7e9414f796Cb34ED91dB77f0E2Dd3aB44885",
+      "txHash": "0x843434412de0db8469cc52b2fe5cf877df3819d1c05917a18f3324a499c70947",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -211,8 +236,8 @@
       }
     },
     "acc28fb20b829f93cfd22d942999acca7407b70d886578521ff60a6767d8db9b": {
-      "address": "0x0A7A0118f66b1bA198581029FC02c4bf887EFC44",
-      "txHash": "0x010d595bc1acfa061518c4868feee464344caa691df6f4821b80941d838a5958",
+      "address": "0x9fFe6F306BD8f43396eCd220dA07fA03C80E57Ef",
+      "txHash": "0x767e4ca8d771fb2cb2ede20ccba7d81d11f3a218805796464f11f0b8389b965e",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [
@@ -280,8 +305,8 @@
       }
     },
     "983031bce3c9908e90e4097636273ab26b625f6f1407060092c213292c7dcd91": {
-      "address": "0xe22FdDa2BD00084e9DeFD15875e70876f8eb3BbC",
-      "txHash": "0xcae4efa024ec6d06ae369446a593fe4c0f927417ffdc260c950a11ce072ff9f6",
+      "address": "0xbd2a2C4f3841f39e1112622596A1AE325B26Fe54",
+      "txHash": "0x6efa2b15b36107ccd3016d48fe6547348c519f0547d0d236f49dd7fc96329c91",
       "layout": {
         "solcVersion": "0.8.17",
         "storage": [

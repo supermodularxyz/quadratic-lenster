@@ -1,10 +1,11 @@
-
+import { FreeCollectModule } from './../../types/contracts/lens/modules/FreeCollectModule';
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-//import { lensMumbaiAddresses } from "../utils/constants";
 import { ethers, network } from "hardhat";
 
 import { lensMumbaiAddresses } from "../utils/constants";
-import LensHub from "../../importedABI/LensHub.json"
+import LensHubABI from "../../importedABI/LensHub.json"
+import FreeCollectModuleABI from "../../importedABI/FreeCollectModule.json"
+//import CollectNFT from "../../importedABI/CollectNFT.json"
 import { expect } from "chai";
 
 
@@ -22,17 +23,18 @@ export async function deployLensMumbaiFixture() {
         {
           forking: {
             jsonRpcUrl: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_API_KEY}`,
-            blockNumber: 30259508 /* Sep 3rd, 2022 */,
+            blockNumber: 30259508 /* Dec 28, 2022 */,
           },
         },
       ],
     });
 
   
-  const lensMumbai = new ethers.Contract(lensMumbaiAddresses.LensHubProxy, LensHub.abi, admin)
+  const lensMumbai = new ethers.Contract(lensMumbaiAddresses.LensHubProxy, LensHubABI.abi, admin)
   const tx = await lensMumbai.getFollowNFTImpl();
-
-  expect(tx).to.equal("0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772")
-
-  return { lensMumbai };
+  expect(tx).to.equal("0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772");
+  /* get free collect module */
+  const freeCollectModule: FreeCollectModule = <FreeCollectModule>new ethers.Contract(lensMumbaiAddresses.freeCollectModule, FreeCollectModuleABI.abi, admin)
+  
+  return { lensMumbai, freeCollectModule };
 }

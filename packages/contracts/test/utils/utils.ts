@@ -1,7 +1,10 @@
-import { ethers } from "ethers";
 import * as dotenv from "dotenv";
+import hre, { ethers } from 'hardhat';
+
+
 
 dotenv.config();
+/* GitCoin Utils */
 
 /**
  * Encodes the parameters for the ProgramFactory.create() function.
@@ -68,4 +71,20 @@ export const assertEnvironment = () => {
   if (!process.env.INFURA_API_KEY) {
     console.error("Please set your INFURA_API_KEY in a .env file");
   }
+}
+
+/* Lens Utils */
+
+export function getAbbreviation(handle: string) {
+  let sliced = handle.slice(0, 4);
+  if (sliced.charAt(3) == ' ') {
+    sliced = sliced.slice(0, 3);
+  }
+  return sliced;
+}
+
+export async function getTimestamp(): Promise<any> {
+  const blockNumber = await hre.ethers.provider.send('eth_blockNumber', []);
+  const block = await hre.ethers.provider.send('eth_getBlockByNumber', [blockNumber, false]);
+  return block.timestamp;
 }
