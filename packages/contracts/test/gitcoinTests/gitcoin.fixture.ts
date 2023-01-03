@@ -1,9 +1,9 @@
-import { QuadraticFundingVotingStrategyFactory__factory } from './../../types/factories/contracts/gitcoin/votingStrategy/QuadraticFundingStrategy/QuadraticFundingVotingStrategyFactory__factory';
-
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { expect } from "chai";
 import { isAddress } from "ethers/lib/utils";
 import { ethers, network, upgrades } from "hardhat";
+
+import wethAbi from '../../importedABI/WETH.json'
 
 /* deploy gitcoin grants implementation on mumbai fork */
 export async function deployGitcoinMumbaiFixture() {
@@ -26,6 +26,17 @@ export async function deployGitcoinMumbaiFixture() {
       ],
     });
 
+    /* get WETH contract */
+    const WETH = new ethers.Contract("0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa", wethAbi, admin);
+    /* impersonate weth whale account */
+    const whale = <SignerWithAddress>await ethers.getImpersonatedSigner("0x9883d5e7dc023a441a01ef95af406c69926a0ab6");
+
+    /* transfer 10 weth to signers */
+    for(let i = 0; i<3 ; i++){
+      await WETH.connect(whale).transfer(signers[i].address, ethers.utils.parseEther("10"));
+      expect(ethers.utils.formatEther(await WETH.balanceOf(signers[i].address))).to.equal("10.0")
+    }
+    
     /* deploy gitcoin program factory */
     const ProgramFactory = await ethers.getContractFactory("ProgramFactory", admin)
     const programFactory = await upgrades.deployProxy(ProgramFactory);
@@ -90,6 +101,8 @@ export async function deployGitcoinMumbaiFixture() {
     .to.emit(roundFactory, 'RoundContractUpdated')
     .withArgs(roundImplementation.address);
 
+
+
   return { 
     programFactory,
     programImplementation,
@@ -97,6 +110,7 @@ export async function deployGitcoinMumbaiFixture() {
     quadraticFundingVotingStrategyImplementation,
     merklePayoutStrategy,
     roundFactory,
-    roundImplementation
+    roundImplementation,
+    WETH
     };
 }

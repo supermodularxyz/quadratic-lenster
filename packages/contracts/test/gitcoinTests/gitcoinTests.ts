@@ -36,6 +36,7 @@ describe("gitcoin Unit tests", function () {
       merklePayoutStrategy,
       roundFactory,
       roundImplementation,
+      WETH
     } = await this.loadFixture(deployGitcoinMumbaiFixture);
     this.programFactory = <ProgramFactory>programFactory;
     this.programImplementation = <ProgramImplementation>programImplementation;
@@ -44,6 +45,7 @@ describe("gitcoin Unit tests", function () {
     this.merklePayoutStrategy = <MerklePayoutStrategy>merklePayoutStrategy;
     this.roundFactory = <RoundFactory>roundFactory;
     this.roundImplementation = <RoundImplementation>roundImplementation;
+    this.weth = WETH;
   });
 
   describe("gitcoin deployment", function () {
@@ -99,7 +101,10 @@ describe("gitcoin Unit tests", function () {
       expect(isAddress(programImplementation)).to.be.true;
     });
   });
-
+  async function waitSomeTime(_time: number) {
+    await network.provider.send("evm_increaseTime", [_time])
+    await network.provider.send("evm_mine")
+  }
   describe("Round interactions", function () {
     beforeEach(async function () {
    
@@ -114,6 +119,8 @@ describe("gitcoin Unit tests", function () {
       const NewQuadraticFundingVotingStrategyImplementation = await ethers.getContractFactory("QuadraticFundingVotingStrategyImplementation", this.signers.admin);
       const newQuadraticFundingVotingStrategyImplementation = await NewQuadraticFundingVotingStrategyImplementation.deploy();
       await newQuadraticFundingVotingStrategyImplementation.deployed();
+
+      this.quadraticFundingVotingStrategyImplementation = newQuadraticFundingVotingStrategyImplementation;
 
       /* Set times for round factory tests */
       const timeStamp = parseInt(await getTimestamp());
@@ -142,9 +149,17 @@ describe("gitcoin Unit tests", function () {
 
       await tx.wait();
 
+            /* advance to a time when the round is accepting applications */      
+            await waitSomeTime(100);
+            /* apply to a round */
+            await this.roundImplementation.applyToRound(
+              ethers.utils.hexZeroPad(projectApplications[0].project, 32),
+              projectApplications[0].metaPtr,
+            );
+
     });
 
-    it("invoking create SHOULD have a successful transaction", async function () {
+    it("should create a round", async function () {
       /* Set times for round factory tests */
       const timeStamp = await getTimestamp();
       const applicationsStartTime = Math.round(timeStamp + 3600); // 1 hour later
@@ -191,15 +206,33 @@ describe("gitcoin Unit tests", function () {
 
     it("Should apply to a round", async function () {
       /* advance to a time when the round is accepting applications */      
-      await network.provider.send("evm_increaseTime", [100])
-      await network.provider.send("evm_mine")
+      await waitSomeTime(100);
       /* apply to a round */
       const tx = await this.roundImplementation.applyToRound(
-        ethers.utils.hexZeroPad(projectApplications[0].project, 32),
-        projectApplications[0].metaPtr,
+        ethers.utils.hexZeroPad(projectApplications[1].project, 32),
+        projectApplications[1].metaPtr,
       );
       const promise = await tx.wait();
-      expect(promise.events[0].args.project).to.equal(ethers.utils.hexZeroPad(projectApplications[0].project, 32).toLowerCase());
+      expect(promise.events[0].args.project).to.equal(ethers.utils.hexZeroPad(projectApplications[1].project, 32).toLowerCase());
     });
+
+    it("Should vote for a project", async function () {
+      expect(ethers.utils.formatEther(await this.weth.balanceOf(this.signers.user.address))).to.equal("10.0");
+      await this.weth.approve(this.quadraticFundingVotingStrategyImplementation.address, 100);
+      const encodedVotes = [];
+      // Prepare Votes
+      const votes = [
+        [this.weth.address, 5,  this.signers.user.address]
+      ];
+
+      for (let i = 0; i < votes.length; i++) {
+        encodedVotes.push(ethers.utils.defaultAbiCoder.encode(
+          ["address", "uint256", "address"],
+          votes[i]
+        ));
+      }
+      await waitSomeTime(500);
+      await expect(this.roundImplementation.vote(encodedVotes)).to.not.be.reverted;
+    })
   });
 });
