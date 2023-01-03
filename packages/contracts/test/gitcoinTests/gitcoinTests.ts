@@ -231,6 +231,7 @@ describe("gitcoin Unit tests", function () {
           votes[i]
         ));
       }
+      /* wait for round to start */
       await waitSomeTime(500);
       await expect(this.roundImplementation.vote(encodedVotes)).to.not.be.reverted;
     })

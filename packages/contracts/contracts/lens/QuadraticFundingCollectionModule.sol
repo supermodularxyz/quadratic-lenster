@@ -130,14 +130,7 @@ contract QuadraticFundingCollectModule is ICollectModule, FeeModuleBase, FollowV
     //     address beneficiary,
     //     uint256 amount
     // ) internal {
-    //     // First, transfer funds to this contract
-    //     IERC20(currency).safeTransferFrom(from, address(this), amount);
-    //     IERC20(currency).approve(aavePool, amount);
 
-    //     // Then, attempt to supply funds in Aave v3, sending aTokens to beneficiary
-    //     try IPool(aavePool).supply(currency, amount, beneficiary, 0) {} catch {
-    //         // If supply() above fails, send funds directly to beneficiary
-    //         IERC20(currency).safeTransfer(beneficiary, amount);
     //     }
     // }
 
@@ -177,8 +170,6 @@ contract QuadraticFundingCollectModule is ICollectModule, FeeModuleBase, FollowV
             IERC20(currency).safeTransferFrom(collector, referralRecipient, referralAmount);
         }
         address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
-
-        // _transferFromAndDepositToAaveIfApplicable(currency, collector, recipient, adjustedAmount);
 
         if (treasuryAmount > 0) {
             IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
