@@ -1,56 +1,51 @@
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+import { Contract } from "ethers";
+import { ethers } from "hardhat";
 
-export function shouldBehaveLikeGitCoinMumbai(): void {
+import { RoundImplementation } from "../../types/contracts/gitcoin/round/RoundImplementation";
+import { deployGitcoinMumbaiFixture } from "./gitcoin.fixture";
 
-  it("ProgramContract: SHOULD have program address after invoking updateProgramContract", async function () {
-       /* Update ProgramImplementation  */
-       await expect(this.programFactory.updateProgramContract(this.programImplementation.address))
-       .to.emit(this.programFactory, 'ProgramContractUpdated')
-       .withArgs(this.programImplementation.address);
-    expect(await this.programFactory.connect(this.signers.admin).programContract()).to.be.equal(
-      this.programImplementation.address,
-    );
+export const shouldBehaveLikeGrantsRound = () => {
+  let _WETH: Contract;
+  let _roundImplementation: RoundImplementation;
+  let _payoutStrategy: Contract;
+  let _votingStrategy: Contract;
+  let _admin: SignerWithAddress;
+  let _user: SignerWithAddress;
+  let _currentBlockTimestamp: number;
+
+  beforeEach(async () => {
+    // TODO users, signers in fixture
+    const { roundImplementation, WETH, payoutStrategy, votingStrategy, admin, user, currentBlockTimestamp } =
+      await loadFixture(deployGitcoinMumbaiFixture);
+    _WETH = WETH;
+    _roundImplementation = roundImplementation;
+    _payoutStrategy = payoutStrategy;
+    _votingStrategy = votingStrategy;
+    _admin = admin;
+    _user = user;
+    _currentBlockTimestamp = currentBlockTimestamp;
   });
 
+  describe("Round interactions", () => {
+    it("Should allow voting in an active round", async () => {
+      expect(ethers.utils.formatEther(await _WETH.balanceOf(_user.address))).to.equal("10.0");
+      await _WETH.approve(_votingStrategy.address, 100);
 
-  it("MerklePayout: invoking init once SHOULD set the round address", async function () {
-    expect(await this.merklePayoutStrategy.connect(this.signers.admin).roundAddress()).to.equal(
-      this.signers.admin.address,
-    );
+      const encodedVotes = [];
+      // Prepare Votes
+      const votes = [[_WETH.address, 5, _user.address]];
+
+      for (let i = 0; i < votes.length; i++) {
+        encodedVotes.push(ethers.utils.defaultAbiCoder.encode(["address", "uint256", "address"], votes[i]));
+      }
+
+      // const mockTime = await _roundImplementation.applicationsStartTime();
+
+      await ethers.provider.send("evm_mine", [_currentBlockTimestamp + 750]); /* wait for round to start */
+      await expect(_roundImplementation.vote(encodedVotes)).to.not.be.reverted;
+    });
   });
-
-  it("MerklePayout: invoking init more than once SHOULD revert the transaction ", async function () {
-    await expect(this.merklePayoutStrategy.connect(this.signers.admin).init()).to.revertedWith(
-      "init: roundAddress already set",
-    );
-  });
-
-  it("QFVotingContract: SHOULD have voting contract address after invoking updateVotingContract", async function () {
-    const votingContract = await this.quadraticFundingVotingStrategyFactory
-      .connect(this.signers.admin)
-      .votingContract();
-    expect(votingContract).to.be.equal(this.quadraticFundingVotingStrategyImplementation.address);
-  });
-
-  it("QFVotingContract: invoking create SHOULD have a successful transaction", async function () {
-    const txn = await this.quadraticFundingVotingStrategyFactory.connect(this.signers.admin).create();
-
-    expect(
-      await this.quadraticFundingVotingStrategyFactory
-        .connect(this.signers.admin)
-        .updateVotingContract(this.quadraticFundingVotingStrategyImplementation.address),
-    );
-
-    const receipt = await txn.wait();
-
-    expect(txn.hash).to.not.be.empty;
-    expect(receipt.status).equals(1);
-  });
-
-  it("RoundFactory: SHOULD have round address after invoking updateRoundContract", async function () {
-    const roundContract = await this.roundFactory.connect(this.signers.admin).roundContract();
-    expect(roundContract).to.be.equal(this.roundImplementation.address);
-  });
-
-
-}
+};

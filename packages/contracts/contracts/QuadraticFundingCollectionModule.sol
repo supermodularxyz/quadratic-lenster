@@ -14,8 +14,6 @@ import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import {IERC721} from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-
-
 /**
  * @notice A struct containing the necessary data to execute collect actions on a publication.
  *
@@ -39,7 +37,7 @@ struct ProfilePublicationData {
     uint72 endTimestamp;
 }
 
-contract QuadraticFundingCollectModule is ICollectModule, FeeModuleBase, FollowValidationModuleBase {
+contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule {
     using SafeERC20 for IERC20;
     
     address public QFCurator;
