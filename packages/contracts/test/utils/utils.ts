@@ -60,19 +60,6 @@ export const encodeMerkleUpdateDistributionParameters = (params: any[]): string 
   );
 }
 
-
-/**
- * Asserts that environment variables are set as expected
- */
-export const assertEnvironment = () => {
-  if (!process.env.MNEMONIC) {
-    console.error("Please set your MNEMONIC in a .env file");
-  }
-  if (!process.env.INFURA_API_KEY) {
-    console.error("Please set your INFURA_API_KEY in a .env file");
-  }
-}
-
 /* Lens Utils */
 
 export function getAbbreviation(handle: string) {
