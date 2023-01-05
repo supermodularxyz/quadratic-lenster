@@ -27,6 +27,6 @@ describe("Lens Unit tests", function () {
 
   shouldBehaveLikeLensHubMumbai();
 
-  });
+  })
 
 });

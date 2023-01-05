@@ -19,5 +19,6 @@ export interface Signers {
   roundOperator: SignerWithAddress;
   user: SignerWithAddress;
   admin: SignerWithAddress;
+  gov: SignerWithAddress;
 }
 

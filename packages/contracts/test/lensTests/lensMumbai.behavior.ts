@@ -1,8 +1,7 @@
-import { CollectNFT__factory } from './../../types/factories/contracts/lens/CollectNFT__factory';
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { FIRST_PROFILE_ID, MOCK_PROFILE_HANDLE } from "../utils/constants";
+import { FIRST_PROFILE_ID } from "../utils/constants";
 import CollectNFT from '../../importedABI/CollectNFT.json';
 import { getTimestamp } from '../utils/utils';
 

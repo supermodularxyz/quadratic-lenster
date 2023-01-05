@@ -1,6 +1,6 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 
 import wethAbi from "../../importedABI/WETH.json";
 import { RoundImplementation } from "../../types/contracts/gitcoin/round/RoundImplementation";

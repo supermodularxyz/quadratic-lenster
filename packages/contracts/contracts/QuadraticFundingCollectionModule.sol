@@ -8,6 +8,7 @@ import {Errors} from './libraries/Errors.sol';
 import {FeeModuleBase} from './FeeModuleBase.sol';
 import {ModuleBase} from './ModuleBase.sol';
 import {FollowValidationModuleBase} from './FollowValidationModuleBase.sol';
+import './interfaces/IRoundImplementation.sol';
 
 import {EIP712} from '@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol';
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
@@ -40,16 +41,13 @@ struct ProfilePublicationData {
 contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule {
     using SafeERC20 for IERC20;
     
-    address public QFCurator;
     mapping(uint256 => mapping(uint256 => ProfilePublicationData))
     internal _dataByPublicationByProfile;
+    
+    IRoundImplementation public roundImplementation;
 
-    constructor(address _lensHub, address _moduleGlobals, address _QFCurator) FeeModuleBase(_moduleGlobals) ModuleBase(_lensHub) {
-       QFCurator = _QFCurator;
-    }
+    constructor(address _lensHub, address _moduleGlobals) FeeModuleBase(_moduleGlobals) ModuleBase(_lensHub) {
 
-    function updateQFCurator(address _updatedAddress) public {
-        
     }
    
     function initializePublicationCollectModule(
@@ -109,28 +107,46 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
         (address treasury, uint16 treasuryFee) = _treasuryData();
         address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
         uint256 treasuryAmount = (amount * treasuryFee) / BPS_MAX;
+        uint256 adjustedAmount = amount - treasuryAmount;
 
-        // _enterQuadraticFundingRound(
-        //     currency,
-        //     collector,
-        //     recipient,
-        //     amount - treasuryAmount
-        // );
+         _vote(
+            currency,
+            recipient,
+            collector,
+            adjustedAmount,
+            data
+        );
 
         if (treasuryAmount > 0) {
             IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
         }
     }
 
-    // function _enterQuadraticFundingRound(
-    //     address currency,
-    //     address from,
-    //     address beneficiary,
-    //     uint256 amount
-    // ) internal {
+    function _vote(
+        address currency,
+        address recipient,
+        address collector,
+        uint256 amount,
+        bytes calldata data
+    ) internal {
 
-    //     }
-    // }
+        /// decode  data
+        ( address grantsRoundAddress, uint256 roundStartTime, uint256 roundEndTime ) = abi.decode(data, (address, uint256, uint256));
+        require(block.timestamp > roundStartTime && block.timestamp < roundEndTime, "Round is not in session");
+        // encode vote
+        bytes memory vote = abi.encode(currency, amount, grantsRoundAddress);
+        /// declare votes array
+        bytes[] memory votes = new bytes[](1);
+        /// cast vote into array because that's how gitcoin likes it.
+        votes[0] = vote;
+
+        /// vote (value is to handle native token voting);
+   
+        IRoundImplementation(grantsRoundAddress).vote(votes);
+
+    } 
+    
+    
 
     function _processCollectWithReferral(
         uint256 referrerProfileId,
