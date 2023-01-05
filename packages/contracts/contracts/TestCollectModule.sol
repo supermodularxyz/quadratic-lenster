@@ -1,63 +1,70 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.10;
+// SPDX-License-Identifier: MIT
 
-import "hardhat/console.sol";
+pragma solidity 0.8.10;
 
 import {ICollectModule} from './interfaces/ICollectModule.sol';
 import {Errors} from './libraries/Errors.sol';
 import {FeeModuleBase} from './FeeModuleBase.sol';
 import {ModuleBase} from './ModuleBase.sol';
 import {FollowValidationModuleBase} from './FollowValidationModuleBase.sol';
-
-import {EIP712} from '@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol';
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import {IERC721} from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import {IERC721} from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 
 /**
  * @notice A struct containing the necessary data to execute collect actions on a publication.
  *
  * @param amount The collecting cost associated with this publication.
  * @param currency The currency associated with this publication.
- * @param collectLimit The maximum number of collects for this publication. 0 for no limit.
- * @param currentCollects The current number of collects for this publication.
  * @param recipient The recipient address associated with this publication.
  * @param referralFee The referral fee associated with this publication.
- * @param followerOnly True if only followers of publisher may collect the post.
- * @param endTimestamp The end timestamp after which collecting is impossible. 0 for no expiry.
+ * @param followerOnly Whether only followers should be able to collect.
  */
 struct ProfilePublicationData {
     uint256 amount;
     address currency;
-    uint96 collectLimit;
-    uint96 currentCollects;
     address recipient;
     uint16 referralFee;
     bool followerOnly;
-    uint72 endTimestamp;
 }
 
-contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule {
+/**
+ * @title FeeCollectModule
+ * @author Lens Protocol
+ *
+ * @notice This is a simple Lens CollectModule implementation, inheriting from the ICollectModule interface and
+ * the FeeCollectModuleBase abstract contract.
+ *
+ * This module works by allowing unlimited collects for a publication at a given price.
+ */
+contract TestCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule {
     using SafeERC20 for IERC20;
-    
-    address public QFCurator;
+
     mapping(uint256 => mapping(uint256 => ProfilePublicationData))
-    internal _dataByPublicationByProfile;
+        internal _dataByPublicationByProfile;
 
-    constructor(address _lensHub, address _moduleGlobals, address _QFCurator) FeeModuleBase(_moduleGlobals) ModuleBase(_lensHub) {
-       QFCurator = _QFCurator;
-    }
+    constructor(address hub, address moduleGlobals) FeeModuleBase(moduleGlobals) ModuleBase(hub) {}
 
-    function updateQFCurator(address _updatedAddress) public {
-        
-    }
-   
+    /**
+     * @notice This collect module levies a fee on collects and supports referrals. Thus, we need to decode data.
+     *
+     * @param profileId The token ID of the profile of the publisher, passed by the hub.
+     * @param pubId The publication ID of the newly created publication, passed by the hub.
+     * @param data The arbitrary data parameter, decoded into:
+     *      uint256 amount: The currency total amount to levy.
+     *      address currency: The currency address, must be internally whitelisted.
+     *      address recipient: The custom recipient address to direct earnings to.
+     *      uint16 referralFee: The referral fee to set.
+     *      bool followerOnly: Whether only followers should be able to collect.
+     *
+     * @return bytes An abi encoded bytes parameter, which is the same as the passed data parameter.
+     */
     function initializePublicationCollectModule(
         uint256 profileId,
         uint256 pubId,
         bytes calldata data
-    ) external returns (bytes memory){
-         (
+    ) external override onlyHub returns (bytes memory) {
+        (
             uint256 amount,
             address currency,
             address recipient,
@@ -80,15 +87,19 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
         return data;
     }
 
- 
+    /**
+     * @dev Processes a collect by:
+     *  1. Ensuring the collector is a follower
+     *  2. Charging a fee
+     */
     function processCollect(
         uint256 referrerProfileId,
         address collector,
         uint256 profileId,
         uint256 pubId,
         bytes calldata data
-    ) external{
-              if (_dataByPublicationByProfile[profileId][pubId].followerOnly)
+    ) external virtual override onlyHub {
+        if (_dataByPublicationByProfile[profileId][pubId].followerOnly)
             _checkFollowValidity(profileId, collector);
         if (referrerProfileId == profileId) {
             _processCollect(collector, profileId, pubId, data);
@@ -96,7 +107,25 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
             _processCollectWithReferral(referrerProfileId, collector, profileId, pubId, data);
         }
     }
-     function _processCollect(
+
+    /**
+     * @notice Returns the publication data for a given publication, or an empty struct if that publication was not
+     * initialized with this module.
+     *
+     * @param profileId The token ID of the profile mapped to the publication to query.
+     * @param pubId The publication ID of the publication to query.
+     *
+     * @return ProfilePublicationData The ProfilePublicationData struct mapped to that publication.
+     */
+    function getPublicationData(uint256 profileId, uint256 pubId)
+        external
+        view
+        returns (ProfilePublicationData memory)
+    {
+        return _dataByPublicationByProfile[profileId][pubId];
+    }
+
+    function _processCollect(
         address collector,
         uint256 profileId,
         uint256 pubId,
@@ -109,28 +138,12 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
         (address treasury, uint16 treasuryFee) = _treasuryData();
         address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
         uint256 treasuryAmount = (amount * treasuryFee) / BPS_MAX;
+        uint256 adjustedAmount = amount - treasuryAmount;
 
-        // _enterQuadraticFundingRound(
-        //     currency,
-        //     collector,
-        //     recipient,
-        //     amount - treasuryAmount
-        // );
-
-        if (treasuryAmount > 0) {
+        IERC20(currency).safeTransferFrom(collector, recipient, adjustedAmount);
+        if (treasuryAmount > 0)
             IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
-        }
     }
-
-    // function _enterQuadraticFundingRound(
-    //     address currency,
-    //     address from,
-    //     address beneficiary,
-    //     uint256 amount
-    // ) internal {
-
-    //     }
-    // }
 
     function _processCollectWithReferral(
         uint256 referrerProfileId,
@@ -164,13 +177,12 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
 
             address referralRecipient = IERC721(HUB).ownerOf(referrerProfileId);
 
-            // Send referral fee in normal ERC20 tokens
             IERC20(currency).safeTransferFrom(collector, referralRecipient, referralAmount);
         }
         address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
 
-        if (treasuryAmount > 0) {
+        IERC20(currency).safeTransferFrom(collector, recipient, adjustedAmount);
+        if (treasuryAmount > 0)
             IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
-        }
     }
 }

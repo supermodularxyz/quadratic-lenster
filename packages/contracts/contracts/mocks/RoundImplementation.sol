@@ -11,6 +11,8 @@ import "./IPayoutStrategy.sol";
 
 import "./MetaPtr.sol";
 
+import "hardhat/console.sol";
+
 /**
  * @notice Contract deployed per Round which would managed by
  * a group of ROUND_OPERATOR via the RoundFactory
@@ -318,7 +320,7 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
     function vote(bytes[] memory encodedVotes) external payable {
         // slither-disable-next-line timestamp
         require(roundStartTime <= block.timestamp && block.timestamp <= roundEndTime, "vote: round is not active");
-
+        console.log(address(msg.sender));
         votingStrategy.vote{ value: msg.value }(encodedVotes, msg.sender);
     }
 

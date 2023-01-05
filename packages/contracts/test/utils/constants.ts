@@ -24,6 +24,7 @@ export const lensMumbaiAddresses = {
   moduleGlobals: "0x1353aAdfE5FeD85382826757A95DE908bd21C4f9",
   mockProfileCreationProxy: "0x420f0257D43145bb002E69B14FF2Eb9630Fc4736",
   uiDataProvider: "0x4fF8EB275b2817fB2e7893bFF7ae7994e54e0730",
+  governanceWallet: "0x1a1cdf59c94a682a067fa2d288c2167a8506abd7",
 };
 
 export const lensPolygonAddresses = {
@@ -52,102 +53,101 @@ export const lensPolygonAddresses = {
 };
 /* zkevm test net is bridged to goerli */
 export const lenszkEVMAddresses = {
-    /* use lenshubproxy for interactions */
-    LensHubProxy: "0x28af365578586eD5Fd500A1Dc0a3E20Fc7b2Cffa",
-    lensHubImplementation: "0x1b30F214c192EF4B7F8c9926c47C4161016955DA",
-    publishingLogic: "0xfAAdCf7EA45FDE28FC05d584B8bc206C79f7c4cA",
-    interactionLogic: "0xe88145bCB599E6b9984707651e23fb7bd485EDD3",
-    profileTokenURILogic: "0x4E0d5b0a41196b0EDee8Ecd3C97C8889c502f041",
-    feeCollectModule: "0x3Dfe8C165929f4AbB02ffb3a46ccE6BdA4e5fABE",
-    limitedFeeCollectModule: "0xcafdB2Acb9a30D00E614817533A204100163432D",
-    timedFeeCollectModule: "0x53C1998e9695Da499bd3Ec2eFfeACCab14c850CF",
-    limitedTimedFeeCollectModule: "0x86CDBB3D663888676365960D93A1c7B727506ed5",
-    revertCollectModule: "0x3111B932cF33a980De37734a4dA10163b2b84077",
-    freeCollectModule: "0xBe4d2f15dc26626A5a2BAd27d96AcEf054D7d33A",
-    feeFollowModule: "0x218fcF793FA1e4fDA220Fb7e55aDF9d8fe0b8C96",
-    profileFollowModule: "0x3AF998eB454a418c4a66780c903CDF45d69265f9",
-    revertFollowModule: "0xE24c9cd6aD3ea09e328BC0eb128FCb0d17737f96",
-    followerOnlyReferenceModule: "0xC6396dcDA9E8830EFD44717da003B0D99b786621",
-    followNFT: "0x9d7c6e30345fc68be670017bbcc6840b35978a7a",
-    collectNFT: "0xe4419a822f6e53fe4d25ff22f51fa5de54e10f53",
-    lensPeriphery: "0x0e1F86F248fBc407BfFc4217042b5A55Db289385",
-    moduleGlobals: "0x20d35ea7c5186879E7d5Ec6d0941d451bBa54F4b",
-    mockProfileCreationProxy: "0x923e7786176Ef21d0B31645fB1353b1392Dd0e40",
-    uiDataProvider: "0x1e20C5D968C543245Ab4f6749e5f863a82842337",
-  };
+  /* use lenshubproxy for interactions */
+  LensHubProxy: "0x28af365578586eD5Fd500A1Dc0a3E20Fc7b2Cffa",
+  lensHubImplementation: "0x1b30F214c192EF4B7F8c9926c47C4161016955DA",
+  publishingLogic: "0xfAAdCf7EA45FDE28FC05d584B8bc206C79f7c4cA",
+  interactionLogic: "0xe88145bCB599E6b9984707651e23fb7bd485EDD3",
+  profileTokenURILogic: "0x4E0d5b0a41196b0EDee8Ecd3C97C8889c502f041",
+  feeCollectModule: "0x3Dfe8C165929f4AbB02ffb3a46ccE6BdA4e5fABE",
+  limitedFeeCollectModule: "0xcafdB2Acb9a30D00E614817533A204100163432D",
+  timedFeeCollectModule: "0x53C1998e9695Da499bd3Ec2eFfeACCab14c850CF",
+  limitedTimedFeeCollectModule: "0x86CDBB3D663888676365960D93A1c7B727506ed5",
+  revertCollectModule: "0x3111B932cF33a980De37734a4dA10163b2b84077",
+  freeCollectModule: "0xBe4d2f15dc26626A5a2BAd27d96AcEf054D7d33A",
+  feeFollowModule: "0x218fcF793FA1e4fDA220Fb7e55aDF9d8fe0b8C96",
+  profileFollowModule: "0x3AF998eB454a418c4a66780c903CDF45d69265f9",
+  revertFollowModule: "0xE24c9cd6aD3ea09e328BC0eb128FCb0d17737f96",
+  followerOnlyReferenceModule: "0xC6396dcDA9E8830EFD44717da003B0D99b786621",
+  followNFT: "0x9d7c6e30345fc68be670017bbcc6840b35978a7a",
+  collectNFT: "0xe4419a822f6e53fe4d25ff22f51fa5de54e10f53",
+  lensPeriphery: "0x0e1F86F248fBc407BfFc4217042b5A55Db289385",
+  moduleGlobals: "0x20d35ea7c5186879E7d5Ec6d0941d451bBa54F4b",
+  mockProfileCreationProxy: "0x923e7786176Ef21d0B31645fB1353b1392Dd0e40",
+  uiDataProvider: "0x1e20C5D968C543245Ab4f6749e5f863a82842337",
+};
 
 /* gitcoin addresses */
 
 export const gitcoinGoerliAddresses = {
-    programFactory: '0x548c775c4Bd61d873a445ee4E769cf1A18d60eA9',
-    programImplementation: '0x8568133fF3Ef0BD108868278Cb2a516Eaa3B8ABf',
-    quadraticFundingVotingStrategyFactory: '0xF741F7B6a4cb3B4869B2e2C01aB70A12575B53Ab',
-    qfVotingStrategyImplementation: '0xfdEAf531f04fd7C6de3938e2069beE83aBadFe08',
-    roundFactory: '0x5770b7a57BD252FC4bB28c9a70C9572aE6400E48',
-    roundImplementation: '0x0fF5962Bc56BA0Cf6D7d6EF90df274AE5dC4D16A',
-    sampleProgram: '0x86DceaCc03A52b7914b72eB4E10290f72BD99e68',
-    sampleQfVotingContract: '0x1a497D28890EfB320D04F534Fa6318B6A0657619',
-    sampleMerklePayoutContract: '0x4A68275B53165d9209Ec3f535a331A3f0160d6FF',
-    sampleRound: '0xcEF1772Dd6764C95f14c26B25e8f012C072C5F77'
-}
+  programFactory: "0x548c775c4Bd61d873a445ee4E769cf1A18d60eA9",
+  programImplementation: "0x8568133fF3Ef0BD108868278Cb2a516Eaa3B8ABf",
+  quadraticFundingVotingStrategyFactory: "0xF741F7B6a4cb3B4869B2e2C01aB70A12575B53Ab",
+  qfVotingStrategyImplementation: "0xfdEAf531f04fd7C6de3938e2069beE83aBadFe08",
+  roundFactory: "0x5770b7a57BD252FC4bB28c9a70C9572aE6400E48",
+  roundImplementation: "0x0fF5962Bc56BA0Cf6D7d6EF90df274AE5dC4D16A",
+  sampleProgram: "0x86DceaCc03A52b7914b72eB4E10290f72BD99e68",
+  sampleQfVotingContract: "0x1a497D28890EfB320D04F534Fa6318B6A0657619",
+  sampleMerklePayoutContract: "0x4A68275B53165d9209Ec3f535a331A3f0160d6FF",
+  sampleRound: "0xcEF1772Dd6764C95f14c26B25e8f012C072C5F77",
+};
 
 export const gitcoinEthMainnetAddresses = {
-    programFactory: '0xe0281a20dFaCb0E179E6581c33542bC533DdC4AB',
-    programImplementation: '0x21B0be8253DEdA0d2d8f010d06ED86093d52359b',
-    quadraticFundingVotingStrategyFactory: '0x06A6Cc566c5A88E77B1353Cdc3110C2e6c828e38',
-    qfVotingStrategyImplementation: '0x114885035DAF6f8E09BE55Ed2169d41A512dad45',
-    roundFactory: '0xE2Bf906f7d10F059cE65769F53fe50D8E0cC7cBe',
-    roundImplementation: '0x3e7f72DFeDF6ba1BcBFE77A94a752C529Bb4429E',
-    sampleProgram: '0x4fde273e009F58Aa0e5e09289242D5336FD18ad1',
-    sampleQfVotingContract: '0x818A3C8F82667bd222faF84a954F35d2b0Eb6a78',
-    sampleMerklePayoutContract: '0xC068C0EAF90533D3817a1782847eAA6719ABB6c7',
-    sampleRound: '0x3172a6cCE26529e7DD2B533e7c3622a0b544f349'
-}
+  programFactory: "0xe0281a20dFaCb0E179E6581c33542bC533DdC4AB",
+  programImplementation: "0x21B0be8253DEdA0d2d8f010d06ED86093d52359b",
+  quadraticFundingVotingStrategyFactory: "0x06A6Cc566c5A88E77B1353Cdc3110C2e6c828e38",
+  qfVotingStrategyImplementation: "0x114885035DAF6f8E09BE55Ed2169d41A512dad45",
+  roundFactory: "0xE2Bf906f7d10F059cE65769F53fe50D8E0cC7cBe",
+  roundImplementation: "0x3e7f72DFeDF6ba1BcBFE77A94a752C529Bb4429E",
+  sampleProgram: "0x4fde273e009F58Aa0e5e09289242D5336FD18ad1",
+  sampleQfVotingContract: "0x818A3C8F82667bd222faF84a954F35d2b0Eb6a78",
+  sampleMerklePayoutContract: "0xC068C0EAF90533D3817a1782847eAA6719ABB6c7",
+  sampleRound: "0x3172a6cCE26529e7DD2B533e7c3622a0b544f349",
+};
 
 /* Gitcoin test constants */
 
-export const projectApplications  = [
+export const projectApplications = [
   {
     project: "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
     metaPtr: {
       protocol: 1,
-      pointer: "bafybeiekytxwrrfzxvuq3ge5glfzlhkuxjgvx2qb4swodhqd3c3mtc5jay"
-    }
+      pointer: "bafybeiekytxwrrfzxvuq3ge5glfzlhkuxjgvx2qb4swodhqd3c3mtc5jay",
+    },
   },
 
   {
     project: "0x1bCD46B724fD4C08995CEC46ffd51bD45feDE200",
     metaPtr: {
       protocol: 1,
-      pointer: "bafybeih2pise44gkkzj7fdws3knwotppnh4x2gifnbxjtttuv7okw4mjzu"
-    }
+      pointer: "bafybeih2pise44gkkzj7fdws3knwotppnh4x2gifnbxjtttuv7okw4mjzu",
+    },
   },
 
   {
     project: "0x500Df079BEBE24A9f6FFa2c70fb58000A4722784",
     metaPtr: {
       protocol: 1,
-      pointer: "bafybeiceggy6uzfxsn3z6b2rraptp3g2kx2nrwailkjnx522yah43g5tyu"
-    }
-  }
+      pointer: "bafybeiceggy6uzfxsn3z6b2rraptp3g2kx2nrwailkjnx522yah43g5tyu",
+    },
+  },
 ];
 
 /* lens test constants */
-export const CURRENCY_MINT_AMOUNT = ethers.utils.parseEther('100');
+export const CURRENCY_MINT_AMOUNT = ethers.utils.parseEther("100");
 export const BPS_MAX = 10000;
 export const TREASURY_FEE_BPS = 50;
 export const REFERRAL_FEE_BPS = 250;
 export const MAX_PROFILE_IMAGE_URI_LENGTH = 6000;
-export const LENS_HUB_NFT_NAME = 'Lens Protocol Profiles';
-export const LENS_HUB_NFT_SYMBOL = 'LPP';
-export const MOCK_PROFILE_HANDLE = 'plant1ghost.eth';
-export const LENS_PERIPHERY_NAME = 'LensPeriphery';
+export const LENS_HUB_NFT_NAME = "Lens Protocol Profiles";
+export const LENS_HUB_NFT_SYMBOL = "LPP";
+export const MOCK_PROFILE_HANDLE = "plant1ghost.eth";
+export const LENS_PERIPHERY_NAME = "LensPeriphery";
 export const FIRST_PROFILE_ID = 1;
-export const MOCK_URI = 'https://ipfs.io/ipfs/QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR';
-export const OTHER_MOCK_URI = 'https://ipfs.io/ipfs/QmSfyMcnh1wnJHrAWCBjZHapTS859oNSsuDFiAPPdAHgHP';
-export const MOCK_PROFILE_URI =
-  'https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu';
+export const MOCK_URI = "https://ipfs.io/ipfs/QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR";
+export const OTHER_MOCK_URI = "https://ipfs.io/ipfs/QmSfyMcnh1wnJHrAWCBjZHapTS859oNSsuDFiAPPdAHgHP";
+export const MOCK_PROFILE_URI = "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu";
 export const MOCK_FOLLOW_NFT_URI =
-  'https://ipfs.fleek.co/ipfs/ghostplantghostplantghostplantghostplantghostplantghostplan';
-  export const FAKE_PRIVATEKEY = '0xa2e0097c961c67ec197b6865d7ecea6caffc68ebeb00e6050368c8f67fc9c588';
+  "https://ipfs.fleek.co/ipfs/ghostplantghostplantghostplantghostplantghostplantghostplan";
+export const FAKE_PRIVATEKEY = "0xa2e0097c961c67ec197b6865d7ecea6caffc68ebeb00e6050368c8f67fc9c588";
 export const testWallet = new ethers.Wallet(FAKE_PRIVATEKEY).connect(ethers.provider);

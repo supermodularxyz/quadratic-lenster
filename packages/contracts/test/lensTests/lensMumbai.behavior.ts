@@ -1,8 +1,8 @@
-import { CollectNFT__factory } from './../../types/factories/contracts/lens/CollectNFT__factory';
+
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { FIRST_PROFILE_ID, MOCK_PROFILE_HANDLE } from "../utils/constants";
+import { FIRST_PROFILE_ID } from "../utils/constants";
 import CollectNFT from '../../importedABI/CollectNFT.json';
 import { getTimestamp } from '../utils/utils';
 
@@ -21,7 +21,12 @@ export function shouldBehaveLikeLensHubMumbai(): void {
 
   it("User should follow, then collect, receive a collect NFT with the expected properties", async function () {
     await expect(this.lensMumbai.connect(this.signers.user).follow([FIRST_PROFILE_ID], [[]])).to.not.be.reverted;
-    await expect(this.lensMumbai.connect(this.signers.user).collect(FIRST_PROFILE_ID, 1, [])).to.not.be.reverted;
+    const tx = await this.lensMumbai.connect(this.signers.user).collect(FIRST_PROFILE_ID, 1, [])
+    const promise = await tx.wait();
+    const event = promise.events.filter((e:any)=> e.event == "Transfer");
+    const tokenId = event[0].args.tokenId;
+    
+    await expect(tx).to.not.be.reverted;
 
     const timestamp = await getTimestamp();
 
@@ -39,7 +44,7 @@ export function shouldBehaveLikeLensHubMumbai(): void {
     const mintTimestamp = await collectNFT.connect(this.signers.user).mintTimestampOf(id);
     const tokenData = await collectNFT.connect(this.signers.user).tokenDataOf(id);
 
-    expect(id).to.eq(1561);
+    expect(id).to.eq(tokenId);
     expect(name).to.eq('lensprotocol.test-Collect-1');
     expect(symbol).to.eq('lens-Cl-1');
     expect(pointer[0]).to.eq(FIRST_PROFILE_ID);
