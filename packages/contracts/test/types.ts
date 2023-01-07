@@ -20,5 +20,6 @@ export interface Signers {
   user: SignerWithAddress;
   admin: SignerWithAddress;
   gov: SignerWithAddress;
+  userTwo: SignerWithAddress;
 }
 
