@@ -8,7 +8,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 
 import "./IVotingStrategy.sol";
 
-import "hardhat/console.sol";
 /**
  * Allows voters to cast multiple weighted votes to grants with one transaction
  * This is inspired from BulkCheckout documented over at:
@@ -18,7 +17,7 @@ import "hardhat/console.sol";
  */
 contract QuadraticFundingVotingStrategyImplementation is IVotingStrategy, ReentrancyGuard, Initializable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
-    
+
     // --- Event ---
 
     /// @notice Emitted when a new vote is sent
@@ -53,7 +52,6 @@ contract QuadraticFundingVotingStrategyImplementation is IVotingStrategy, Reentr
         bytes[] calldata encodedVotes,
         address voterAddress
     ) external payable override nonReentrant isRoundContract {
-        console.log("Vote Pinged: ",address(this));
         /// @dev iterate over multiple donations and transfer funds
         for (uint256 i = 0; i < encodedVotes.length; i++) {
             (address _token, uint256 _amount, address _grantAddress) = abi.decode(

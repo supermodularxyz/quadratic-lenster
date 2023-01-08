@@ -47,6 +47,13 @@ struct ProfilePublicationData {
     uint72 endTimestamp;
 }
 
+struct VotingData {
+    address grantsRoundAddress;
+    address votingStrategyAddress;
+    uint256 roundStartTime;
+    uint256 roundEndTime;
+}
+
 contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule, IERC1271, ERC165 {
     using SafeERC20 for IERC20;
 
@@ -100,15 +107,14 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
     function _processCollect(address collector, uint256 profileId, uint256 pubId, bytes calldata data) internal {
         //decode data;
         /// decode  data
-        (
-            address _currency,
-            uint256 _amount,
-            address grantsRoundAddress,
-            address votingStrategyAddress,
-            uint256 roundStartTime,
-            uint256 roundEndTime
-        ) = abi.decode(data, (address, uint256, address, address,uint256, uint256));
-        require(block.timestamp > roundStartTime && block.timestamp < roundEndTime, "Round is not in session");
+        (address _currency, uint256 _amount, VotingData memory votingData) = abi.decode(
+            data,
+            (address, uint256, VotingData)
+        );
+        require(
+            block.timestamp > votingData.roundStartTime && block.timestamp < votingData.roundEndTime,
+            "Round is not in session"
+        );
 
         //check signature validity
 
@@ -136,33 +142,8 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
         _vote(adjustedAmount, data);
 
         if (treasuryAmount > 0) {
-           IERC20(_currency).approve(address(treasury), adjustedAmount); 
-           IERC20(_currency).safeTransferFrom(address(this), treasury, treasuryAmount);
+            IERC20(_currency).safeTransfer(treasury, treasuryAmount);
         }
-    }
-
-    function _vote(uint256 adjustedAmount, bytes calldata data) internal {
-        (
-            address _currency,
-            uint256 _amount,
-            address grantsRoundAddress,
-            address votingStrategyAddress,
-            uint256 roundStartTime,
-            uint256 roundEndTime
-        ) = abi.decode(data, (address, uint256, address, address,uint256, uint256));
-
-        // encode vote
-        bytes memory vote = abi.encode(_currency, adjustedAmount, grantsRoundAddress);
-        /// declare votes array
-        bytes[] memory votes = new bytes[](1);
-        /// cast vote into array because that's how gitcoin likes it.
-        votes[0] = vote;
-        // approve voting strategy to spend erc20
-        IERC20(_currency).approve(votingStrategyAddress, adjustedAmount);
-
-        /// vote
-
-        IRoundImplementation(grantsRoundAddress).vote(votes);
     }
 
     function _processCollectWithReferral(
@@ -172,39 +153,80 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
         uint256 pubId,
         bytes calldata data
     ) internal {
+        /// decode  data
+        (, uint256 _amount, VotingData memory votingData) = abi.decode(data, (address, uint256, VotingData));
+        require(
+            block.timestamp > votingData.roundStartTime && block.timestamp < votingData.roundEndTime,
+            "Round is not in session"
+        );
+
+        //TODO check signature validity
+
+        //validate data
         uint256 amount = _dataByPublicationByProfile[profileId][pubId].amount;
         address currency = _dataByPublicationByProfile[profileId][pubId].currency;
+        uint256 referralFee = _dataByPublicationByProfile[profileId][pubId].referralFee;
+
         _validateDataIsExpected(data, currency, amount);
 
-        uint256 referralFee = _dataByPublicationByProfile[profileId][pubId].referralFee;
+        //transfer erc20 from collector to this contract
+        IERC20(currency).safeTransferFrom(collector, address(this), _amount);
+
+        // address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
         address treasury;
         uint256 treasuryAmount;
-
-        // Avoids stack too deep
-        {
-            uint16 treasuryFee;
-            (treasury, treasuryFee) = _treasuryData();
-            treasuryAmount = (amount * treasuryFee) / BPS_MAX;
-        }
-
-        uint256 adjustedAmount = amount - treasuryAmount;
+        uint256 adjustedAmount;
+        uint256 referralAmount;
 
         if (referralFee != 0) {
+            // Avoids stack too deep
+            {
+                uint16 treasuryFee;
+                (treasury, treasuryFee) = _treasuryData();
+                treasuryAmount = (amount * treasuryFee) / BPS_MAX;
+                referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
+                adjustedAmount = amount - treasuryAmount - referralAmount;
+            }
             // The reason we levy the referral fee on the adjusted amount is so that referral fees
             // don't bypass the treasury fee, in essence referrals pay their fair share to the treasury.
-            uint256 referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
-            adjustedAmount = adjustedAmount - referralAmount;
-
-            address referralRecipient = IERC721(HUB).ownerOf(referrerProfileId);
-
-            // Send referral fee in normal ERC20 tokens
-            IERC20(currency).safeTransferFrom(collector, referralRecipient, referralAmount);
+            _processReferral(referrerProfileId, referralAmount, currency);
         }
-        address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
+        //address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
 
-        if (treasuryAmount > 0) {
-            IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
+        if (treasuryAmount != 0) {
+            IERC20(currency).safeTransfer(treasury, treasuryAmount);
         }
+
+        //cast vote
+        _vote(adjustedAmount, data);
+    }
+
+    function _vote(uint256 adjustedAmount, bytes calldata data) internal {
+        (address _currency, , VotingData memory votingData) = abi.decode(data, (address, uint256, VotingData));
+
+        // encode vote
+        bytes memory vote = abi.encode(_currency, adjustedAmount, votingData.grantsRoundAddress);
+
+        /// declare votes array
+        bytes[] memory votes = new bytes[](1);
+
+        /// cast vote into array because that's how gitcoin likes it.
+        votes[0] = vote;
+
+        // approve voting strategy to spend erc20
+        IERC20(_currency).approve(votingData.votingStrategyAddress, adjustedAmount);
+
+        /// vote
+        IRoundImplementation(votingData.grantsRoundAddress).vote(votes);
+    }
+
+    function _processReferral(uint256 referrerProfileId, uint256 referralAmount, address currency) internal {
+        //address referralRecipient = _dataByPublicationByProfile[profileId][pubId].recipient;
+
+        address referralRecipient = IERC721(HUB).ownerOf(referrerProfileId);
+
+        // Send referral fee in normal ERC20 tokens
+        IERC20(currency).safeTransfer(referralRecipient, referralAmount);
     }
 
     /******************************************************/

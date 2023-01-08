@@ -66,6 +66,7 @@ import ModuleGlobalsAbi from "../../importedABI/ModuleGlobals.json"
 
     await mockModuleGlobals.mock.isCurrencyWhitelisted.returns(true);
     await mockModuleGlobals.mock.getTreasuryData.returns(this.mockedQfModule.address, 1);
+    await mockLenshub.mock.ownerOf.returns(this.signers.userTwo.address);
     });
 
     afterEach("restore blockchain snapshot", async () => {
