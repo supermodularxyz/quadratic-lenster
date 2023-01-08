@@ -511,7 +511,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/abi@npm:5.7.0, @ethersproject/abi@npm:^5.0.0-beta.146, @ethersproject/abi@npm:^5.0.9, @ethersproject/abi@npm:^5.1.2, @ethersproject/abi@npm:^5.7.0":
+"@ethereum-waffle/mock-contract@npm:^3.4.4":
+  version: 3.4.4
+  resolution: "@ethereum-waffle/mock-contract@npm:3.4.4"
+  dependencies:
+    "@ethersproject/abi": ^5.5.0
+    ethers: ^5.5.2
+  checksum: 6e5c62b342e424cd1937f2f7eb424056ad143b238320880f378c0db61c6d694617f968687321a2f030d546aa5b4dde42681cbb419589d7f87452c82844a4488b
+  languageName: node
+  linkType: hard
+
+"@ethersproject/abi@npm:5.7.0, @ethersproject/abi@npm:^5.0.0-beta.146, @ethersproject/abi@npm:^5.0.9, @ethersproject/abi@npm:^5.1.2, @ethersproject/abi@npm:^5.5.0, @ethersproject/abi@npm:^5.7.0":
   version: 5.7.0
   resolution: "@ethersproject/abi@npm:5.7.0"
   dependencies:
@@ -1224,7 +1234,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nomicfoundation/hardhat-chai-matchers@npm:^1.0.4":
+"@nomicfoundation/hardhat-chai-matchers@npm:^1.0.5":
   version: 1.0.5
   resolution: "@nomicfoundation/hardhat-chai-matchers@npm:1.0.5"
   dependencies:
@@ -4359,7 +4369,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:^5.7.2":
+"ethers@npm:^5.5.2, ethers@npm:^5.7.2":
   version: 5.7.2
   resolution: "ethers@npm:5.7.2"
   dependencies:
@@ -8030,12 +8040,13 @@ __metadata:
   dependencies:
     "@commitlint/cli": ^17.3.0
     "@commitlint/config-conventional": ^17.3.0
+    "@ethereum-waffle/mock-contract": ^3.4.4
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/abstract-signer": ^5.7.0
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/bytes": ^5.7.0
     "@ethersproject/providers": ^5.7.2
-    "@nomicfoundation/hardhat-chai-matchers": ^1.0.4
+    "@nomicfoundation/hardhat-chai-matchers": ^1.0.5
     "@nomicfoundation/hardhat-network-helpers": ^1.0.6
     "@nomicfoundation/hardhat-toolbox": ^2.0.0
     "@nomiclabs/hardhat-ethers": ^2.2.1

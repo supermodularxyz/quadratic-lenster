@@ -39,12 +39,12 @@ export async function deployLensMumbaiFixture() {
     const governanceWallet = <SignerWithAddress>await ethers.getImpersonatedSigner(lensMumbaiAddresses.governanceWallet);
 
   //deploy QF Collection Module.
-  const QFCollectionModule = await ethers.getContractFactory("QuadraticFundingCollectModule");
-  const qfCollectionModule = await QFCollectionModule.connect(governanceWallet).deploy(lensMumbaiAddresses.feeFollowModule, lensMumbaiAddresses.lensHubImplementation);
+  const QFCollectModule = await ethers.getContractFactory("QuadraticVoteCollectModule");
+  const qfCollectModule = await QFCollectModule.connect(governanceWallet).deploy(lensMumbaiAddresses.feeFollowModule, lensMumbaiAddresses.lensHubImplementation);
 
   
   //deploy test collection Module.
   const TestCollect = await ethers.getContractFactory("TestCollectModule");
   const testCollect = await TestCollect.connect(governanceWallet).deploy(lensMumbaiAddresses.feeFollowModule, lensMumbaiAddresses.lensHubImplementation);
-  return { lensMumbai, freeCollectModule, qfCollectionModule, feeCollectModule, governanceWallet, moduleGlobals, testCollect };
+  return { lensMumbai, freeCollectModule, qfCollectModule, feeCollectModule, governanceWallet, moduleGlobals, testCollect };
 }

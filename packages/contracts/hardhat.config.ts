@@ -1,8 +1,10 @@
 import "@nomicfoundation/hardhat-toolbox";
 import "@openzeppelin/hardhat-upgrades";
+import "@nomiclabs/hardhat-ethers";
 import { config as dotenvConfig } from "dotenv";
 import type { HardhatUserConfig } from "hardhat/config";
 import type { NetworkUserConfig } from "hardhat/types";
+import "@nomicfoundation/hardhat-chai-matchers";
 import { resolve } from "path";
 
 import "./tasks/accounts";

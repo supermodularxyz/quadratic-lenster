@@ -7,7 +7,12 @@ import {ICollectModule} from './interfaces/ICollectModule.sol';
 import {Errors} from './libraries/Errors.sol';
 import {FeeModuleBase} from './FeeModuleBase.sol';
 import {ModuleBase} from './ModuleBase.sol';
-import {FollowValidationModuleBase} from './FollowValidationModuleBase.sol';
+
+//todo switch to correct import when deploying
+import {FollowValidationModuleBase} from './mocks/MockFollowValidationModuleBase.sol';
+//import {FollowValidationModuleBase} from './FollowValidationModuleBase.sol';
+
+
 import './interfaces/IRoundImplementation.sol';
 
 import {EIP712} from '@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol';
@@ -38,7 +43,7 @@ struct ProfilePublicationData {
     uint72 endTimestamp;
 }
 
-contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule {
+contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule {
     using SafeERC20 for IERC20;
     
     mapping(uint256 => mapping(uint256 => ProfilePublicationData))
@@ -55,7 +60,7 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
         uint256 pubId,
         bytes calldata data
     ) external returns (bytes memory){
-        console.log("INITIALIZING!");
+
          (
             uint256 amount,
             address currency,
@@ -87,7 +92,7 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
         uint256 pubId,
         bytes calldata data
     ) external{
-              if (_dataByPublicationByProfile[profileId][pubId].followerOnly)
+        if (_dataByPublicationByProfile[profileId][pubId].followerOnly)
             _checkFollowValidity(profileId, collector);
         if (referrerProfileId == profileId) {
             _processCollect(collector, profileId, pubId, data);
@@ -95,6 +100,7 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
             _processCollectWithReferral(referrerProfileId, collector, profileId, pubId, data);
         }
     }
+
      function _processCollect(
         address collector,
         uint256 profileId,
@@ -132,7 +138,7 @@ contract QuadraticFundingCollectModule is FeeModuleBase, FollowValidationModuleB
     ) internal {
 
         /// decode  data
-        ( address grantsRoundAddress, uint256 roundStartTime, uint256 roundEndTime ) = abi.decode(data, (address, uint256, uint256));
+        ( address _currency, uint256 _amount , address grantsRoundAddress, uint256 roundStartTime, uint256 roundEndTime ) = abi.decode(data, (address, uint256, address, uint256, uint256));
         require(block.timestamp > roundStartTime && block.timestamp < roundEndTime, "Round is not in session");
         // encode vote
         bytes memory vote = abi.encode(currency, amount, grantsRoundAddress);
