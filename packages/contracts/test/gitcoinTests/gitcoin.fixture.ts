@@ -1,6 +1,6 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { expect } from "chai";
-import { ethers, network } from "hardhat";
+import { ethers } from "hardhat";
 
 import wethAbi from "../../importedABI/WETH.json";
 import { RoundImplementation } from "../../types/contracts/gitcoin/round/RoundImplementation";
@@ -30,7 +30,7 @@ export async function deployGitcoinMumbaiFixture() {
   const whale = <SignerWithAddress>await ethers.getImpersonatedSigner("0x9883d5e7dc023a441a01ef95af406c69926a0ab6");
 
   /* transfer 10 weth to signers */
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i <4; i++) {
     await WETH.connect(whale).transfer(signers[i].address, ethers.utils.parseEther("10"));
     expect(ethers.utils.formatEther(await WETH.balanceOf(signers[i].address))).to.equal("10.0");
   }
@@ -68,5 +68,6 @@ export async function deployGitcoinMumbaiFixture() {
     admin,
     user,
     currentBlockTimestamp,
+    whale
   };
 }

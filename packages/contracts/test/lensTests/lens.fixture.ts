@@ -7,7 +7,7 @@ import { ethers } from "hardhat";
 import FreeCollectModuleABI from "../../importedABI/FreeCollectModule.json";
 import FeeCollectModuleABI from "../../importedABI/FeeCollectModule.json";
 import LensHubABI from "../../importedABI/LensHub.json";
-import ModuleGlobals from "../../importedABI/ModuleGlobals.json"
+import ModuleGlobals from "../../importedABI/ModuleGlobals.json";
 import { lensMumbaiAddresses } from "../utils/constants";
 import { FreeCollectModule } from "./../../types/contracts/lens/modules/FreeCollectModule";
 
@@ -26,7 +26,9 @@ export async function deployLensMumbaiFixture() {
   const lensMumbai = <LensHub>new ethers.Contract(lensMumbaiAddresses.LensHubProxy, LensHubABI.abi, admin);
   const tx = await lensMumbai.getFollowNFTImpl();
   expect(tx).to.equal("0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772");
+
   const moduleGlobals = new ethers.Contract(lensMumbaiAddresses.moduleGlobals, ModuleGlobals.abi, admin);
+
   /* get free collect module */
   const freeCollectModule: FreeCollectModule = <FreeCollectModule>(
     new ethers.Contract(lensMumbaiAddresses.freeCollectModule, FreeCollectModuleABI.abi, admin)

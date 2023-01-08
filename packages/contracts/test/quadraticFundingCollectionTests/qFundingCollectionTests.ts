@@ -23,32 +23,34 @@ import ModuleGlobalsAbi from "../../importedABI/ModuleGlobals.json"
       this.signers.user = signers[2];
       this.signers.userTwo = signers[3];
       this.loadFixture = loadFixture;
+
+          // deploy lens fixture 
+          const { lensMumbai, freeCollectModule, qfCollectModule, feeCollectModule ,governanceWallet, moduleGlobals, testCollect } = await loadFixture(deployLensMumbaiFixture);
+          this.lensMumbai = lensMumbai;
+          this.qfCollectModule = qfCollectModule;
+          this.freeCollectModule = freeCollectModule;
+          this.feeCollectModule = feeCollectModule;
+          this.signers.gov = governanceWallet;
+          this.moduleGlobals = moduleGlobals;
+    
+          this.testCollect = testCollect;
+    
+          // deploy gitcoin fixture
+          const { roundImplementation, WETH, payoutStrategy, votingStrategy, currentBlockTimestamp } =
+        await loadFixture(deployGitcoinMumbaiFixture);
+    
+        this.WETH = WETH;
+        this.roundImplementation = roundImplementation;
+        this.payoutStrategy = payoutStrategy;
+        this.votingStrategy = votingStrategy;
+        this.currentBlockTimestamp = currentBlockTimestamp;
+    
+        snapshotId = await network.provider.send("evm_snapshot", []);
+          //mock contracts
     });
     
     beforeEach(async function () {
-      // deploy lens fixture 
-      const { lensMumbai, freeCollectModule, qfCollectModule, feeCollectModule ,governanceWallet, moduleGlobals, testCollect } = await loadFixture(deployLensMumbaiFixture);
-      this.lensMumbai = lensMumbai;
-      this.qfCollectModule = qfCollectModule;
-      this.freeCollectModule = freeCollectModule;
-      this.feeCollectModule = feeCollectModule;
-      this.signers.gov = governanceWallet;
-      this.moduleGlobals = moduleGlobals;
-
-      this.testCollect = testCollect;
-
-      // deploy gitcoin fixture
-      const { roundImplementation, WETH, payoutStrategy, votingStrategy, currentBlockTimestamp } =
-    await loadFixture(deployGitcoinMumbaiFixture);
-
-    this.WETH = WETH;
-    this.roundImplementation = roundImplementation;
-    this.payoutStrategy = payoutStrategy;
-    this.votingStrategy = votingStrategy;
-    this.currentBlockTimestamp = currentBlockTimestamp;
-
-    snapshotId = await network.provider.send("evm_snapshot", []);
-      //mock contracts
+  
 
     const mockLenshub = await deployMockContract(this.signers.admin, LensHubAbi.abi);
     const mockModuleGlobals = await deployMockContract(this.signers.admin, ModuleGlobalsAbi.abi);
