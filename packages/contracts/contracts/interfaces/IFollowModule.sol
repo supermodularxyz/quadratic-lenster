@@ -17,7 +17,9 @@ interface IFollowModule {
      *
      * @return bytes The encoded data to emit in the hub.
      */
-    function initializeFollowModule(uint256 profileId, bytes calldata data) external returns (bytes memory);
+    function initializeFollowModule(uint256 profileId, bytes calldata data)
+        external
+        returns (bytes memory);
 
     /**
      * @notice Processes a given follow, this can only be called from the LensHub contract.
@@ -26,7 +28,11 @@ interface IFollowModule {
      * @param profileId The token ID of the profile being followed.
      * @param data Arbitrary data passed by the follower.
      */
-    function processFollow(address follower, uint256 profileId, bytes calldata data) external;
+    function processFollow(
+        address follower,
+        uint256 profileId,
+        bytes calldata data
+    ) external;
 
     /**
      * @notice This is a transfer hook that is called upon follow NFT transfer in `beforeTokenTransfer. This can
@@ -41,7 +47,12 @@ interface IFollowModule {
      * @param to The address receiving the follow NFT.
      * @param followNFTTokenId The token ID of the follow NFT being transferred.
      */
-    function followModuleTransferHook(uint256 profileId, address from, address to, uint256 followNFTTokenId) external;
+    function followModuleTransferHook(
+        uint256 profileId,
+        address from,
+        address to,
+        uint256 followNFTTokenId
+    ) external;
 
     /**
      * @notice This is a helper function that could be used in conjunction with specific collect modules.
@@ -65,5 +76,9 @@ interface IFollowModule {
      *
      * @return true if the given address is following the given profile ID, false otherwise.
      */
-    function isFollowing(uint256 profileId, address follower, uint256 followNFTTokenId) external view returns (bool);
+    function isFollowing(
+        uint256 profileId,
+        address follower,
+        uint256 followNFTTokenId
+    ) external view returns (bool);
 }

@@ -1,5 +1,7 @@
 import * as dotenv from "dotenv";
-import hre, { ethers } from "hardhat";
+import hre, { ethers } from 'hardhat';
+
+
 
 dotenv.config();
 /* GitCoin Utils */
@@ -13,9 +15,9 @@ dotenv.config();
 export const encodeProgramParameters = (params: any[]): string => {
   return ethers.utils.defaultAbiCoder.encode(
     ["tuple(uint256 protocol, string pointer)", "address[]", "address[]"],
-    params,
+    params
   );
-};
+}
 
 /**
  * Encodes the parameters for the RoundFactory.create() function.
@@ -36,11 +38,11 @@ export const encodeRoundParameters = (params: any[]): string => {
       "tuple(uint256 protocol, string pointer)",
       "tuple(uint256 protocol, string pointer)",
       "address[]",
-      "address[]",
+      "address[]"
     ],
-    params,
+    params
   );
-};
+}
 
 /**
  * Encodes the parameters for the MerklePayoutStrategy.updateDistribution() function.
@@ -49,33 +51,27 @@ export const encodeRoundParameters = (params: any[]): string => {
  * @returns {string}
  */
 export const encodeMerkleUpdateDistributionParameters = (params: any[]): string => {
-  return ethers.utils.defaultAbiCoder.encode(["bytes32", "tuple(uint256 protocol, string pointer)"], params);
-};
+  return ethers.utils.defaultAbiCoder.encode(
+    [
+      "bytes32",
+      "tuple(uint256 protocol, string pointer)"
+    ],
+    params
+  );
+}
 
 /* Lens Utils */
 
 export function getAbbreviation(handle: string) {
   let sliced = handle.slice(0, 4);
-  if (sliced.charAt(3) == " ") {
+  if (sliced.charAt(3) == ' ') {
     sliced = sliced.slice(0, 3);
   }
   return sliced;
 }
 
 export async function getTimestamp(): Promise<any> {
-  const blockNumber = await hre.ethers.provider.send("eth_blockNumber", []);
-  const block = await hre.ethers.provider.send("eth_getBlockByNumber", [blockNumber, false]);
+  const blockNumber = await hre.ethers.provider.send('eth_blockNumber', []);
+  const block = await hre.ethers.provider.send('eth_getBlockByNumber', [blockNumber, false]);
   return block.timestamp;
-}
-
-export function getCollectModulePubInitData(
-  initModuleData: any[]
-  ) {
-
-  const collectModuleInitData = ethers.utils.defaultAbiCoder.encode(
-    ["uint256", "address", "address", "uint16", "bool", "address", "address"],
-    initModuleData,
-  );
-
-  return collectModuleInitData;
 }

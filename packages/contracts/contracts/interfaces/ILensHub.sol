@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.10;
 
-import { DataTypes } from "../libraries/DataTypes.sol";
+import {DataTypes} from '../libraries/DataTypes.sol';
 
 /**
  * @title ILensHub
@@ -20,7 +20,11 @@ interface ILensHub {
      * @param symbol The symbol to set for the hub NFT.
      * @param newGovernance The governance address to set.
      */
-    function initialize(string calldata name, string calldata symbol, address newGovernance) external;
+    function initialize(
+        string calldata name,
+        string calldata symbol,
+        address newGovernance
+    ) external;
 
     /**
      * @notice Sets the privileged governance role. This function can only be called by the current governance
@@ -111,7 +115,8 @@ interface ILensHub {
      *
      * @param vars A SetDefaultProfileWithSigData struct, including the regular parameters and an EIP712Signature struct.
      */
-    function setDefaultProfileWithSig(DataTypes.SetDefaultProfileWithSigData calldata vars) external;
+    function setDefaultProfileWithSig(DataTypes.SetDefaultProfileWithSigData calldata vars)
+        external;
 
     /**
      * @notice Sets a profile's follow module, must be called by the profile owner.
@@ -120,7 +125,11 @@ interface ILensHub {
      * @param followModule The follow module to set for the given profile, must be whitelisted.
      * @param followModuleInitData The data to be passed to the follow module for initialization.
      */
-    function setFollowModule(uint256 profileId, address followModule, bytes calldata followModuleInitData) external;
+    function setFollowModule(
+        uint256 profileId,
+        address followModule,
+        bytes calldata followModuleInitData
+    ) external;
 
     /**
      * @notice Sets a profile's follow module via signature with the specified parameters.
@@ -157,7 +166,8 @@ interface ILensHub {
      *
      * @param vars A SetProfileImageURIWithSigData struct, including the regular parameters and an EIP712Signature struct.
      */
-    function setProfileImageURIWithSig(DataTypes.SetProfileImageURIWithSigData calldata vars) external;
+    function setProfileImageURIWithSig(DataTypes.SetProfileImageURIWithSigData calldata vars)
+        external;
 
     /**
      * @notice Sets a followNFT URI for a given profile's follow NFT.
@@ -238,7 +248,9 @@ interface ILensHub {
      *
      * @return uint256[] An array of integers representing the minted follow NFTs token IDs.
      */
-    function follow(uint256[] calldata profileIds, bytes[] calldata datas) external returns (uint256[] memory);
+    function follow(uint256[] calldata profileIds, bytes[] calldata datas)
+        external
+        returns (uint256[] memory);
 
     /**
      * @notice Follows a given profile via signature with the specified parameters.
@@ -248,7 +260,9 @@ interface ILensHub {
      *
      * @return uint256[] An array of integers representing the minted follow NFTs token IDs.
      */
-    function followWithSig(DataTypes.FollowWithSigData calldata vars) external returns (uint256[] memory);
+    function followWithSig(DataTypes.FollowWithSigData calldata vars)
+        external
+        returns (uint256[] memory);
 
     /**
      * @notice Collects a given publication, executing collect module logic and minting a collectNFT to the caller.
@@ -259,7 +273,11 @@ interface ILensHub {
      *
      * @return uint256 An integer representing the minted token ID.
      */
-    function collect(uint256 profileId, uint256 pubId, bytes calldata data) external returns (uint256);
+    function collect(
+        uint256 profileId,
+        uint256 pubId,
+        bytes calldata data
+    ) external returns (uint256);
 
     /**
      * @notice Collects a given publication via signature with the specified parameters.
@@ -280,7 +298,12 @@ interface ILensHub {
      * @param from The address the followNFT is being transferred from.
      * @param to The address the followNFT is being transferred to.
      */
-    function emitFollowNFTTransferEvent(uint256 profileId, uint256 followNFTId, address from, address to) external;
+    function emitFollowNFTTransferEvent(
+        uint256 profileId,
+        uint256 followNFTId,
+        address from,
+        address to
+    ) external;
 
     /**
      * @dev Helper function to emit a detailed collectNFT transfer event from the hub, to be consumed by frontends to track
@@ -449,7 +472,10 @@ interface ILensHub {
      * @return tuple First, the profile ID of the profile the current publication is pointing to, second, the
      * publication ID of the publication the current publication is pointing to.
      */
-    function getPubPointer(uint256 profileId, uint256 pubId) external view returns (uint256, uint256);
+    function getPubPointer(uint256 profileId, uint256 pubId)
+        external
+        view
+        returns (uint256, uint256);
 
     /**
      * @notice Returns the URI associated with a given publication.
@@ -487,7 +513,10 @@ interface ILensHub {
      *
      * @return PublicationStruct The publication struct associated with the queried publication.
      */
-    function getPub(uint256 profileId, uint256 pubId) external view returns (DataTypes.PublicationStruct memory);
+    function getPub(uint256 profileId, uint256 pubId)
+        external
+        view
+        returns (DataTypes.PublicationStruct memory);
 
     /**
      * @notice Returns the publication type associated with a given publication.

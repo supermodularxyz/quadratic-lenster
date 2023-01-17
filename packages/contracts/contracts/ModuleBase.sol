@@ -2,8 +2,8 @@
 
 pragma solidity 0.8.10;
 
-import { Errors } from "./libraries/Errors.sol";
-import { Events } from "./libraries/Events.sol";
+import {Errors} from './libraries/Errors.sol';
+import {Events} from './libraries/Events.sol';
 
 /**
  * @title ModuleBase

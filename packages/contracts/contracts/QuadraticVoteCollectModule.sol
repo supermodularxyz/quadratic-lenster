@@ -8,17 +8,21 @@ import { Errors } from "./libraries/Errors.sol";
 import { FeeModuleBase } from "./FeeModuleBase.sol";
 import { ModuleBase } from "./ModuleBase.sol";
 
-import { FollowValidationModuleBase } from "./FollowValidationModuleBase.sol";
+//todo switch to correct import when deploying
+import { FollowValidationModuleBase } from "./mocks/MockFollowValidationModuleBase.sol";
+//import {FollowValidationModuleBase} from './FollowValidationModuleBase.sol';
 
 import "./interfaces/IRoundImplementation.sol";
 
+import { EIP712 } from "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
-
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
  * @notice A struct containing the necessary data to execute collect actions on a publication.
@@ -41,11 +45,16 @@ struct ProfilePublicationData {
     uint16 referralFee;
     bool followerOnly;
     uint72 endTimestamp;
-    address grantsRoundAddress;
-    address votingStrategyAddress;
 }
 
-contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule, ERC165 {
+struct VotingData {
+    address grantsRoundAddress;
+    address votingStrategyAddress;
+    uint256 roundStartTime;
+    uint256 roundEndTime;
+}
+
+contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule, IERC1271, ERC165 {
     using SafeERC20 for IERC20;
 
     mapping(uint256 => mapping(uint256 => ProfilePublicationData)) internal _dataByPublicationByProfile;
@@ -64,15 +73,10 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
         uint256 pubId,
         bytes calldata data
     ) external returns (bytes memory) {
-        (
-            uint256 amount,
-            address currency,
-            address recipient,
-            uint16 referralFee,
-            bool followerOnly,
-            address grantsRoundAddress,
-            address votingStrategyAddress
-        ) = abi.decode(data, (uint256, address, address, uint16, bool, address, address));
+        (uint256 amount, address currency, address recipient, uint16 referralFee, bool followerOnly) = abi.decode(
+            data,
+            (uint256, address, address, uint16, bool)
+        );
         if (!_currencyWhitelisted(currency) || recipient == address(0) || referralFee > BPS_MAX || amount == 0)
             revert Errors.InitParamsInvalid();
 
@@ -81,8 +85,6 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
         _dataByPublicationByProfile[profileId][pubId].recipient = recipient;
         _dataByPublicationByProfile[profileId][pubId].referralFee = referralFee;
         _dataByPublicationByProfile[profileId][pubId].followerOnly = followerOnly;
-        _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress = grantsRoundAddress;
-        _dataByPublicationByProfile[profileId][pubId].votingStrategyAddress = votingStrategyAddress;
 
         return data;
     }
@@ -103,21 +105,26 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
     }
 
     function _processCollect(address collector, uint256 profileId, uint256 pubId, bytes calldata data) internal {
+        //decode data;
         /// decode  data
-        (address _currency, uint256 _amount) = abi.decode(data, (address, uint256));
-        address grantsRoundAddress = _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress;
-        uint256 roundStartTime = IRoundImplementation(grantsRoundAddress).roundStartTime();
-        uint256 roundEndTime = IRoundImplementation(grantsRoundAddress).roundEndTime();
-        require(block.timestamp > roundStartTime && block.timestamp < roundEndTime, "Round is not in session");
+        (address _currency, uint256 _amount, VotingData memory votingData) = abi.decode(
+            data,
+            (address, uint256, VotingData)
+        );
+        require(
+            block.timestamp > votingData.roundStartTime && block.timestamp < votingData.roundEndTime,
+            "Round is not in session"
+        );
+
+        //check signature validity
+
+        //transfer erc20 from collector to this contract
+        IERC20(_currency).safeTransferFrom(collector, address(this), _amount);
 
         //validate data
         uint256 amount = _dataByPublicationByProfile[profileId][pubId].amount;
         address currency = _dataByPublicationByProfile[profileId][pubId].currency;
         _validateDataIsExpected(data, currency, amount);
-        //check signature validity
-
-        //transfer erc20 from collector to this contract
-        IERC20(_currency).safeTransferFrom(collector, address(this), _amount);
 
         // address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
         address treasury;
@@ -131,9 +138,8 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
         }
 
         uint256 adjustedAmount = amount - treasuryAmount;
-
         //cast vote
-        _vote(profileId, pubId, adjustedAmount, data);
+        _vote(adjustedAmount, data);
 
         if (treasuryAmount > 0) {
             IERC20(_currency).safeTransfer(treasury, treasuryAmount);
@@ -148,47 +154,42 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
         bytes calldata data
     ) internal {
         /// decode  data
-        (address _currency, uint256 _amount) = abi.decode(data, (address, uint256));
-        {
-            uint256 roundStartTime = IRoundImplementation(
-                _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress
-            ).roundStartTime();
-            uint256 roundEndTime = IRoundImplementation(
-                _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress
-            ).roundEndTime();
-            require(block.timestamp > roundStartTime && block.timestamp < roundEndTime, "Round is not in session");
-        }
-        
+        (, uint256 _amount, VotingData memory votingData) = abi.decode(data, (address, uint256, VotingData));
+        require(
+            block.timestamp > votingData.roundStartTime && block.timestamp < votingData.roundEndTime,
+            "Round is not in session"
+        );
+
+        //TODO check signature validity
+
+        //validate data
         uint256 amount = _dataByPublicationByProfile[profileId][pubId].amount;
         address currency = _dataByPublicationByProfile[profileId][pubId].currency;
         uint256 referralFee = _dataByPublicationByProfile[profileId][pubId].referralFee;
-        //validate data
+
         _validateDataIsExpected(data, currency, amount);
 
         //transfer erc20 from collector to this contract
-        IERC20(_currency).safeTransferFrom(collector, address(this), _amount);
+        IERC20(currency).safeTransferFrom(collector, address(this), _amount);
 
         // address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
         address treasury;
         uint256 treasuryAmount;
         uint256 adjustedAmount;
-
-        {
-            uint16 treasuryFee;
-            (treasury, treasuryFee) = _treasuryData();
-            treasuryAmount = (amount * treasuryFee) / BPS_MAX;
-            adjustedAmount = amount - treasuryAmount;
-        }
+        uint256 referralAmount;
 
         if (referralFee != 0) {
             // Avoids stack too deep
             {
-                uint256 referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
+                uint16 treasuryFee;
+                (treasury, treasuryFee) = _treasuryData();
+                treasuryAmount = (amount * treasuryFee) / BPS_MAX;
+                referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
                 adjustedAmount = amount - treasuryAmount - referralAmount;
-                _processReferral(referrerProfileId, referralAmount, currency);
             }
             // The reason we levy the referral fee on the adjusted amount is so that referral fees
             // don't bypass the treasury fee, in essence referrals pay their fair share to the treasury.
+            _processReferral(referrerProfileId, referralAmount, currency);
         }
         //address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
 
@@ -197,17 +198,14 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
         }
 
         //cast vote
-        _vote(profileId, pubId, adjustedAmount, data);
+        _vote(adjustedAmount, data);
     }
 
-    function _vote(uint256 profileId, uint256 pubId, uint256 adjustedAmount, bytes calldata data) internal {
-        (address _currency, ) = abi.decode(data, (address, uint256));
-
-        address grantsRoundAddress = _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress;
-        address votingStrategyAddress = _dataByPublicationByProfile[profileId][pubId].votingStrategyAddress;
+    function _vote(uint256 adjustedAmount, bytes calldata data) internal {
+        (address _currency, , VotingData memory votingData) = abi.decode(data, (address, uint256, VotingData));
 
         // encode vote
-        bytes memory vote = abi.encode(_currency, adjustedAmount, grantsRoundAddress);
+        bytes memory vote = abi.encode(_currency, adjustedAmount, votingData.grantsRoundAddress);
 
         /// declare votes array
         bytes[] memory votes = new bytes[](1);
@@ -216,10 +214,10 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
         votes[0] = vote;
 
         // approve voting strategy to spend erc20
-        IERC20(_currency).approve(votingStrategyAddress, adjustedAmount);
+        IERC20(_currency).approve(votingData.votingStrategyAddress, adjustedAmount);
 
         /// vote
-        IRoundImplementation(grantsRoundAddress).vote(votes);
+        IRoundImplementation(votingData.grantsRoundAddress).vote(votes);
     }
 
     function _processReferral(uint256 referrerProfileId, uint256 referralAmount, address currency) internal {
@@ -240,8 +238,23 @@ contract QuadraticVoteCollectModule is FeeModuleBase, FollowValidationModuleBase
      */
     function supportsInterface(bytes4 interfaceId) public view override(ERC165) returns (bool) {
         return
+            interfaceId == type(IERC1271).interfaceId ||
             interfaceId == type(IERC20).interfaceId ||
             super.supportsInterface(interfaceId);
     }
 
+    /******************************************************/
+    /* EIP1271 implementation */
+    /******************************************************/
+
+    /**
+     * @notice Verify vote and signature are both valid
+     * @param digest EIP712 vote digest
+     * @param signature Signature Vote digest
+     * @return Magic value on valid signature, 0xffffffff otherwise
+     */
+    function isValidSignature(bytes32 digest, bytes calldata signature) public view returns (bytes4) {
+        signature;
+        return _validVotes[digest] ? bytes4(0x1626ba7e) : bytes4(0xffffffff);
+    }
 }

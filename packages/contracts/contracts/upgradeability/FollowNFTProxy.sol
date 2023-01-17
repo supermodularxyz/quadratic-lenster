@@ -2,9 +2,9 @@
 
 pragma solidity 0.8.10;
 
-import { ILensHub } from "../interfaces/ILensHub.sol";
-import { Proxy } from "@openzeppelin/contracts/proxy/Proxy.sol";
-import { Address } from "@openzeppelin/contracts/utils/Address.sol";
+import {ILensHub} from '../interfaces/ILensHub.sol';
+import {Proxy} from '@openzeppelin/contracts/proxy/Proxy.sol';
+import {Address} from '@openzeppelin/contracts/utils/Address.sol';
 
 contract FollowNFTProxy is Proxy {
     using Address for address;

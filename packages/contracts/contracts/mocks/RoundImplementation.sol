@@ -9,9 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./IVotingStrategy.sol";
 import "./IPayoutStrategy.sol";
 
-import "../interfaces/MetaPtr.sol";
-
-import "hardhat/console.sol";
+import "./MetaPtr.sol";
 
 import "hardhat/console.sol";
 

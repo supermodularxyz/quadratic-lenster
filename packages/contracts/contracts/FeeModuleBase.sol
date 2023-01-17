@@ -2,9 +2,9 @@
 
 pragma solidity 0.8.10;
 
-import { Errors } from "./libraries/Errors.sol";
-import { Events } from "./libraries/Events.sol";
-import { IModuleGlobals } from "./interfaces/IModuleGlobals.sol";
+import {Errors} from './libraries/Errors.sol';
+import {Events} from './libraries/Events.sol';
+import {IModuleGlobals} from './interfaces/IModuleGlobals.sol';
 
 /**
  * @title FeeModuleBase
@@ -32,8 +32,13 @@ abstract contract FeeModuleBase {
         return IModuleGlobals(MODULE_GLOBALS).getTreasuryData();
     }
 
-    function _validateDataIsExpected(bytes calldata data, address currency, uint256 amount) internal pure {
+    function _validateDataIsExpected(
+        bytes calldata data,
+        address currency,
+        uint256 amount
+    ) internal pure {
         (address decodedCurrency, uint256 decodedAmount) = abi.decode(data, (address, uint256));
-        if (decodedAmount != amount || decodedCurrency != currency) revert Errors.ModuleDataMismatch();
+        if (decodedAmount != amount || decodedCurrency != currency)
+            revert Errors.ModuleDataMismatch();
     }
 }

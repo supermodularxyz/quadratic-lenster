@@ -2,8 +2,8 @@
 
 pragma solidity 0.8.10;
 
-import { DataTypes } from "./DataTypes.sol";
-import { Errors } from "./Errors.sol";
+import {DataTypes} from './DataTypes.sol';
+import {Errors} from './Errors.sol';
 
 /**
  * @title Helpers
@@ -27,8 +27,17 @@ library Helpers {
     function getPointedIfMirror(
         uint256 profileId,
         uint256 pubId,
-        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct)) storage _pubByIdByProfile
-    ) internal view returns (uint256, uint256, address) {
+        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct))
+            storage _pubByIdByProfile
+    )
+        internal
+        view
+        returns (
+            uint256,
+            uint256,
+            address
+        )
+    {
         address collectModule = _pubByIdByProfile[profileId][pubId].collectModule;
         if (collectModule != address(0)) {
             return (profileId, pubId, collectModule);
@@ -39,7 +48,8 @@ library Helpers {
 
             uint256 pointedPubId = _pubByIdByProfile[profileId][pubId].pubIdPointed;
 
-            address pointedCollectModule = _pubByIdByProfile[pointedTokenId][pointedPubId].collectModule;
+            address pointedCollectModule = _pubByIdByProfile[pointedTokenId][pointedPubId]
+                .collectModule;
 
             return (pointedTokenId, pointedPubId, pointedCollectModule);
         }

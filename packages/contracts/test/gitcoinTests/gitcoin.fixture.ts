@@ -3,10 +3,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 import wethAbi from "../../importedABI/WETH.json";
-import { ERC20 } from "../../types/@openzeppelin/contracts/token/ERC20/ERC20";
-import { MerklePayoutStrategy } from "../../types/contracts/gitcoin/payoutStrategy/MerklePayoutStrategy";
 import { RoundImplementation } from "../../types/contracts/gitcoin/round/RoundImplementation";
-import { QuadraticFundingVotingStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation"
 import { encodeRoundParameters } from "../utils/utils";
 
 /* deploy gitcoin grants implementation on mumbai fork */
@@ -19,16 +16,16 @@ export async function deployGitcoinMumbaiFixture() {
 
   // Voting Strategy
   const votingStrategyFactory = await ethers.getContractFactory("QuadraticFundingVotingStrategyImplementation");
-  const votingStrategy = <QuadraticFundingVotingStrategyImplementation> await votingStrategyFactory.deploy();
+  const votingStrategy = await votingStrategyFactory.deploy();
   await votingStrategy.deployed();
 
   // Payout Strategy
   const payoutStrategyFactory = await ethers.getContractFactory("MerklePayoutStrategy");
-  const payoutStrategy = <MerklePayoutStrategy> await payoutStrategyFactory.deploy();
+  const payoutStrategy = await payoutStrategyFactory.deploy();
   await payoutStrategy.deployed();
 
   /* get WETH contract */
-  const WETH = <ERC20>new ethers.Contract("0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa", wethAbi, admin);
+  const WETH = new ethers.Contract("0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa", wethAbi, admin);
   /* impersonate weth whale account */
   const whale = <SignerWithAddress>await ethers.getImpersonatedSigner("0x9883d5e7dc023a441a01ef95af406c69926a0ab6");
 

@@ -2,18 +2,18 @@
 
 pragma solidity 0.8.10;
 
-import { FollowNFTProxy } from "../upgradeability/FollowNFTProxy.sol";
-import { Helpers } from "./Helpers.sol";
-import { DataTypes } from "./DataTypes.sol";
-import { Errors } from "./Errors.sol";
-import { Events } from "./Events.sol";
-import { Constants } from "./Constants.sol";
-import { IFollowNFT } from "../interfaces/IFollowNFT.sol";
-import { ICollectNFT } from "../interfaces/ICollectNFT.sol";
-import { IFollowModule } from "../interfaces/IFollowModule.sol";
-import { ICollectModule } from "../interfaces/ICollectModule.sol";
-import { Clones } from "@openzeppelin/contracts/proxy/Clones.sol";
-import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
+import {FollowNFTProxy} from '../upgradeability/FollowNFTProxy.sol';
+import {Helpers} from './Helpers.sol';
+import {DataTypes} from './DataTypes.sol';
+import {Errors} from './Errors.sol';
+import {Events} from './Events.sol';
+import {Constants} from './Constants.sol';
+import {IFollowNFT} from '../interfaces/IFollowNFT.sol';
+import {ICollectNFT} from '../interfaces/ICollectNFT.sol';
+import {IFollowModule} from '../interfaces/IFollowModule.sol';
+import {ICollectModule} from '../interfaces/ICollectModule.sol';
+import {Clones} from '@openzeppelin/contracts/proxy/Clones.sol';
+import {Strings} from '@openzeppelin/contracts/utils/Strings.sol';
 
 /**
  * @title InteractionLogic
@@ -49,7 +49,8 @@ library InteractionLogic {
         uint256[] memory tokenIds = new uint256[](profileIds.length);
         for (uint256 i = 0; i < profileIds.length; ) {
             string memory handle = _profileById[profileIds[i]].handle;
-            if (_profileIdByHandleHash[keccak256(bytes(handle))] != profileIds[i]) revert Errors.TokenDoesNotExist();
+            if (_profileIdByHandleHash[keccak256(bytes(handle))] != profileIds[i])
+                revert Errors.TokenDoesNotExist();
 
             address followModule = _profileById[profileIds[i]].followModule;
             address followNFT = _profileById[profileIds[i]].followNFT;
@@ -62,7 +63,11 @@ library InteractionLogic {
             tokenIds[i] = IFollowNFT(followNFT).mint(follower);
 
             if (followModule != address(0)) {
-                IFollowModule(followModule).processFollow(follower, profileIds[i], followModuleDatas[i]);
+                IFollowModule(followModule).processFollow(
+                    follower,
+                    profileIds[i],
+                    followModuleDatas[i]
+                );
             }
             unchecked {
                 ++i;
@@ -92,14 +97,12 @@ library InteractionLogic {
         uint256 pubId,
         bytes calldata collectModuleData,
         address collectNFTImpl,
-        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct)) storage _pubByIdByProfile,
+        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct))
+            storage _pubByIdByProfile,
         mapping(uint256 => DataTypes.ProfileStruct) storage _profileById
     ) external returns (uint256) {
-        (uint256 rootProfileId, uint256 rootPubId, address rootCollectModule) = Helpers.getPointedIfMirror(
-            profileId,
-            pubId,
-            _pubByIdByProfile
-        );
+        (uint256 rootProfileId, uint256 rootPubId, address rootCollectModule) = Helpers
+            .getPointedIfMirror(profileId, pubId, _pubByIdByProfile);
 
         uint256 tokenId;
         // Avoids stack too deep
@@ -124,7 +127,14 @@ library InteractionLogic {
             rootPubId,
             collectModuleData
         );
-        _emitCollectedEvent(collector, profileId, pubId, rootProfileId, rootPubId, collectModuleData);
+        _emitCollectedEvent(
+            collector,
+            profileId,
+            pubId,
+            rootProfileId,
+            rootPubId,
+            collectModuleData
+        );
 
         return tokenId;
     }
@@ -137,7 +147,10 @@ library InteractionLogic {
      * @return address The address of the deployed Follow NFT contract.
      */
     function _deployFollowNFT(uint256 profileId) private returns (address) {
-        bytes memory functionData = abi.encodeWithSelector(IFollowNFT.initialize.selector, profileId);
+        bytes memory functionData = abi.encodeWithSelector(
+            IFollowNFT.initialize.selector,
+            profileId
+        );
         address followNFT = address(new FollowNFTProxy(functionData));
         emit Events.FollowNFTDeployed(profileId, followNFT, block.timestamp);
 
@@ -197,6 +210,14 @@ library InteractionLogic {
         uint256 rootPubId,
         bytes calldata data
     ) private {
-        emit Events.Collected(collector, profileId, pubId, rootProfileId, rootPubId, data, block.timestamp);
+        emit Events.Collected(
+            collector,
+            profileId,
+            pubId,
+            rootProfileId,
+            rootPubId,
+            data,
+            block.timestamp
+        );
     }
 }
