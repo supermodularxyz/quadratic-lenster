@@ -41,10 +41,8 @@ export const shouldBehaveLikeGrantsRound = () => {
         encodedVotes.push(ethers.utils.defaultAbiCoder.encode(["address", "uint256", "address"], votes[i]));
       }
 
-      // const mockTime = await _roundImplementation.applicationsStartTime();
-
       await ethers.provider.send("evm_mine", [_currentBlockTimestamp + 750]); /* wait for round to start */
-      await expect(_roundImplementation.vote(encodedVotes)).to.not.be.reverted;
+      await expect(_roundImplementation.vote(encodedVotes)).to.emit(_votingStrategy, "Voted");
     });
   });
 };
