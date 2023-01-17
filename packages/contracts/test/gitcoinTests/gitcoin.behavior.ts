@@ -17,7 +17,6 @@ export const shouldBehaveLikeGrantsRound = () => {
   let _currentBlockTimestamp: number;
 
   beforeEach(async () => {
-    // TODO users, signers in fixture
     const { roundImplementation, WETH, payoutStrategy, votingStrategy, admin, user, currentBlockTimestamp } =
       await loadFixture(deployGitcoinMumbaiFixture);
     _WETH = WETH;

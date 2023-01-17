@@ -21,6 +21,10 @@ if (!mnemonic) {
 
 const infuraApiKey: string | undefined = process.env.INFURA_API_KEY;
 
+if (!infuraApiKey) {
+  throw new Error("Please set your INFURA_API_KEY in a .env file");
+}
+
 const chainIds = {
   hardhat: 31337,
   "polygon-mainnet": 137,
@@ -40,6 +44,9 @@ const getChainConfig = (chain: keyof typeof chainIds): NetworkUserConfig => {
     url: jsonRpcUrl,
   };
 };
+
+/* change this variable to true if you want to use infura in testing. */
+const useInfuraForTests = process.env.USE_INFURA_FOR_TESTS;
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
@@ -62,7 +69,7 @@ const config: HardhatUserConfig = {
         mnemonic,
       },
       chainId: chainIds.hardhat,
-      forking: { url: `${infuraApiKey?`https://polygon-mumbai.infura.io/v3/${infuraApiKey}`:"https://rpc.ankr.com/polygon_mumbai"}` },
+      forking: { url: `${useInfuraForTests?`https://polygon-mumbai.infura.io/v3/${infuraApiKey}`:"https://rpc.ankr.com/polygon_mumbai"}` },
     },
     "polygon-mainnet": { ...getChainConfig("polygon-mainnet"), url: "https://rpc.ankr.com/polygon" },
     "polygon-mumbai": { ...getChainConfig("polygon-mumbai"), url: "https://rpc.ankr.com/polygon_mumbai" },
@@ -81,9 +88,9 @@ const config: HardhatUserConfig = {
       {
         version: "0.8.17",
       },
-      {
-        version: ">=0.8.10",
-      },
+      // {
+      //   version: ">=0.8.10",
+      // },
     ],
     settings: {
       metadata: {
