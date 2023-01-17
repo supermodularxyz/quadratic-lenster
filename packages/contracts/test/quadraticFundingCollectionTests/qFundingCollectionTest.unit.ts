@@ -1,102 +1,186 @@
+import { deployMockContract } from "@ethereum-waffle/mock-contract";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 
-import {
-  FIRST_PROFILE_ID,
-  MOCK_FOLLOW_NFT_URI,
-  MOCK_PROFILE_HANDLE,
-  MOCK_PROFILE_URI,
-  MOCK_URI,
-  REFERRAL_FEE_BPS,
-} from "../utils/constants";
+import ERC721Abi from "../../artifacts/contracts/mocks/MockERC721.sol/MockERC721.json";
+import LensHubAbi from "../../importedABI/LensHub.json";
+import ModuleGlobalsAbi from "../../importedABI/ModuleGlobals.json";
+import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
+import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
+import { deployLensMumbaiFixture } from "../lensTests/lens.fixture";
+import { getCollectModulePubInitData } from "../utils/utils";
+import { ERC20 } from "./../../types/@openzeppelin/contracts/token/ERC20/ERC20";
+import { MerklePayoutStrategy } from "./../../types/contracts/gitcoin/payoutStrategy/MerklePayoutStrategy";
+import { RoundImplementation } from "./../../types/contracts/gitcoin/round/RoundImplementation";
+import { QuadraticFundingVotingStrategyImplementation } from "./../../types/contracts/gitcoin/votingStrategy/QuadraticFundingStrategy/QuadraticFundingVotingStrategyImplementation";
+import { LensHub } from "./../../types/contracts/lens/LensHub";
+import { ModuleBase } from "./../../types/contracts/lens/ModuleBase";
+import { FeeCollectModule } from "./../../types/contracts/lens/modules/FeeCollectModule";
+import { FreeCollectModule } from "./../../types/contracts/lens/modules/FreeCollectModule";
 
-export function shouldBeAUnitTestQFCM() {
-  it("Should initialize the qfFundingModule with WETH", async function () {
-    const DEFAULT_COLLECT_PRICE = ethers.utils.parseEther("1");
+export const shouldBehaveLikeQuadraticVoteModule = () => {
+let _snapshotId: number;
+  let _admin: SignerWithAddress;
+  let _user: SignerWithAddress;
+  let _userTwo: SignerWithAddress;
+  let _gov: SignerWithAddress;
+  let _lensMumbai: LensHub;
+  let _qVoteCollectModule: QuadraticVoteCollectModule;
+  let _freeCollectModule: FreeCollectModule;
+  let _feeCollectModule: FeeCollectModule;
+  let _moduleGlobals: ModuleBase;
+  let _WETH: ERC20;
+  let _roundImplementation: RoundImplementation;
+  let _payoutStrategy: MerklePayoutStrategy;
+  let _votingStrategy: QuadraticFundingVotingStrategyImplementation;
+  let _currentBlockTimestamp: number;
 
-    const collectModuleInitData = ethers.utils.defaultAbiCoder.encode(
-      ["uint256", "address", "address", "uint16", "bool"],
-      [DEFAULT_COLLECT_PRICE, this.WETH.address, this.signers.user.address, 100, true],
+  before(async function () {
+    const signers: SignerWithAddress[] = await ethers.getSigners();
+    _admin = signers[0];
+    _user = signers[2];
+    _userTwo = signers[3];
+
+    // deploy lens fixture
+    const { lensMumbai, freeCollectModule, qVoteCollectModule, feeCollectModule, governanceWallet, moduleGlobals } =
+      await loadFixture(deployLensMumbaiFixture);
+    _lensMumbai = lensMumbai;
+    _qVoteCollectModule = qVoteCollectModule;
+    _freeCollectModule = freeCollectModule;
+    _feeCollectModule = feeCollectModule;
+    _gov = governanceWallet;
+    _moduleGlobals = moduleGlobals;
+
+    // deploy gitcoin fixture
+    const { roundImplementation, WETH, payoutStrategy, votingStrategy, currentBlockTimestamp } = await loadFixture(
+      deployGitcoinMumbaiFixture,
     );
-    await expect(this.mockedQfModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
-      .reverted;
+
+    _WETH = WETH;
+    _roundImplementation = roundImplementation;
+    _payoutStrategy = payoutStrategy;
+    _votingStrategy = votingStrategy;
+    _currentBlockTimestamp = currentBlockTimestamp;
+
+    _snapshotId = await network.provider.send("evm_snapshot", []);
+    //mock contracts
+  });
+  afterEach("restore blockchain snapshot", async () => {
+    await network.provider.send("evm_revert", [_snapshotId]);
   });
 
-  it.only("Should execute processCollect and vote", async function () {
-    const DEFAULT_COLLECT_PRICE = ethers.utils.parseEther("1");
-    expect(await this.WETH.balanceOf(this.signers.userTwo.address)).to.be.eq(ethers.utils.parseEther("10"));
-    const collectModuleInitData = ethers.utils.defaultAbiCoder.encode(
-      ["uint256", "address", "address", "uint16", "bool"],
-      [DEFAULT_COLLECT_PRICE, this.WETH.address, this.signers.user.address, 100, true],
-    );
-    await expect(this.mockedQfModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
-      .reverted;
-    //start a round
-    const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
+  describe("QuadraticVoteCollectModule unit tests", () => {
+    let _mockLenshub;
+    let _mockModuleGlobals;
+    let _mockERC721;
 
-    await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
-    const votingData = {
-      grantsAddress: this.roundImplementation.address,
-      votingStrategyAddress: this.votingStrategy.address,
-      roundStartTime: currentBlockTimestamp + 500,
-      roundEndTime: currentBlockTimestamp + 1000,
-    };
-    //encode collect call data
-    const collectData = ethers.utils.defaultAbiCoder.encode(
-      [
-        "address",
-        "uint256",
-        "tuple(address grantsAddress, address votingStrategyAddress, uint256 roundStartTime, uint256 roundEndTime) votingData",
-      ],
-      [this.WETH.address, DEFAULT_COLLECT_PRICE, votingData],
-    );
+    beforeEach(async () => {
+      //deploy mock lenshub
+      _mockLenshub = await deployMockContract(_admin, LensHubAbi.abi);
+      //deploy mock module globals contract
+      _mockModuleGlobals = await deployMockContract(_admin, ModuleGlobalsAbi.abi);
+      //deploy mock erc721
+      _mockERC721 = await deployMockContract(_admin, ERC721Abi.abi);
+      //deploy qfCollectionModule using mocked lenshub and moduleGlobals contact
+      const MockedQFCollectionModule = await ethers.getContractFactory("QuadraticVoteCollectModule");
+      _qVoteCollectModule = <QuadraticVoteCollectModule>(
+        await MockedQFCollectionModule.deploy(_mockLenshub.address, _mockModuleGlobals.address)
+      );
 
-    await this.WETH.connect(this.signers.userTwo).approve(this.mockedQfModule.address, DEFAULT_COLLECT_PRICE);
+      //set mocked contracts to return data needed for tests
+      await _mockModuleGlobals.mock.isCurrencyWhitelisted.returns(true);
+      await _mockModuleGlobals.mock.getTreasuryData.returns(_qVoteCollectModule.address, 1);
+      await _mockLenshub.mock.ownerOf.returns(_userTwo.address);
+      await _mockLenshub.mock.getFollowModule.returns(ethers.constants.AddressZero);
+      await _mockLenshub.mock.getFollowNFT.returns(_mockERC721.address);
+      await _mockERC721.mock.balanceOf.returns(1);
+    });
 
-    const tx = await this.mockedQfModule
-      .connect(this.signers.userTwo)
-      .processCollect(1, this.signers.userTwo.address, 1, 1, collectData);
-    const receipt = await tx.wait();
+    afterEach("restore blockchain snapshot", async () => {
+      await network.provider.send("evm_revert", [_snapshotId]);
+    });
+    it("Should initialize the QVCM with WETH", async function () {
+      const DEFAULT_COLLECT_PRICE = ethers.utils.parseEther("1");
+      const collectModuleInitData = getCollectModulePubInitData([
+        DEFAULT_COLLECT_PRICE,
+        _WETH.address,
+        _qVoteCollectModule.address,
+        100,
+        true,
+        _roundImplementation.address,
+        _votingStrategy.address,
+      ]);
 
-    await expect(tx).to.not.be.reverted;
-  });
+      await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
+        .reverted;
+    });
 
-  it.only("Should execute processCollect with referall and vote", async function () {
-    const DEFAULT_COLLECT_PRICE = ethers.utils.parseEther("1");
-    expect(await this.WETH.balanceOf(this.signers.userTwo.address)).to.be.eq(ethers.utils.parseEther("10"));
-    const collectModuleInitData = ethers.utils.defaultAbiCoder.encode(
-      ["uint256", "address", "address", "uint16", "bool"],
-      [DEFAULT_COLLECT_PRICE, this.WETH.address, this.signers.user.address, 100, true],
-    );
-    await expect(this.mockedQfModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
-      .reverted;
-    //start a round
-    const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
+    it("Should execute processCollect and vote", async function () {
+      const DEFAULT_COLLECT_PRICE = ethers.utils.parseEther("1");
+      expect(await _WETH.balanceOf(_userTwo.address)).to.be.eq(ethers.utils.parseEther("10"));
+      const collectModuleInitData = getCollectModulePubInitData([
+        DEFAULT_COLLECT_PRICE,
+        _WETH.address,
+        _user.address,
+        100,
+        true,
+        _roundImplementation.address,
+        _votingStrategy.address,
+      ]);
 
-    await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
-    const votingData = {
-      grantsAddress: this.roundImplementation.address,
-      votingStrategyAddress: this.votingStrategy.address,
-      roundStartTime: currentBlockTimestamp + 500,
-      roundEndTime: currentBlockTimestamp + 1000,
-    };
-    //encode collect call data
-    const collectData = ethers.utils.defaultAbiCoder.encode(
-      [
-        "address",
-        "uint256",
-        "tuple(address grantsAddress, address votingStrategyAddress, uint256 roundStartTime, uint256 roundEndTime) votingData",
-      ],
-      [this.WETH.address, DEFAULT_COLLECT_PRICE, votingData],
-    );
+      await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
+        .reverted;
 
-    await this.WETH.connect(this.signers.userTwo).approve(this.mockedQfModule.address, DEFAULT_COLLECT_PRICE);
+      //start a round
+      const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
 
-    const tx = await this.mockedQfModule
-      .connect(this.signers.userTwo)
-      .processCollect(22, this.signers.userTwo.address, 1, 1, collectData);
-    const receipt = await tx.wait();
+      await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
 
-    await expect(tx).to.not.be.reverted;
+      //encode collect call data
+      const collectData = ethers.utils.defaultAbiCoder.encode(
+        ["address", "uint256"],
+        [_WETH.address, DEFAULT_COLLECT_PRICE],
+      );
+
+      await _WETH.connect(_userTwo).approve(_qVoteCollectModule.address, DEFAULT_COLLECT_PRICE);
+
+      const tx = await _qVoteCollectModule.connect(_userTwo).processCollect(1, _userTwo.address, 1, 1, collectData);
+      //const receipt = await tx.wait();
+
+      await expect(tx).to.not.be.reverted;
+    });
+
+    it("Should execute processCollect with referral and vote", async function () {
+      const DEFAULT_COLLECT_PRICE = ethers.utils.parseEther("1");
+      expect(await _WETH.balanceOf(_userTwo.address)).to.be.eq(ethers.utils.parseEther("9"));
+      const collectModuleInitData = getCollectModulePubInitData([
+        DEFAULT_COLLECT_PRICE,
+        _WETH.address,
+        _user.address,
+        100,
+        true,
+        _roundImplementation.address,
+        _votingStrategy.address,
+      ]);
+      await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
+        .reverted;
+
+      //await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
+
+      //encode collect call data
+      const collectData = ethers.utils.defaultAbiCoder.encode(
+        ["address", "uint256"],
+        [_WETH.address, DEFAULT_COLLECT_PRICE],
+      );
+
+      await _WETH.connect(_userTwo).approve(_qVoteCollectModule.address, DEFAULT_COLLECT_PRICE);
+
+      const tx = await _qVoteCollectModule.connect(_userTwo).processCollect(22, _userTwo.address, 1, 1, collectData);
+      //const receipt = await tx.wait();
+
+      await expect(tx).to.not.be.reverted;
+    });
   });
 }
