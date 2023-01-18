@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import hre, { ethers } from "hardhat";
 
 dotenv.config();
@@ -51,6 +51,10 @@ export const encodeRoundParameters = (params: any[]): string => {
  */
 export const encodeMerkleUpdateDistributionParameters = (params: []): string => {
   return ethers.utils.defaultAbiCoder.encode(["bytes32", "tuple(uint256 protocol, string pointer)"], params);
+};
+
+export const encodeMetaPtr = (params: [BigNumberish, string]): string => {
+  return ethers.utils.defaultAbiCoder.encode(["uint256", "string"], params);
 };
 
 /* Lens Utils */

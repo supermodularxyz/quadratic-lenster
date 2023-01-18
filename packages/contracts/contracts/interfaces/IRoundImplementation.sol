@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity 0.8.10;
+pragma solidity >= 0.8.10;
 
 import "./MetaPtr.sol";
 
@@ -9,7 +9,7 @@ interface IRoundImplementation {
 
     /// @notice Update projectsMetaPtr (only by ROUND_OPERATOR_ROLE)
     /// @param newProjectsMetaPtr new ProjectsMetaPtr
-    function updateProjectsMetaPtr(MetaPtr calldata newProjectsMetaPtr) external {}
+    function updateProjectsMetaPtr(MetaPtr calldata newProjectsMetaPtr) external;
 
     /**
      * @notice Invoked by collection module to allow collector to  to cast
@@ -23,5 +23,5 @@ interface IRoundImplementation {
      *
      * @param _encodedVotes encoded votes
      */
-    function vote(bytes[] calldata _encodedVotes) external payable virtual;
+    function vote(bytes[] calldata _encodedVotes) external;
 }

@@ -1,4 +1,10 @@
+import { BigNumberish } from "ethers";
 import { ethers } from "hardhat";
+
+export type MetaPtr = {
+  protocol: BigNumberish;
+  pointer: string;
+};
 
 export const DEFAULT_VOTE = ethers.utils.parseEther("1");
 
