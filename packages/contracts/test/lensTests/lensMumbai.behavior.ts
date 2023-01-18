@@ -1,52 +1,76 @@
-import { CollectNFT__factory } from './../../types/factories/contracts/lens/CollectNFT__factory';
+import { SnapshotRestorer, takeSnapshot } from "@nomicfoundation/hardhat-network-helpers";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { FIRST_PROFILE_ID, MOCK_PROFILE_HANDLE } from "../utils/constants";
-import CollectNFT from '../../importedABI/CollectNFT.json';
-import { getTimestamp } from '../utils/utils';
+import CollectNFT from "../../importedABI/CollectNFT.json";
+import LensHubAbi from "../../importedABI/LensHub.json";
+import { LensHub } from "../../types/contracts/mocks/LensHub";
+import { FIRST_PROFILE_ID, getDefaultSigners, lensMumbaiAddresses } from "../utils/constants";
+import { getTimestamp } from "../utils/utils";
 
-export function shouldBehaveLikeLensHubMumbai(): void {
-  it("should return the correct follow NFT implementation", async function () {
-    expect(await this.lensMumbai.connect(this.signers.admin).getFollowNFTImpl()).to.equal(
-      "0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772",
-    );
+export const shouldBehaveLikeLensHubMumbai = () => {
+  let _snapshot: SnapshotRestorer;
+  let _lensMumbai: LensHub;
+  let _signers: { [key: string]: SignerWithAddress };
+
+  before(async function () {
+    const signers = await getDefaultSigners();
+    _signers = signers;
+
+    _lensMumbai = <LensHub>new ethers.Contract(lensMumbaiAddresses.LensHubProxy, LensHubAbi.abi, signers.admin);
   });
 
-  it("should collect a user post", async function () {
-    /* follow and collect */
-    await expect(this.lensMumbai.connect(this.signers.admin).follow([FIRST_PROFILE_ID], [[]])).to.not.be.reverted;
-    await expect(this.lensMumbai.connect(this.signers.admin).collect(FIRST_PROFILE_ID, 1, [])).to.not.be.reverted;
+  describe("Lens deployment", function () {
+    beforeEach("snapshot blockchain", async () => {
+      _snapshot = await takeSnapshot();
+    });
+
+    afterEach("restore blockchain snapshot", async () => {
+      await _snapshot.restore();
+    });
+
+    it("should return the correct follow NFT implementation", async () => {
+      expect(await _lensMumbai.getFollowNFTImpl()).to.equal("0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772");
+    });
+
+    it("should collect a user post", async () => {
+      const { admin } = _signers;
+      /* follow and collect */
+      // TODO cannot check event: https://github.com/ethereum/solidity/issues/13086
+      await expect(_lensMumbai.connect(admin).follow([FIRST_PROFILE_ID], [[]])).to.not.be.reverted;
+      await expect(_lensMumbai.connect(admin).collect(FIRST_PROFILE_ID, 1, [])).to.not.be.reverted;
+    });
+
+    it("User should follow, then collect, receive a collect NFT with the expected properties", async () => {
+      const { user, admin } = _signers;
+      await _lensMumbai.connect(user).follow([FIRST_PROFILE_ID], [[]]);
+      const tx = await _lensMumbai.connect(user).collect(FIRST_PROFILE_ID, 1, []);
+      const promise = await tx.wait();
+      const event = promise?.events?.filter((e: any) => e.event == "Transfer");
+      const tokenId = event?.[0].args?.tokenId;
+
+      await expect(tx).to.not.be.reverted;
+
+      const timestamp = await getTimestamp();
+
+      const collectNFTAddr = await _lensMumbai.getCollectNFT(FIRST_PROFILE_ID, 1);
+
+      expect(collectNFTAddr).to.not.eq(ethers.constants.AddressZero);
+      const collectNFT = new ethers.Contract(collectNFTAddr, CollectNFT.abi, admin);
+
+      const pointer = await collectNFT.connect(user).getSourcePublicationPointer();
+      const tokenData = await collectNFT.connect(user).tokenDataOf(tokenId);
+
+      expect(await collectNFT.connect(user).tokenOfOwnerByIndex(user.address, 0)).to.eq(tokenId);
+      expect(await collectNFT.name()).to.eq("lensprotocol.test-Collect-1");
+      expect(await collectNFT.connect(user).symbol()).to.eq("lens-Cl-1");
+      expect(pointer[0]).to.eq(FIRST_PROFILE_ID);
+      expect(pointer[1]).to.eq(1);
+      expect(await collectNFT.connect(user).ownerOf(tokenId)).to.eq(user.address);
+      expect(tokenData.owner).to.eq(user.address);
+      expect(tokenData.mintTimestamp).to.eq(timestamp);
+      expect(await collectNFT.connect(user).mintTimestampOf(tokenId)).to.eq(timestamp);
+    });
   });
-
-  it("User should follow, then collect, receive a collect NFT with the expected properties", async function () {
-    await expect(this.lensMumbai.connect(this.signers.user).follow([FIRST_PROFILE_ID], [[]])).to.not.be.reverted;
-    await expect(this.lensMumbai.connect(this.signers.user).collect(FIRST_PROFILE_ID, 1, [])).to.not.be.reverted;
-
-    const timestamp = await getTimestamp();
-
-    const collectNFTAddr = await this.lensMumbai.getCollectNFT(FIRST_PROFILE_ID, 1);
-
-    expect(collectNFTAddr).to.not.eq(ethers.constants.AddressZero);
-    /* get collect nft contract for first profile and first post of that profile on mumbai */
-    const collectNFT = new ethers.Contract(collectNFTAddr, CollectNFT.abi, this.signers.admin );
-
-    const id = await collectNFT.connect(this.signers.user).tokenOfOwnerByIndex(this.signers.user.address, 0);
-    const name = await collectNFT.name();
-    const symbol = await collectNFT.connect(this.signers.user).symbol();
-    const pointer = await collectNFT.connect(this.signers.user).getSourcePublicationPointer();
-    const owner = await collectNFT.connect(this.signers.user).ownerOf(id);
-    const mintTimestamp = await collectNFT.connect(this.signers.user).mintTimestampOf(id);
-    const tokenData = await collectNFT.connect(this.signers.user).tokenDataOf(id);
-
-    expect(id).to.eq(1561);
-    expect(name).to.eq('lensprotocol.test-Collect-1');
-    expect(symbol).to.eq('lens-Cl-1');
-    expect(pointer[0]).to.eq(FIRST_PROFILE_ID);
-    expect(pointer[1]).to.eq(1);
-    expect(owner).to.eq(this.signers.user.address);
-    expect(tokenData.owner).to.eq(this.signers.user.address);
-    expect(tokenData.mintTimestamp).to.eq(timestamp);
-    expect(mintTimestamp).to.eq(timestamp);
-  });
-}
+};

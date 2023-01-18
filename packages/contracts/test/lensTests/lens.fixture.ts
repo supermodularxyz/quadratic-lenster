@@ -1,29 +1,37 @@
-import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-//import CollectNFT from "../../importedABI/CollectNFT.json"
-import { expect } from "chai";
-import { ethers, network } from "hardhat";
+import { deployMockContract } from "@ethereum-waffle/mock-contract";
+import { ethers } from "hardhat";
 
-import FreeCollectModuleABI from "../../importedABI/FreeCollectModule.json";
-import LensHubABI from "../../importedABI/LensHub.json";
-import { lensMumbaiAddresses } from "../utils/constants";
-import { FreeCollectModule } from "./../../types/contracts/lens/modules/FreeCollectModule";
+import ERC721Abi from "../../artifacts/@openzeppelin/contracts/token/ERC721/IERC721.sol/IERC721.json";
+import LensHubAbi from "../../importedABI/LensHub.json";
+import ModuleGlobalsAbi from "../../importedABI/ModuleGlobals.json";
+import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
+import { getDefaultSigners } from "../utils/constants";
 
 export async function deployLensMumbaiFixture() {
-  const signers: SignerWithAddress[] = await ethers.getSigners();
-  const admin: SignerWithAddress = signers[0];
+  const { admin, user2 } = await getDefaultSigners();
 
-  /* Fork mumbai */
-  await network.provider.request({
-    method: "hardhat_reset",
-  });
+  //Mocks
+  //deploy mock lenshub
+  const _mockLenshub = await deployMockContract(admin, LensHubAbi.abi);
+  //deploy mock module globals contract
+  const _mockModuleGlobals = await deployMockContract(admin, ModuleGlobalsAbi.abi);
+  //deploy mock erc721
+  const _mockERC721 = await deployMockContract(admin, ERC721Abi.abi);
 
-  const lensMumbai = new ethers.Contract(lensMumbaiAddresses.LensHubProxy, LensHubABI.abi, admin);
-  const tx = await lensMumbai.getFollowNFTImpl();
-  expect(tx).to.equal("0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772");
-  /* get free collect module */
-  const freeCollectModule: FreeCollectModule = <FreeCollectModule>(
-    new ethers.Contract(lensMumbaiAddresses.freeCollectModule, FreeCollectModuleABI.abi, admin)
+  //deploy QF Collection Module.
+  const QFCollectModule = await ethers.getContractFactory("QuadraticVoteCollectModule");
+  const qVoteCollectModule = <QuadraticVoteCollectModule>(
+    await QFCollectModule.connect(admin).deploy(_mockLenshub.address, _mockModuleGlobals.address)
   );
+  await qVoteCollectModule.deployed();
 
-  return { lensMumbai, freeCollectModule };
+  //set mocked contracts to return data needed for tests
+  await _mockModuleGlobals.mock.isCurrencyWhitelisted.returns(true);
+  await _mockModuleGlobals.mock.getTreasuryData.returns(qVoteCollectModule.address, 1);
+  await _mockLenshub.mock.ownerOf.returns(user2.address);
+  await _mockLenshub.mock.getFollowModule.returns(ethers.constants.AddressZero);
+  await _mockLenshub.mock.getFollowNFT.returns(_mockERC721.address);
+  await _mockERC721.mock.balanceOf.returns(1);
+
+  return { qVoteCollectModule };
 }

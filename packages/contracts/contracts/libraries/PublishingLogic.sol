@@ -2,14 +2,14 @@
 
 pragma solidity 0.8.10;
 
-import {Helpers} from './Helpers.sol';
-import {DataTypes} from './DataTypes.sol';
-import {Errors} from './Errors.sol';
-import {Events} from './Events.sol';
-import {Constants} from './Constants.sol';
-import {IFollowModule} from '../interfaces/IFollowModule.sol';
-import {ICollectModule} from '../interfaces/ICollectModule.sol';
-import {IReferenceModule} from '../interfaces/IReferenceModule.sol';
+import { Helpers } from "./Helpers.sol";
+import { DataTypes } from "./DataTypes.sol";
+import { Errors } from "./Errors.sol";
+import { Events } from "./Events.sol";
+import { Constants } from "./Constants.sol";
+import { IFollowModule } from "../interfaces/IFollowModule.sol";
+import { ICollectModule } from "../interfaces/ICollectModule.sol";
+import { IReferenceModule } from "../interfaces/IReferenceModule.sol";
 
 /**
  * @title PublishingLogic
@@ -99,12 +99,7 @@ library PublishingLogic {
                 followModuleInitData,
                 _followModuleWhitelisted
             );
-        emit Events.FollowModuleSet(
-            profileId,
-            followModule,
-            followModuleReturnData,
-            block.timestamp
-        );
+        emit Events.FollowModuleSet(profileId, followModule, followModuleReturnData, block.timestamp);
     }
 
     /**
@@ -131,8 +126,7 @@ library PublishingLogic {
         address referenceModule,
         bytes memory referenceModuleInitData,
         uint256 pubId,
-        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct))
-            storage _pubByIdByProfile,
+        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct)) storage _pubByIdByProfile,
         mapping(address => bool) storage _collectModuleWhitelisted,
         mapping(address => bool) storage _referenceModuleWhitelisted
     ) external {
@@ -187,19 +181,16 @@ library PublishingLogic {
         DataTypes.CommentData memory vars,
         uint256 pubId,
         mapping(uint256 => DataTypes.ProfileStruct) storage _profileById,
-        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct))
-            storage _pubByIdByProfile,
+        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct)) storage _pubByIdByProfile,
         mapping(address => bool) storage _collectModuleWhitelisted,
         mapping(address => bool) storage _referenceModuleWhitelisted
     ) external {
         // Validate existence of the pointed publication
         uint256 pubCount = _profileById[vars.profileIdPointed].pubCount;
-        if (pubCount < vars.pubIdPointed || vars.pubIdPointed == 0)
-            revert Errors.PublicationDoesNotExist();
+        if (pubCount < vars.pubIdPointed || vars.pubIdPointed == 0) revert Errors.PublicationDoesNotExist();
 
         // Ensure the pointed publication is not the comment being created
-        if (vars.profileId == vars.profileIdPointed && vars.pubIdPointed == pubId)
-            revert Errors.CannotCommentOnSelf();
+        if (vars.profileId == vars.profileIdPointed && vars.pubIdPointed == pubId) revert Errors.CannotCommentOnSelf();
 
         _pubByIdByProfile[vars.profileId][pubId].contentURI = vars.contentURI;
         _pubByIdByProfile[vars.profileId][pubId].profileIdPointed = vars.profileIdPointed;
@@ -226,8 +217,7 @@ library PublishingLogic {
         );
 
         // Reference module validation
-        address refModule = _pubByIdByProfile[vars.profileIdPointed][vars.pubIdPointed]
-            .referenceModule;
+        address refModule = _pubByIdByProfile[vars.profileIdPointed][vars.pubIdPointed].referenceModule;
         if (refModule != address(0)) {
             IReferenceModule(refModule).processComment(
                 vars.profileId,
@@ -252,8 +242,7 @@ library PublishingLogic {
     function createMirror(
         DataTypes.MirrorData memory vars,
         uint256 pubId,
-        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct))
-            storage _pubByIdByProfile,
+        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct)) storage _pubByIdByProfile,
         mapping(address => bool) storage _referenceModuleWhitelisted
     ) external {
         (uint256 rootProfileIdPointed, uint256 rootPubIdPointed, ) = Helpers.getPointedIfMirror(
@@ -276,8 +265,7 @@ library PublishingLogic {
         );
 
         // Reference module validation
-        address refModule = _pubByIdByProfile[rootProfileIdPointed][rootPubIdPointed]
-            .referenceModule;
+        address refModule = _pubByIdByProfile[rootProfileIdPointed][rootPubIdPointed].referenceModule;
         if (refModule != address(0)) {
             IReferenceModule(refModule).processMirror(
                 vars.profileId,
@@ -304,18 +292,13 @@ library PublishingLogic {
         uint256 pubId,
         address collectModule,
         bytes memory collectModuleInitData,
-        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct))
-            storage _pubByIdByProfile,
+        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct)) storage _pubByIdByProfile,
         mapping(address => bool) storage _collectModuleWhitelisted
     ) private returns (bytes memory) {
         if (!_collectModuleWhitelisted[collectModule]) revert Errors.CollectModuleNotWhitelisted();
         _pubByIdByProfile[profileId][pubId].collectModule = collectModule;
         return
-            ICollectModule(collectModule).initializePublicationCollectModule(
-                profileId,
-                pubId,
-                collectModuleInitData
-            );
+            ICollectModule(collectModule).initializePublicationCollectModule(profileId, pubId, collectModuleInitData);
     }
 
     function _initPubReferenceModule(
@@ -323,20 +306,13 @@ library PublishingLogic {
         uint256 pubId,
         address referenceModule,
         bytes memory referenceModuleInitData,
-        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct))
-            storage _pubByIdByProfile,
+        mapping(uint256 => mapping(uint256 => DataTypes.PublicationStruct)) storage _pubByIdByProfile,
         mapping(address => bool) storage _referenceModuleWhitelisted
     ) private returns (bytes memory) {
         if (referenceModule == address(0)) return new bytes(0);
-        if (!_referenceModuleWhitelisted[referenceModule])
-            revert Errors.ReferenceModuleNotWhitelisted();
+        if (!_referenceModuleWhitelisted[referenceModule]) revert Errors.ReferenceModuleNotWhitelisted();
         _pubByIdByProfile[profileId][pubId].referenceModule = referenceModule;
-        return
-            IReferenceModule(referenceModule).initializeReferenceModule(
-                profileId,
-                pubId,
-                referenceModuleInitData
-            );
+        return IReferenceModule(referenceModule).initializeReferenceModule(profileId, pubId, referenceModuleInitData);
     }
 
     function _initFollowModule(
@@ -396,12 +372,10 @@ library PublishingLogic {
         uint256 byteHandleLength = byteHandle.length;
         for (uint256 i = 0; i < byteHandleLength; ) {
             if (
-                (byteHandle[i] < '0' ||
-                    byteHandle[i] > 'z' ||
-                    (byteHandle[i] > '9' && byteHandle[i] < 'a')) &&
-                byteHandle[i] != '.' &&
-                byteHandle[i] != '-' &&
-                byteHandle[i] != '_'
+                (byteHandle[i] < "0" || byteHandle[i] > "z" || (byteHandle[i] > "9" && byteHandle[i] < "a")) &&
+                byteHandle[i] != "." &&
+                byteHandle[i] != "-" &&
+                byteHandle[i] != "_"
             ) revert Errors.HandleContainsInvalidCharacters();
             unchecked {
                 ++i;

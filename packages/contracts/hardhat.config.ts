@@ -1,4 +1,6 @@
+import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomicfoundation/hardhat-toolbox";
+import "@nomiclabs/hardhat-ethers";
 import "@openzeppelin/hardhat-upgrades";
 import { config as dotenvConfig } from "dotenv";
 import type { HardhatUserConfig } from "hardhat/config";
@@ -18,6 +20,7 @@ if (!mnemonic) {
 }
 
 const infuraApiKey: string | undefined = process.env.INFURA_API_KEY;
+
 if (!infuraApiKey) {
   throw new Error("Please set your INFURA_API_KEY in a .env file");
 }
@@ -63,7 +66,9 @@ const config: HardhatUserConfig = {
         mnemonic,
       },
       chainId: chainIds.hardhat,
-      forking: { url: "https://rpc.ankr.com/polygon_mumbai" },
+      forking: {
+        url: "https://rpc.ankr.com/polygon_mumbai",
+      },
     },
     "polygon-mainnet": { ...getChainConfig("polygon-mainnet"), url: "https://rpc.ankr.com/polygon" },
     "polygon-mumbai": { ...getChainConfig("polygon-mumbai"), url: "https://rpc.ankr.com/polygon_mumbai" },

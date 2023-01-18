@@ -1,0 +1,17 @@
+{
+  "name": "data",
+  "version": "0.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "eslint-config-weblint": "*",
+    "tsconfig": "*"
+  }
+}
