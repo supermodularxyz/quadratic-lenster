@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-abstract contract IRoundImplementation {
-    function roundStartTime() public view virtual returns (uint256);
+import "./MetaPtr.sol";
 
-    function roundEndTime() public view virtual returns (uint256);
+interface IRoundImplementation {
+    /// @notice Emitted when a team metadata pointer is updated
+    event MetaPtrUpdated(MetaPtr oldMetaPtr, MetaPtr newMetaPtr);
+
+    /// @notice Update projectsMetaPtr (only by ROUND_OPERATOR_ROLE)
+    /// @param newProjectsMetaPtr new ProjectsMetaPtr
+    function updateProjectsMetaPtr(MetaPtr calldata newProjectsMetaPtr) external {}
 
     /**
      * @notice Invoked by collection module to allow collector to  to cast
