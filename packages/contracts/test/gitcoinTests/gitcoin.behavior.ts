@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { Contract } from "ethers";
 import { ethers } from "hardhat";
 
-import { RoundImplementation } from "../../types/contracts/gitcoin/round/RoundImplementation";
+import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
 import { getDefaultSigners } from "../utils/constants";
 import { deployGitcoinMumbaiFixture } from "./gitcoin.fixture";
 

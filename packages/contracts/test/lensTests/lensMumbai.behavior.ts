@@ -1,16 +1,16 @@
-import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { SnapshotRestorer, takeSnapshot } from "@nomicfoundation/hardhat-network-helpers";
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { expect } from "chai";
-import { ethers, network } from "hardhat";
+import { ethers } from "hardhat";
 
 import CollectNFT from "../../importedABI/CollectNFT.json";
-import { LensHub } from "../../types/contracts/lens/LensHub";
-import { FIRST_PROFILE_ID, getDefaultSigners } from "../utils/constants";
+import LensHubAbi from "../../importedABI/LensHub.json";
+import { LensHub } from "../../types/contracts/mocks/LensHub";
+import { FIRST_PROFILE_ID, getDefaultSigners, lensMumbaiAddresses } from "../utils/constants";
 import { getTimestamp } from "../utils/utils";
-import { deployLensMumbaiFixture } from "./lens.fixture";
 
 export const shouldBehaveLikeLensHubMumbai = () => {
-  let _snapshotId: number;
+  let _snapshot: SnapshotRestorer;
   let _lensMumbai: LensHub;
   let _signers: { [key: string]: SignerWithAddress };
 
@@ -18,23 +18,20 @@ export const shouldBehaveLikeLensHubMumbai = () => {
     const signers = await getDefaultSigners();
     _signers = signers;
 
-    const { lensMumbai } = await loadFixture(deployLensMumbaiFixture);
-    _lensMumbai = lensMumbai;
+    _lensMumbai = <LensHub>new ethers.Contract(lensMumbaiAddresses.LensHubProxy, LensHubAbi.abi, signers.admin);
   });
 
   describe("Lens deployment", function () {
     beforeEach("snapshot blockchain", async () => {
-      _snapshotId = await network.provider.send("evm_snapshot", []);
+      _snapshot = await takeSnapshot();
     });
 
     afterEach("restore blockchain snapshot", async () => {
-      await network.provider.send("evm_revert", [_snapshotId]);
+      await _snapshot.restore();
     });
 
     it("should return the correct follow NFT implementation", async () => {
-      expect(await _lensMumbai.getFollowNFTImpl()).to.equal(
-        "0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772",
-      );
+      expect(await _lensMumbai.getFollowNFTImpl()).to.equal("0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772");
     });
 
     it("should collect a user post", async () => {

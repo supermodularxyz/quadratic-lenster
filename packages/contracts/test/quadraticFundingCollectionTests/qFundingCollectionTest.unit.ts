@@ -1,16 +1,16 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { ethers, network } from "hardhat";
+import { BigNumber } from "ethers";
+import { ethers } from "hardhat";
 
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
-import { deployLensMumbaiFixture } from "../lensTests/lens.fixture";
 import { DEFAULT_VOTE, getDefaultSigners } from "../utils/constants";
 import { getCollectModulePubInitData } from "../utils/utils";
-import { ERC20 } from "./../../types/@openzeppelin/contracts/token/ERC20/ERC20";
-import { RoundImplementation } from "./../../types/contracts/gitcoin/round/RoundImplementation";
-import { QuadraticFundingVotingStrategyImplementation } from "./../../types/contracts/gitcoin/votingStrategy/QuadraticFundingStrategy/QuadraticFundingVotingStrategyImplementation";
+import { ERC20 } from "./../../types/contracts/mocks/ERC20";
+import { QuadraticFundingVotingStrategyImplementation } from "./../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation";
+import { RoundImplementation } from "./../../types/contracts/mocks/RoundImplementation";
 
 export const shouldBehaveLikeQuadraticVoteModule = () => {
   let _qVoteCollectModule: QuadraticVoteCollectModule;
@@ -18,41 +18,34 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
   let _roundImplementation: RoundImplementation;
   let _votingStrategy: QuadraticFundingVotingStrategyImplementation;
   let _signers: { [key: string]: SignerWithAddress };
-
+  let _initData: (string | number | BigNumber)[];
+  let collectModuleInitData: string;
   before("Setup QFVM", async () => {
     const signers = await getDefaultSigners();
     _signers = signers;
 
-    // deploy lens fixture
-    const { qVoteCollectModule } = await loadFixture(deployLensMumbaiFixture);
-    _qVoteCollectModule = qVoteCollectModule;
-
     // deploy gitcoin fixture
-    const { roundImplementation, WETH, votingStrategy } = await loadFixture(deployGitcoinMumbaiFixture);
+    const { qVoteCollectModule, roundImplementation, WETH, votingStrategy } = await loadFixture(
+      deployGitcoinMumbaiFixture,
+    );
 
+    _qVoteCollectModule = qVoteCollectModule;
     _WETH = WETH;
     _roundImplementation = roundImplementation;
     _votingStrategy = votingStrategy;
+    _initData = [_WETH.address, 100, _roundImplementation.address, _votingStrategy.address];
+
+    collectModuleInitData = getCollectModulePubInitData(_initData);
   });
 
   describe("QuadraticVoteCollectModule unit tests", () => {
     it("Should initialize the QVCM with WETH", async () => {
-      const initData = [_WETH.address, 100, _roundImplementation.address, _votingStrategy.address];
-      console.log("INIT DATA: ", initData);
-
-      const collectModuleInitData = getCollectModulePubInitData(initData);
-
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
         .reverted;
     });
 
     it("Should execute processCollect and vote", async () => {
       const { user2 } = _signers;
-
-      //TODO Refactor to default Init data
-      const initData = [_WETH.address, 100, _roundImplementation.address, _votingStrategy.address];
-
-      const collectModuleInitData = getCollectModulePubInitData(initData);
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
         .reverted;
@@ -67,20 +60,15 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
 
       await expect(_WETH.connect(user2).approve(_qVoteCollectModule.address, DEFAULT_VOTE)).to.emit(_WETH, "Approval");
 
-      // TODO when fixed expect "Voted event"
-      await expect(_qVoteCollectModule.connect(user2).processCollect(1, user2.address, 1, 1, collectData)).to.be
-        .reverted;
+      const moduleWitUser = _qVoteCollectModule.connect(user2);
+
+      // TODO when fixed expect correct "Voted event parameters"
+      await expect(moduleWitUser.processCollect(1, user2.address, 1, 1, collectData)).to.be.reverted;
     });
 
     it("Should execute processCollect with referral and vote", async () => {
       const { user2 } = _signers;
 
-      const collectModuleInitData = getCollectModulePubInitData([
-        _WETH.address,
-        100,
-        _roundImplementation.address,
-        _votingStrategy.address,
-      ]);
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
         .reverted;
 
@@ -93,7 +81,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
 
       await _WETH.connect(user2).approve(_qVoteCollectModule.address, DEFAULT_VOTE);
 
-      // TODO when fixed expect "Voted event"
+      // TODO when fixed expect "Voted event parameters"
       await expect(_qVoteCollectModule.connect(user2).processCollect(22, user2.address, 1, 1, collectData)).to.be
         .reverted;
     });
