@@ -1,51 +1,43 @@
-import { LensHub } from './../../types/contracts/lens/LensHub';
+import { deployMockContract } from "@ethereum-waffle/mock-contract";
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-//import CollectNFT from "../../importedABI/CollectNFT.json"
-import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import FreeCollectModuleABI from "../../importedABI/FreeCollectModule.json";
-import FeeCollectModuleABI from "../../importedABI/FeeCollectModule.json";
-import LensHubABI from "../../importedABI/LensHub.json";
-import ModuleGlobals from "../../importedABI/ModuleGlobals.json";
-import { lensMumbaiAddresses } from "../utils/constants";
-import { FreeCollectModule } from "./../../types/contracts/lens/modules/FreeCollectModule";
-import { ModuleBase } from '../../types/contracts/lens/ModuleBase';
-import { QuadraticVoteCollectModule } from '../../types/contracts/QuadraticVoteCollectModule';
+import ERC721Abi from "../../artifacts/@openzeppelin/contracts/token/ERC721/IERC721.sol/IERC721.json";
+import LensHubAbi from "../../importedABI/LensHub.json";
+import ModuleGlobalsAbi from "../../importedABI/ModuleGlobals.json";
+import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
+import { LensHub } from "../../types/contracts/lens/LensHub";
+import { getDefaultSigners, lensMumbaiAddresses } from "../utils/constants";
 
 export async function deployLensMumbaiFixture() {
-  const signers: SignerWithAddress[] = await ethers.getSigners();
-  const admin: SignerWithAddress = signers[0];
+  //TODO PRIO Remove dependency from snapshot, unstable testing...
+  const { admin, user2 } = await getDefaultSigners();
 
-  // /* Reset mumbai Fork */
-  // await network.provider.request({
-  //   method: "hardhat_reset",
-  //   params: [{
-  //     forking: { jsonRpcUrl: "https://rpc.ankr.com/polygon_mumbai" },
-  //   }]
-  // });
+  const lensMumbai = <LensHub>new ethers.Contract(lensMumbaiAddresses.LensHubProxy, LensHubAbi.abi, admin);
+  //impersonate mumbai governance EOA
+  const governanceWallet = <SignerWithAddress>await ethers.getImpersonatedSigner(lensMumbaiAddresses.governanceWallet);
 
-  const lensMumbai = <LensHub>new ethers.Contract(lensMumbaiAddresses.LensHubProxy, LensHubABI.abi, admin);
-  const tx = await lensMumbai.getFollowNFTImpl();
-  expect(tx).to.equal("0x1A2BB1bc90AA5716f5Eb85FD1823338BD1b6f772");
-
-  const moduleGlobals = <ModuleBase>new ethers.Contract(lensMumbaiAddresses.moduleGlobals, ModuleGlobals.abi, admin);
-
-  /* get free collect module */
-  const freeCollectModule: FreeCollectModule = <FreeCollectModule>(
-    new ethers.Contract(lensMumbaiAddresses.freeCollectModule, FreeCollectModuleABI.abi, admin)
-  );
-  
-  const feeCollectModule: any = (
-    new ethers.Contract(lensMumbaiAddresses.feeCollectModule, FeeCollectModuleABI.abi, admin)
-  );
-    //impersonate mumbai governance EOA
-    const governanceWallet = <SignerWithAddress>await ethers.getImpersonatedSigner(lensMumbaiAddresses.governanceWallet);
+  //Mocks
+  //deploy mock lenshub
+  const _mockLenshub = await deployMockContract(admin, LensHubAbi.abi);
+  //deploy mock module globals contract
+  const _mockModuleGlobals = await deployMockContract(admin, ModuleGlobalsAbi.abi);
+  //deploy mock erc721
+  const _mockERC721 = await deployMockContract(admin, ERC721Abi.abi);
 
   //deploy QF Collection Module.
   const QFCollectModule = await ethers.getContractFactory("QuadraticVoteCollectModule");
-  const qVoteCollectModule = <QuadraticVoteCollectModule> await QFCollectModule.connect(governanceWallet).deploy(lensMumbaiAddresses.feeFollowModule, lensMumbaiAddresses.lensHubImplementation);
+  const qVoteCollectModule = <QuadraticVoteCollectModule>(
+    await QFCollectModule.connect(governanceWallet).deploy(_mockLenshub.address, _mockModuleGlobals.address)
+  );
 
+  //set mocked contracts to return data needed for tests
+  await _mockModuleGlobals.mock.isCurrencyWhitelisted.returns(true);
+  await _mockModuleGlobals.mock.getTreasuryData.returns(qVoteCollectModule.address, 1);
+  await _mockLenshub.mock.ownerOf.returns(user2.address);
+  await _mockLenshub.mock.getFollowModule.returns(ethers.constants.AddressZero);
+  await _mockLenshub.mock.getFollowNFT.returns(_mockERC721.address);
+  await _mockERC721.mock.balanceOf.returns(1);
 
-  return { lensMumbai, freeCollectModule, qVoteCollectModule, feeCollectModule, governanceWallet, moduleGlobals };
+  return { qVoteCollectModule, governanceWallet, lensMumbai };
 }

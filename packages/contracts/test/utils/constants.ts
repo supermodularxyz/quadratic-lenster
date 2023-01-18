@@ -1,5 +1,16 @@
 import { ethers } from "hardhat";
 
+export const DEFAULT_VOTE = ethers.utils.parseEther("1");
+
+export const getDefaultSigners = async () => {
+  const defaultSigners = await ethers.getSigners();
+  return {
+    admin: defaultSigners[0],
+    user: defaultSigners[1],
+    user2: defaultSigners[2],
+  };
+};
+
 /*objects that contain all the deployed contract addresses for lens */
 export const lensMumbaiAddresses = {
   /* use lenshubproxy for interactions */

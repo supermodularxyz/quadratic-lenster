@@ -29,15 +29,17 @@ export function shouldBehaveLikeQFCollectionModule() {
 
     await expect(this.roundImplementation.vote(encodedVotes)).to.not.be.reverted;
     // whitelist collect module
-    await expect(this.lensMumbai.connect(this.signers.gov).whitelistCollectModule(this.qfCollectModule.address, true)).to.not.be.reverted;
+    await expect(this.lensMumbai.connect(this.signers.gov).whitelistCollectModule(this.qfCollectModule.address, true))
+      .to.not.be.reverted;
 
-    await expect(this.moduleGlobals.connect(this.signers.gov).whitelistCurrency(this.WETH.address, true)).to.not.be.reverted;
+    await expect(this.moduleGlobals.connect(this.signers.gov).whitelistCurrency(this.WETH.address, true)).to.not.be
+      .reverted;
 
     const tx = await this.lensMumbai.connect(this.signers.gov).whitelistProfileCreator(this.signers.user.address, true);
     await tx.wait();
-    
+
     expect(await this.lensMumbai.isProfileCreatorWhitelisted(this.signers.user.address)).to.be.eq(true);
-    
+
     //create profile variables
     const profileVariables = {
       to: this.signers.user.address,
@@ -67,12 +69,14 @@ export function shouldBehaveLikeQFCollectionModule() {
     const wethAmount = ethers.utils.parseEther("10");
 
     //approve module to spend weth
-    await expect(this.WETH.connect(this.signers.user).approve(this.qfCollectModule.address, wethAmount)).to.not.be.reverted;
+    await expect(this.WETH.connect(this.signers.user).approve(this.qfCollectModule.address, wethAmount)).to.not.be
+      .reverted;
     await expect(this.WETH.connect(this.signers.user).approve(this.lensMumbai.address, wethAmount)).to.not.be.reverted;
-    await expect(this.WETH.connect(this.signers.user).approve(this.moduleGlobals.address, wethAmount)).to.not.be.reverted;
-    
+    await expect(this.WETH.connect(this.signers.user).approve(this.moduleGlobals.address, wethAmount)).to.not.be
+      .reverted;
+
     try {
-     const tx = await this.lensMumbai.connect(this.signers.user).post({
+      const tx = await this.lensMumbai.connect(this.signers.user).post({
         profileId: profileId,
         contentURI: MOCK_URI,
         collectModule: this.qfCollectModule.address,

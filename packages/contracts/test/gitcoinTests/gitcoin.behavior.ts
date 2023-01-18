@@ -5,6 +5,7 @@ import { Contract } from "ethers";
 import { ethers } from "hardhat";
 
 import { RoundImplementation } from "../../types/contracts/gitcoin/round/RoundImplementation";
+import { getDefaultSigners } from "../utils/constants";
 import { deployGitcoinMumbaiFixture } from "./gitcoin.fixture";
 
 export const shouldBehaveLikeGrantsRound = () => {
@@ -12,37 +13,40 @@ export const shouldBehaveLikeGrantsRound = () => {
   let _roundImplementation: RoundImplementation;
   let _payoutStrategy: Contract;
   let _votingStrategy: Contract;
-  let _admin: SignerWithAddress;
-  let _user: SignerWithAddress;
   let _currentBlockTimestamp: number;
+  let _signers: { [key: string]: SignerWithAddress };
 
   beforeEach(async () => {
-    const { roundImplementation, WETH, payoutStrategy, votingStrategy, admin, user, currentBlockTimestamp } =
-      await loadFixture(deployGitcoinMumbaiFixture);
+    const signers = await getDefaultSigners();
+    _signers = signers;
+
+    const { roundImplementation, WETH, payoutStrategy, votingStrategy, currentBlockTimestamp } = await loadFixture(
+      deployGitcoinMumbaiFixture,
+    );
     _WETH = WETH;
     _roundImplementation = roundImplementation;
     _payoutStrategy = payoutStrategy;
     _votingStrategy = votingStrategy;
-    _admin = admin;
-    _user = user;
     _currentBlockTimestamp = currentBlockTimestamp;
   });
 
   describe("Round interactions", () => {
     it("Should allow voting in an active round", async () => {
-      expect(ethers.utils.formatEther(await _WETH.balanceOf(_user.address))).to.equal("10.0");
-      await _WETH.approve(_votingStrategy.address, 100);
+      const { user } = _signers;
+
+      expect(ethers.utils.formatEther(await _WETH.balanceOf(user.address))).to.equal("10.0");
+      await _WETH.connect(user).approve(_votingStrategy.address, 100);
 
       const encodedVotes = [];
       // Prepare Votes
-      const votes = [[_WETH.address, 5, _user.address]];
+      const votes = [[_WETH.address, 5, user.address]];
 
       for (let i = 0; i < votes.length; i++) {
         encodedVotes.push(ethers.utils.defaultAbiCoder.encode(["address", "uint256", "address"], votes[i]));
       }
 
       await ethers.provider.send("evm_mine", [_currentBlockTimestamp + 750]); /* wait for round to start */
-      await expect(_roundImplementation.vote(encodedVotes)).to.emit(_votingStrategy, "Voted");
+      await expect(_roundImplementation.connect(user).vote(encodedVotes)).to.emit(_votingStrategy, "Voted");
     });
   });
 };

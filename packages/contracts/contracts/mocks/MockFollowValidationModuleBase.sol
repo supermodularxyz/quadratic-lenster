@@ -2,12 +2,12 @@
 
 pragma solidity 0.8.10;
 
-import {IFollowModule} from '../interfaces/IFollowModule.sol';
-import {ILensHub} from '../interfaces/ILensHub.sol';
-import {Errors} from '../libraries/Errors.sol';
-import {Events} from '../libraries/Events.sol';
-import {ModuleBase} from '../ModuleBase.sol';
-import {IERC721} from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
+import { IFollowModule } from "../interfaces/IFollowModule.sol";
+import { ILensHub } from "../interfaces/ILensHub.sol";
+import { Errors } from "../libraries/Errors.sol";
+import { Events } from "../libraries/Events.sol";
+import { ModuleBase } from "../ModuleBase.sol";
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 /**
  * @title FollowValidationModuleBase
@@ -22,6 +22,7 @@ import {IERC721} from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
  */
 abstract contract FollowValidationModuleBase is ModuleBase {
     event validFollow(uint256 profileId, address user);
+
     /**
      * @notice Validates whether a given user is following a given profile.
      *
@@ -33,5 +34,4 @@ abstract contract FollowValidationModuleBase is ModuleBase {
     function _checkFollowValidity(uint256 profileId, address user) internal {
         emit validFollow(profileId, user);
     }
-    
 }

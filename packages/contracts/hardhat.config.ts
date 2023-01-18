@@ -1,10 +1,10 @@
+import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomicfoundation/hardhat-toolbox";
-import "@openzeppelin/hardhat-upgrades";
 import "@nomiclabs/hardhat-ethers";
+import "@openzeppelin/hardhat-upgrades";
 import { config as dotenvConfig } from "dotenv";
 import type { HardhatUserConfig } from "hardhat/config";
 import type { NetworkUserConfig } from "hardhat/types";
-import "@nomicfoundation/hardhat-chai-matchers";
 import { resolve } from "path";
 
 import "./tasks/accounts";
@@ -45,9 +45,6 @@ const getChainConfig = (chain: keyof typeof chainIds): NetworkUserConfig => {
   };
 };
 
-/* change this variable to true if you want to use infura in testing. */
-const useInfuraForTests = process.env.USE_INFURA_FOR_TESTS;
-
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   etherscan: {
@@ -69,7 +66,9 @@ const config: HardhatUserConfig = {
         mnemonic,
       },
       chainId: chainIds.hardhat,
-      forking: { url: `${useInfuraForTests?`https://polygon-mumbai.infura.io/v3/${infuraApiKey}`:"https://rpc.ankr.com/polygon_mumbai"}` },
+      forking: {
+        url: "https://rpc.ankr.com/polygon_mumbai",
+      },
     },
     "polygon-mainnet": { ...getChainConfig("polygon-mainnet"), url: "https://rpc.ankr.com/polygon" },
     "polygon-mumbai": { ...getChainConfig("polygon-mumbai"), url: "https://rpc.ankr.com/polygon_mumbai" },
@@ -88,9 +87,6 @@ const config: HardhatUserConfig = {
       {
         version: "0.8.17",
       },
-      // {
-      //   version: ">=0.8.10",
-      // },
     ],
     settings: {
       metadata: {

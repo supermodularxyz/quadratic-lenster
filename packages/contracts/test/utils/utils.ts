@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import { BigNumber } from "ethers";
 import hre, { ethers } from "hardhat";
 
 dotenv.config();
@@ -10,7 +11,7 @@ dotenv.config();
  * @param params
  * @returns {string}
  */
-export const encodeProgramParameters = (params: any[]): string => {
+export const encodeProgramParameters = (params: []): string => {
   return ethers.utils.defaultAbiCoder.encode(
     ["tuple(uint256 protocol, string pointer)", "address[]", "address[]"],
     params,
@@ -48,7 +49,7 @@ export const encodeRoundParameters = (params: any[]): string => {
  * @param params
  * @returns {string}
  */
-export const encodeMerkleUpdateDistributionParameters = (params: any[]): string => {
+export const encodeMerkleUpdateDistributionParameters = (params: []): string => {
   return ethers.utils.defaultAbiCoder.encode(["bytes32", "tuple(uint256 protocol, string pointer)"], params);
 };
 
@@ -62,18 +63,15 @@ export function getAbbreviation(handle: string) {
   return sliced;
 }
 
-export async function getTimestamp(): Promise<any> {
+export async function getTimestamp(): Promise<number> {
   const blockNumber = await hre.ethers.provider.send("eth_blockNumber", []);
   const block = await hre.ethers.provider.send("eth_getBlockByNumber", [blockNumber, false]);
   return block.timestamp;
 }
 
-export function getCollectModulePubInitData(
-  initModuleData: any[]
-  ) {
-
+export function getCollectModulePubInitData(initModuleData: (string | number | BigNumber)[]) {
   const collectModuleInitData = ethers.utils.defaultAbiCoder.encode(
-    ["uint256", "address", "address", "uint16", "bool", "address", "address"],
+    ["address", "uint16", "address", "address"],
     initModuleData,
   );
 
