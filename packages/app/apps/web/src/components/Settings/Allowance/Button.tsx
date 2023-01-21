@@ -38,7 +38,7 @@ const AllowanceButton: FC<Props> = ({ title = t`Allow`, module, allowed, setAllo
   const { isLoading: waitLoading } = useWaitForTransaction({
     hash: txData?.hash,
     onSuccess: () => {
-      toast.success(`Module ${allowed ? 'disabled' : 'enabled'} successfully!`);
+      toast.success(t`Module ${allowed ? 'disabled' : 'enabled'} successfully!`);
       setShowWarningModal(false);
       setAllowed(!allowed);
       Analytics.track(`module_${allowed ? 'disabled' : 'enabled'}`);
@@ -83,11 +83,7 @@ const AllowanceButton: FC<Props> = ({ title = t`Allow`, module, allowed, setAllo
     </Button>
   ) : (
     <>
-      <Button
-        variant="success"
-        icon={<PlusIcon className="w-4 h-4" />}
-        onClick={() => setShowWarningModal(!showWarningModal)}
-      >
+      <Button icon={<PlusIcon className="w-4 h-4" />} onClick={() => setShowWarningModal(!showWarningModal)}>
         {title}
       </Button>
       <Modal
@@ -109,10 +105,9 @@ const AllowanceButton: FC<Props> = ({ title = t`Allow`, module, allowed, setAllo
             }
           />
           <Button
-            variant="success"
             icon={
               queryLoading || transactionLoading || waitLoading ? (
-                <Spinner variant="success" size="xs" />
+                <Spinner size="xs" />
               ) : (
                 <PlusIcon className="w-4 h-4" />
               )

@@ -1,10 +1,9 @@
-import type { LensterPublication } from '@generated/types';
 import { PauseIcon, PlayIcon } from '@heroicons/react/solid';
 import { Analytics } from '@lib/analytics';
 import getAttributeFromTrait from '@lib/getAttributeFromTrait';
 import getThumbnailUrl from '@lib/getThumbnailUrl';
 import { t } from '@lingui/macro';
-import type { Attribute } from 'lens';
+import type { Attribute, Publication } from 'lens';
 import type { APITypes } from 'plyr-react';
 import type { ChangeEvent, FC } from 'react';
 import { useRef, useState } from 'react';
@@ -18,17 +17,24 @@ import Player from './Player';
 interface Props {
   src: string;
   isNew?: boolean;
-  publication?: LensterPublication;
+  publication?: Publication;
   txn: any;
+  expandCover: (url: string) => void;
 }
 
 export const AudioPublicationSchema = object({
-  title: string().trim().min(1, { message: 'Invalid audio title' }),
-  author: string().trim().min(1, { message: 'Invalid author name' }),
-  cover: string().trim().min(1, { message: 'Invalid cover image' })
+  title: string()
+    .trim()
+    .min(1, { message: t`Invalid audio title` }),
+  author: string()
+    .trim()
+    .min(1, { message: t`Invalid author name` }),
+  cover: string()
+    .trim()
+    .min(1, { message: t`Invalid cover image` })
 });
 
-const Audio: FC<Props> = ({ src, isNew = false, publication, txn }) => {
+const Audio: FC<Props> = ({ src, isNew = false, publication, txn, expandCover }) => {
   const [playing, setPlaying] = useState(false);
   const audioPublication = usePublicationStore((state) => state.audioPublication);
   const setAudioPublication = usePublicationStore((state) => state.setAudioPublication);
@@ -64,6 +70,7 @@ const Audio: FC<Props> = ({ src, isNew = false, publication, txn }) => {
             setAudioPublication({ ...audioPublication, cover: url, coverMimeType: mimeType })
           }
           imageRef={imageRef}
+          expandCover={expandCover}
         />
         <div className="flex py-1 md:px-3 flex-col justify-between w-full truncate">
           <div className="flex justify-between mt-3 md:mt-7">
