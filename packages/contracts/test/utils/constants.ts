@@ -1,21 +1,13 @@
-import { BigNumberish } from "ethers";
-import { ethers } from "hardhat";
+import { BigNumberish, utils } from "ethers";
 
 export type MetaPtr = {
   protocol: BigNumberish;
   pointer: string;
 };
 
-export const DEFAULT_VOTE = ethers.utils.parseEther("1");
+export const DEFAULT_VOTE = utils.parseEther("1");
 
-export const getDefaultSigners = async () => {
-  const defaultSigners = await ethers.getSigners();
-  return {
-    admin: defaultSigners[0],
-    user: defaultSigners[1],
-    user2: defaultSigners[2],
-  };
-};
+
 
 /*objects that contain all the deployed contract addresses for lens */
 export const lensMumbaiAddresses = {
@@ -98,7 +90,7 @@ export const projectApplications = [
 ];
 
 /* lens test constants */
-export const CURRENCY_MINT_AMOUNT = ethers.utils.parseEther("100");
+export const CURRENCY_MINT_AMOUNT = utils.parseEther("100");
 export const BPS_MAX = 10000;
 export const TREASURY_FEE_BPS = 50;
 export const REFERRAL_FEE_BPS = 250;
@@ -114,4 +106,4 @@ export const MOCK_PROFILE_URI = "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u
 export const MOCK_FOLLOW_NFT_URI =
   "https://ipfs.fleek.co/ipfs/ghostplantghostplantghostplantghostplantghostplantghostplan";
 export const FAKE_PRIVATEKEY = "0xa2e0097c961c67ec197b6865d7ecea6caffc68ebeb00e6050368c8f67fc9c588";
-export const testWallet = new ethers.Wallet(FAKE_PRIVATEKEY).connect(ethers.provider);
+//export const testWallet = new Wallet(FAKE_PRIVATEKEY).connect(ethers.provider);
