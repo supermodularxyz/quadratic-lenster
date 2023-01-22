@@ -6,34 +6,64 @@ import { Analytics } from '@lib/analytics';
 import getSignature from '@lib/getSignature';
 import onError from '@lib/onError';
 import splitSignature from '@lib/splitSignature';
+import { t } from '@lingui/macro';
 import { LensHubProxy } from 'abis';
-import { LENSHUB_PROXY, SIGN_WALLET } from 'data/constants';
+import { LENSHUB_PROXY } from 'data/constants';
 import type { Profile } from 'lens';
 import { useBroadcastMutation, useCreateFollowTypedDataMutation, useProxyActionMutation } from 'lens';
+import { useRouter } from 'next/router';
 import type { Dispatch, FC } from 'react';
 import toast from 'react-hot-toast';
 import { useAppStore } from 'src/store/app';
+import { useAuthStore } from 'src/store/auth';
 import { PROFILE } from 'src/tracking';
 import { useAccount, useContractWrite, useSignTypedData } from 'wagmi';
+
+export enum FollowSource {
+  WHO_TO_FOLLOW = 'who_to_follow',
+  WHO_TO_FOLLOW_MODAL = 'who_to_follow_modal',
+  LIKES_MODAL = 'likes_modal',
+  MIRRORS_MODAL = 'mirrors_modal',
+  COLLECTORS_MODAL = 'collectors_modal',
+  FOLLOWERS_MODAL = 'followers_modal',
+  FOLLOWING_MODAL = 'following_modal',
+  MUTUAL_FOLLOWERS_MODAL = 'mutual_followers_modal',
+  PUBLICATION_RELEVANT_PROFILES = 'publication_relevant_profiles',
+  DIRECT_MESSAGE_HEADER = 'direct_message_header',
+  PROFILE_PAGE = 'profile_page',
+  PROFILE_POPOVER = 'profile_popover'
+}
 
 interface Props {
   profile: Profile;
   setFollowing: Dispatch<boolean>;
   showText?: boolean;
+
+  // For data analytics
+  followPosition?: number;
+  followSource?: string;
 }
 
-const Follow: FC<Props> = ({ profile, showText = false, setFollowing }) => {
+const Follow: FC<Props> = ({ profile, showText = false, setFollowing, followSource, followPosition }) => {
+  const { pathname } = useRouter();
   const userSigNonce = useAppStore((state) => state.userSigNonce);
   const setUserSigNonce = useAppStore((state) => state.setUserSigNonce);
   const currentProfile = useAppStore((state) => state.currentProfile);
   const { address } = useAccount();
+  const setShowAuthModal = useAuthStore((state) => state.setShowAuthModal);
 
   const { isLoading: signLoading, signTypedDataAsync } = useSignTypedData({ onError });
 
   const onCompleted = () => {
     setFollowing(true);
-    toast.success('Followed successfully!');
-    Analytics.track(PROFILE.FOLLOW);
+    toast.success(t`Followed successfully!`);
+    Analytics.track(PROFILE.FOLLOW, {
+      follow_path: pathname,
+      ...(followSource && { follow_source: followSource }),
+      ...(followPosition && { follow_position: followPosition }),
+      follow_from: currentProfile?.id,
+      follow_target: profile?.id
+    });
   };
 
   const updateCache = (cache: ApolloCache<any>) => {
@@ -102,7 +132,8 @@ const Follow: FC<Props> = ({ profile, showText = false, setFollowing }) => {
 
   const createFollow = async () => {
     if (!currentProfile) {
-      return toast.error(SIGN_WALLET);
+      setShowAuthModal(true);
+      return;
     }
 
     try {
@@ -144,12 +175,11 @@ const Follow: FC<Props> = ({ profile, showText = false, setFollowing }) => {
       className="text-sm !px-3 !py-1.5"
       outline
       onClick={createFollow}
-      variant="success"
       aria-label="Follow"
       disabled={isLoading}
-      icon={isLoading ? <Spinner variant="success" size="xs" /> : <UserAddIcon className="w-4 h-4" />}
+      icon={isLoading ? <Spinner size="xs" /> : <UserAddIcon className="w-4 h-4" />}
     >
-      {showText && 'Follow'}
+      {showText && t`Follow`}
     </Button>
   );
 };

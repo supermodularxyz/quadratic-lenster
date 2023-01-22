@@ -5,7 +5,7 @@ import { Button } from '@components/UI/Button';
 import { Card } from '@components/UI/Card';
 import { ErrorMessage } from '@components/UI/ErrorMessage';
 import { Spinner } from '@components/UI/Spinner';
-import type { LensterAttachment, LensterPublication } from '@generated/types';
+import type { LensterAttachment } from '@generated/types';
 import type { IGif } from '@giphy/js-types';
 import { ChatAlt2Icon, PencilAltIcon } from '@heroicons/react/outline';
 import type { CollectCondition, EncryptedMetadata, FollowCondition } from '@lens-protocol/sdk-gated';
@@ -33,7 +33,12 @@ import {
   LIT_PROTOCOL_ENVIRONMENT,
   SIGN_WALLET
 } from 'data/constants';
-import type { CreatePublicCommentRequest, MetadataAttributeInput, PublicationMetadataV2Input } from 'lens';
+import type {
+  CreatePublicCommentRequest,
+  MetadataAttributeInput,
+  Publication,
+  PublicationMetadataV2Input
+} from 'lens';
 import {
   CollectModules,
   PublicationMainFocus,
@@ -79,7 +84,7 @@ const AccessSettings = dynamic(() => import('@components/Composer/Actions/Access
 });
 
 interface Props {
-  publication: LensterPublication;
+  publication: Publication;
 }
 
 const NewPublication: FC<Props> = ({ publication }) => {
@@ -435,7 +440,6 @@ const NewPublication: FC<Props> = ({ publication }) => {
       const metadata: PublicationMetadataV2Input = {
         version: '2.0.0',
         metadata_id: uuid(),
-        description: publicationContent,
         content: publicationContent,
         external_url: `https://lenster.xyz/u/${currentProfile?.handle}`,
         image: attachmentsInput.length > 0 ? getAttachmentImage() : textNftImageUrl,

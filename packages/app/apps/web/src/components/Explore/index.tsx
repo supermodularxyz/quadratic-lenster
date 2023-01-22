@@ -8,9 +8,10 @@ import { Analytics } from '@lib/analytics';
 import isFeatureEnabled from '@lib/isFeatureEnabled';
 import { t } from '@lingui/macro';
 import clsx from 'clsx';
-import { APP_NAME, STATIC_IMAGES_URL } from 'data/constants';
+import { APP_NAME } from 'data/constants';
 import { PublicationSortCriteria } from 'lens';
 import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useAppStore } from 'src/store/app';
 
@@ -20,12 +21,13 @@ import FeedType from './FeedType';
 const Explore: NextPage = () => {
   const currentProfile = useAppStore((state) => state.currentProfile);
   const [focus, setFocus] = useState<any>();
+  const router = useRouter();
 
   const tabs = [
-    { name: t`For you`, emoji: 'leaf-fluttering-in-wind.png', type: PublicationSortCriteria.CuratedProfiles },
-    { name: t`Popular`, emoji: 'hundred-points.png', type: PublicationSortCriteria.TopCommented },
-    { name: t`Trending`, emoji: 'heart-on-fire.png', type: PublicationSortCriteria.TopCollected },
-    { name: t`Interesting`, emoji: 'hushed-face.png', type: PublicationSortCriteria.TopMirrored }
+    { name: t`For you`, type: PublicationSortCriteria.CuratedProfiles },
+    { name: t`Popular`, type: PublicationSortCriteria.TopCommented },
+    { name: t`Trending`, type: PublicationSortCriteria.TopCollected },
+    { name: t`Interesting`, type: PublicationSortCriteria.TopMirrored }
   ];
 
   return (
@@ -35,7 +37,12 @@ const Explore: NextPage = () => {
         description={`Explore top commented, collected and latest publications in the ${APP_NAME}.`}
       />
       <GridItemEight className="space-y-5">
-        <Tab.Group>
+        <Tab.Group
+          defaultIndex={Number(router.query.tab)}
+          onChange={(index) => {
+            router.replace({ query: { ...router.query, tab: index } }, undefined, { shallow: true });
+          }}
+        >
           <Tab.List className="divider space-x-8">
             {tabs.map((tab, index) => (
               <Tab
@@ -47,14 +54,11 @@ const Explore: NextPage = () => {
                 className={({ selected }) =>
                   clsx(
                     { 'border-b-2 border-brand-500 !text-black dark:!text-white': selected },
-                    'px-4 pb-2 lt-text-gray-500 outline-none font-medium text-sm'
+                    'px-4 pb-2 lt-text-gray-500 outline-none font-medium text-xs sm:text-sm'
                   )
                 }
               >
-                <span className="flex items-center space-x-2">
-                  <span className="hidden sm:block">{tab.name}</span>
-                  <img className="h-4" src={`${STATIC_IMAGES_URL}/emojis/${tab.emoji}`} alt={tab.name} />
-                </span>
+                {tab.name}
               </Tab>
             ))}
           </Tab.List>

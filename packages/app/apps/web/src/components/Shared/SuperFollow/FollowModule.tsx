@@ -2,7 +2,6 @@ import AllowanceButton from '@components/Settings/Allowance/Button';
 import { Button } from '@components/UI/Button';
 import { Spinner } from '@components/UI/Spinner';
 import { WarningMessage } from '@components/UI/WarningMessage';
-import type { LensterFollowModule } from '@generated/types';
 import { StarIcon, UserIcon } from '@heroicons/react/outline';
 import { Analytics } from '@lib/analytics';
 import formatAddress from '@lib/formatAddress';
@@ -11,7 +10,7 @@ import getSignature from '@lib/getSignature';
 import getTokenImage from '@lib/getTokenImage';
 import onError from '@lib/onError';
 import splitSignature from '@lib/splitSignature';
-import { t } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { LensHubProxy } from 'abis';
 import { LENSHUB_PROXY, POLYGONSCAN_URL, SIGN_WALLET } from 'data/constants';
 import type { Profile } from 'lens';
@@ -51,7 +50,7 @@ const FollowModule: FC<Props> = ({ profile, setFollowing, setShowFollowModal, ag
   const onCompleted = () => {
     setFollowing(true);
     setShowFollowModal(false);
-    toast.success('Followed successfully!');
+    toast.success(t`Followed successfully!`);
     Analytics.track(PROFILE.SUPER_FOLLOW);
   };
 
@@ -183,7 +182,9 @@ const FollowModule: FC<Props> = ({ profile, setFollowing, setShowFollowModal, ag
       <div className="flex items-center space-x-2">
         <UserIcon className="w-4 h-4 lt-text-gray-500" />
         <div className="space-x-1.5">
-          <span>Recipient:</span>
+          <span>
+            <Trans>Recipient:</Trans>
+          </span>
           <a
             href={`${POLYGONSCAN_URL}/address/${followModule?.recipient}`}
             target="_blank"
@@ -199,23 +200,33 @@ const FollowModule: FC<Props> = ({ profile, setFollowing, setShowFollowModal, ag
         <ul className="space-y-1 text-sm lt-text-gray-500">
           <li className="flex space-x-2 tracking-normal leading-6">
             <div>•</div>
-            <div>You can comment on @{formatHandle(profile?.handle)}'s publications</div>
+            <div>
+              <Trans>You can comment on @{formatHandle(profile?.handle)}'s publications</Trans>
+            </div>
           </li>
           <li className="flex space-x-2 tracking-normal leading-6">
             <div>•</div>
-            <div>You can collect @{formatHandle(profile?.handle)}'s publications</div>
+            <div>
+              <Trans>You can collect @{formatHandle(profile?.handle)}'s publications</Trans>
+            </div>
           </li>
           <li className="flex space-x-2 tracking-normal leading-6">
             <div>•</div>
-            <div>You will get super follow badge in @{formatHandle(profile?.handle)}'s profile</div>
+            <div>
+              <Trans>You will get super follow badge in @{formatHandle(profile?.handle)}'s profile</Trans>
+            </div>
           </li>
           <li className="flex space-x-2 tracking-normal leading-6">
             <div>•</div>
-            <div>You will have high voting power if you followed multiple times</div>
+            <div>
+              <Trans>You will have high voting power if you followed multiple times</Trans>
+            </div>
           </li>
           <li className="flex space-x-2 tracking-normal leading-6">
             <div>•</div>
-            <div>More coming soon™</div>
+            <div>
+              <Trans>More coming soon™</Trans>
+            </div>
           </li>
         </ul>
       </div>
@@ -238,18 +249,15 @@ const FollowModule: FC<Props> = ({ profile, setFollowing, setShowFollowModal, ag
                 )
               }
             >
-              Super follow {again ? 'again' : 'now'}
+              {again ? t`Super follow again` : t`Super follow now`}
             </Button>
           ) : (
-            <WarningMessage
-              className="mt-5"
-              message={<Uniswap module={followModule as LensterFollowModule} />}
-            />
+            <WarningMessage className="mt-5" message={<Uniswap module={followModule} />} />
           )
         ) : (
           <div className="mt-5">
             <AllowanceButton
-              title="Allow follow module"
+              title={t`Allow follow module`}
               module={allowanceData?.approvedModuleAllowanceAmount[0]}
               allowed={allowed}
               setAllowed={setAllowed}

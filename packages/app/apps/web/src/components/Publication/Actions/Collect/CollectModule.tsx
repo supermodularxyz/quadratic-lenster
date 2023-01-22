@@ -1,6 +1,5 @@
 import AllowanceButton from '@components/Settings/Allowance/Button';
 import CollectWarning from '@components/Shared/CollectWarning';
-import IndexStatus from '@components/Shared/IndexStatus';
 import Loader from '@components/Shared/Loader';
 import Markup from '@components/Shared/Markup';
 import Collectors from '@components/Shared/Modal/Collectors';
@@ -11,14 +10,12 @@ import { Modal } from '@components/UI/Modal';
 import { Spinner } from '@components/UI/Spinner';
 import { Tooltip } from '@components/UI/Tooltip';
 import { WarningMessage } from '@components/UI/WarningMessage';
-import type { LensterPublication } from '@generated/types';
 import {
   CashIcon,
   ClockIcon,
   CollectionIcon,
   PhotographIcon,
   PuzzleIcon,
-  SwitchHorizontalIcon,
   UsersIcon
 } from '@heroicons/react/outline';
 import { CheckCircleIcon } from '@heroicons/react/solid';
@@ -33,7 +30,7 @@ import getTokenImage from '@lib/getTokenImage';
 import humanize from '@lib/humanize';
 import onError from '@lib/onError';
 import splitSignature from '@lib/splitSignature';
-import { t } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { useQuery } from '@tanstack/react-query';
 import { LensHubProxy, UpdateOwnableFeeCollectModule } from 'abis';
 import { LENSHUB_PROXY, POLYGONSCAN_URL, SIGN_WALLET } from 'data/constants';
@@ -41,7 +38,7 @@ import getEnvConfig from 'data/utils/getEnvConfig';
 import dayjs from 'dayjs';
 import type { BigNumber } from 'ethers';
 import { defaultAbiCoder } from 'ethers/lib/utils';
-import type { ElectedMirror } from 'lens';
+import type { ElectedMirror, Publication } from 'lens';
 import {
   CollectModules,
   useApprovedModuleAllowanceAmountQuery,
@@ -61,7 +58,7 @@ import { useAccount, useBalance, useContractRead, useContractWrite, useSignTyped
 interface Props {
   count: number;
   setCount: Dispatch<number>;
-  publication: LensterPublication;
+  publication: Publication;
   electedMirror?: ElectedMirror;
 }
 
@@ -75,7 +72,6 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
   const [allowed, setAllowed] = useState(true);
   const { address } = useAccount();
   const { isLoading: signLoading, signTypedDataAsync } = useSignTypedData({ onError });
-  const isMirror = electedMirror ? false : publication.__typename === 'Mirror';
 
   const { data, loading } = useCollectModuleQuery({
     variables: { request: { publicationId: publication?.id } }
@@ -87,7 +83,7 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
     setRevenue(revenue + parseFloat(collectModule?.amount?.value));
     setCount(count + 1);
     setHasCollectedByMe(true);
-    toast.success('Transaction submitted successfully!');
+    toast.success(t`Collected successfully!`);
     Analytics.track(PUBLICATION.COLLECT_MODULE.COLLECT);
   };
 
@@ -99,11 +95,7 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
     enabled: false
   });
 
-  const {
-    data: writeData,
-    isLoading: writeLoading,
-    write
-  } = useContractWrite({
+  const { isLoading: writeLoading, write } = useContractWrite({
     address: LENSHUB_PROXY,
     abi: LensHubProxy,
     functionName: 'collectWithSig',
@@ -163,7 +155,7 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
     hasAmount = true;
   }
 
-  const [broadcast, { data: broadcastData, loading: broadcastLoading }] = useBroadcastMutation({
+  const [broadcast, { loading: broadcastLoading }] = useBroadcastMutation({
     onCompleted
   });
   const [createCollectTypedData, { loading: typedDataLoading }] = useCreateCollectTypedDataMutation({
@@ -249,8 +241,6 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
 
   const isLoading =
     typedDataLoading || proxyActionLoading || signLoading || isFetching || writeLoading || broadcastLoading;
-  const broadcastTxHash =
-    broadcastData?.broadcast.__typename === 'RelayerResult' && broadcastData.broadcast.txHash;
 
   return (
     <>
@@ -272,24 +262,11 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
           </div>
         )}
         <div className="pb-2 space-y-1.5">
-          <div className="flex items-center space-x-2">
-            {(electedMirror || isMirror) && (
-              <Tooltip
-                content={`Mirror of ${
-                  electedMirror ? publication.__typename : publication?.mirrorOf.__typename?.toLowerCase()
-                } by ${
-                  isMirror ? publication?.mirrorOf?.profile?.handle : formatHandle(publication.profile.handle)
-                }`}
-              >
-                <SwitchHorizontalIcon className="w-5 h-5 text-brand" />
-              </Tooltip>
-            )}
-            {publication?.metadata?.name && (
-              <div className="text-xl font-bold">{publication?.metadata?.name}</div>
-            )}
-          </div>
-          {publication?.metadata?.description && (
-            <Markup className="lt-text-gray-500 line-clamp-2">{publication?.metadata?.description}</Markup>
+          {publication?.metadata?.name && (
+            <div className="text-xl font-bold">{publication?.metadata?.name}</div>
+          )}
+          {publication?.metadata?.content && (
+            <Markup className="lt-text-gray-500 line-clamp-2">{publication?.metadata?.content}</Markup>
           )}
           <ReferralAlert
             electedMirror={electedMirror}
@@ -333,7 +310,7 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
                   Analytics.track(PUBLICATION.COLLECT_MODULE.OPEN_COLLECTORS);
                 }}
               >
-                {humanize(count)} collectors
+                <Trans>{humanize(count)} collectors</Trans>
               </button>
               <Modal
                 title={t`Collected by`}
@@ -351,13 +328,17 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
             {collectModule?.collectLimit && (
               <div className="flex items-center space-x-2">
                 <PhotographIcon className="w-4 h-4 lt-text-gray-500" />
-                <div className="font-bold">{parseInt(collectModule?.collectLimit) - count} available</div>
+                <div className="font-bold">
+                  <Trans>{parseInt(collectModule?.collectLimit) - count} available</Trans>
+                </div>
               </div>
             )}
             {collectModule?.referralFee ? (
               <div className="flex items-center space-x-2">
                 <CashIcon className="w-4 h-4 lt-text-gray-500" />
-                <div className="font-bold">{collectModule.referralFee}% referral fee</div>
+                <div className="font-bold">
+                  <Trans>{collectModule.referralFee}% referral fee</Trans>
+                </div>
               </div>
             ) : null}
           </div>
@@ -365,7 +346,9 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
             <div className="flex items-center space-x-2">
               <CashIcon className="w-4 h-4 lt-text-gray-500" />
               <div className="flex items-center space-x-1.5">
-                <span>Revenue:</span>
+                <span>
+                  <Trans>Revenue:</Trans>
+                </span>
                 <span className="flex items-center space-x-1">
                   <img
                     src={getTokenImage(collectModule?.amount?.asset?.symbol)}
@@ -395,7 +378,9 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
             <div className="flex items-center space-x-2">
               <ClockIcon className="w-4 h-4 lt-text-gray-500" />
               <div className="space-x-1.5">
-                <span>Sale Ends:</span>
+                <span>
+                  <Trans>Sale Ends:</Trans>
+                </span>
                 <span className="font-bold text-gray-600" title={formatTime(collectModule.endTimestamp)}>
                   {dayjs(collectModule.endTimestamp).format('MMMM DD, YYYY')} at{' '}
                   {dayjs(collectModule.endTimestamp).format('hh:mm a')}
@@ -407,7 +392,9 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
             <div className="flex items-center space-x-2">
               <PuzzleIcon className="w-4 h-4 lt-text-gray-500" />
               <div className="space-x-1.5">
-                <span>Token:</span>
+                <span>
+                  <Trans>Token:</Trans>
+                </span>
                 <a
                   href={`${POLYGONSCAN_URL}/token/${data?.publication?.collectNftAddress}`}
                   target="_blank"
@@ -420,11 +407,6 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
             </div>
           )}
         </div>
-        {writeData?.hash ?? broadcastTxHash ? (
-          <div className="mt-5">
-            <IndexStatus txHash={writeData?.hash ?? broadcastTxHash} />
-          </div>
-        ) : null}
         <div className="flex items-center space-x-2 mt-5">
           {currentProfile && !hasCollectedByMe ? (
             allowanceLoading || balanceLoading ? (
@@ -436,7 +418,7 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
                   disabled={isLoading}
                   icon={isLoading ? <Spinner size="xs" /> : <CollectionIcon className="w-4 h-4" />}
                 >
-                  Collect now
+                  <Trans>Collect now</Trans>
                 </Button>
               ) : (
                 <WarningMessage message={<Uniswap module={collectModule} />} />
@@ -454,7 +436,9 @@ const CollectModule: FC<Props> = ({ count, setCount, publication, electedMirror 
         {publication?.hasCollectedByMe && (
           <div className="mt-3 font-bold text-green-500 flex items-center space-x-1.5">
             <CheckCircleIcon className="h-5 w-5" />
-            <div>You already collected this</div>
+            <div>
+              <Trans>You already collected this</Trans>
+            </div>
           </div>
         )}
       </div>
