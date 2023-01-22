@@ -4,7 +4,7 @@ import { ethers } from "hardhat";
 
 import { QuadraticFundingCurator } from "../../types/contracts/QuadraticFundingCurator";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
-import { getDefaultSigners } from "../utils/constants";
+import { getDefaultSigners } from "../utils/utils";
 
 /* deploy gitcoin grants implementation on mumbai fork */
 export async function deployCuratorFixture() {

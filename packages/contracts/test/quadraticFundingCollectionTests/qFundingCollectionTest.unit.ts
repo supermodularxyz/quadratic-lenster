@@ -6,8 +6,8 @@ import { ethers } from "hardhat";
 
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
-import { DEFAULT_VOTE, getDefaultSigners } from "../utils/constants";
-import { getCollectModulePubInitData } from "../utils/utils";
+import { DEFAULT_VOTE } from "../utils/constants";
+import { getCollectModulePubInitData, getDefaultSigners } from "../utils/utils";
 import { ERC20 } from "./../../types/contracts/mocks/ERC20";
 import { QuadraticFundingVotingStrategyImplementation } from "./../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation";
 import { RoundImplementation } from "./../../types/contracts/mocks/RoundImplementation";
