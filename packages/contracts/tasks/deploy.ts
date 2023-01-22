@@ -1,4 +1,4 @@
-import { lensMumbaiAddresses } from './../test/utils/constants';
+import { lensMumbaiAddresses, lensPolygonAddresses } from './../test/utils/constants';
 import { ContractFactory } from 'ethers';
 import { task } from 'hardhat/config';
 import * as fs from 'fs';
@@ -26,8 +26,8 @@ task('deploy', 'Deploy contracts and verify')
     const constructorArguments: Record<Contracts, string[]> = {
       QuadraticFundingCurator: ['0x45cf9Ba12b43F6c8B7148E06A6f84c5B9ad3Dd44', admin.address],
       QuadraticVoteCollectModule: [
-        '0x60Ae865ee4C725cd04353b5AAb364553f56ceF82',
-        '0x1353aAdfE5FeD85382826757A95DE908bd21C4f9',
+        lensPolygonAddresses.lensHubImplementation,
+        lensPolygonAddresses.moduleGlobals,
       ],
     };
 
