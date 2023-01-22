@@ -81,3 +81,12 @@ export function getCollectModulePubInitData(initModuleData: (string | number | B
 
   return collectModuleInitData;
 }
+
+export const getDefaultSigners = async () => {
+  const defaultSigners = await ethers.getSigners();
+  return {
+    admin: defaultSigners[0],
+    user: defaultSigners[1],
+    user2: defaultSigners[2],
+  };
+};
