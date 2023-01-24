@@ -1,0 +1,4 @@
+[submodule "packages/app"]
+	path = packages/app
+	url = https://github.com/psparacino/qf-lenster.git
+	branch = qf-main
