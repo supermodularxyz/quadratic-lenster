@@ -6,8 +6,22 @@
   "repository": "https://github.com/MrDeadCe11/quadratic-lenster-monorepo",
   "author": "bitbeckers",
   "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "create:sentinel": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-sentinel.ts",
+    "create:notifications:email": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-notifications.ts",
+    "list:sentinels": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-sentinels.ts",
+    "list:notifications": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-notifications.ts"
+  },
   "devDependencies": {
+    "@types/inquirer": "^9.0.3",
     "@types/node": "^18.11.18",
+    "inquirer": "^9.1.4",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "defender-sentinel-client": "^1.38.0",
+    "dotenv": "^16.0.3"
   }
 }
