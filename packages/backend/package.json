@@ -1,0 +1,13 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "backend for monitoring and managing grants round",
+  "main": "index.js",
+  "repository": "https://github.com/MrDeadCe11/quadratic-lenster-monorepo",
+  "author": "bitbeckers",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "typescript": "^4.9.4"
+  }
+}
