@@ -8,20 +8,34 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "build:autotask": "rollup -c",
+    "create:autotask": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-autotask.ts",
+    "create:notifications": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-notifications.ts",
+    "create:relayer": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-relayer.ts",
     "create:sentinel": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-sentinel.ts",
-    "create:notifications:email": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-notifications.ts",
-    "list:sentinels": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-sentinels.ts",
-    "list:notifications": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-notifications.ts"
+    "list:autotasks": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-autotasks.ts",
+    "list:notifications": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-notifications.ts",
+    "list:relayers": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-relays.ts",
+    "list:sentinels": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-sentinels.ts"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.1.1",
+    "@rollup/plugin-typescript": "^11.0.0",
     "@types/inquirer": "^9.0.3",
     "@types/node": "^18.11.18",
+    "defender-autotask-client": "^1.38.0",
+    "defender-autotask-utils": "^1.38.0",
+    "defender-relay-client": "^1.38.0",
     "inquirer": "^9.1.4",
+    "rollup": "^3.11.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   },
   "dependencies": {
     "defender-sentinel-client": "^1.38.0",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "ethers": "^5.7.2"
   }
 }

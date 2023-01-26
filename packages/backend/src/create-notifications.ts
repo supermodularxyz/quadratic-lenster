@@ -1,27 +1,33 @@
-import { ADMIN_API_KEY, ADMIN_API_SECRET } from "./constants.js";
+import {
+  ADMIN_API_KEY,
+  ADMIN_API_SECRET,
+  AUTOTASK_WEBHOOK,
+} from "./constants.js";
 import { SentinelClient } from "defender-sentinel-client";
 import inquirer, { Question } from "inquirer";
 
 const creds = { apiKey: ADMIN_API_KEY, apiSecret: ADMIN_API_SECRET };
 const client = new SentinelClient(creds);
 
-const emailQuestion: Question = {
+const urlQuestion: Question = {
   type: "input",
-  name: "email",
-  message: "Which email do you want to receive notifications on?",
+  name: "url",
+  message: "Please provide webhook to trigger",
+  default: AUTOTASK_WEBHOOK,
 };
 
-const labelQuestion: Question = {
+const nameQuestion: Question = {
   type: "input",
-  name: "label",
-  message: "Which label do you want to use for this email?",
+  name: "name",
+  message: "Which name do you want to use for this notification?",
+  default: "test webhook + email",
 };
 
 const prompt = async () => {
   inquirer
-    .prompt([emailQuestion, labelQuestion])
+    .prompt([nameQuestion, urlQuestion])
     .then((answers) => {
-      createChannel(answers["label"], answers["email"]);
+      createChannel(answers["name"], answers["url"]);
     })
     .catch((error) => {
       if (error.isTtyError) {
@@ -32,18 +38,16 @@ const prompt = async () => {
     });
 };
 
-const createChannel = async (label: string, email: string) => {
+const createChannel = async (name: string, url: string) => {
   await client
     .createNotificationChannel({
-      type: "email",
-      name: label,
-      config: {
-        emails: [email],
-      },
+      type: "webhook",
+      name,
+      config: { url },
       paused: false,
     })
     .then((res) => {
-      console.log(`Created email channel: `);
+      console.log(`Created notification webhook channel: `);
       console.log(res);
     })
     .catch((error) => {
