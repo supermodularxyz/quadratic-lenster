@@ -1,7 +1,8 @@
-import { lensMumbaiAddresses, lensPolygonAddresses } from './../test/utils/constants';
 import { ContractFactory } from 'ethers';
-import { task } from 'hardhat/config';
 import * as fs from 'fs';
+import { task } from 'hardhat/config';
+
+import { lensMumbaiAddresses, lensPolygonAddresses } from './../test/utils/constants';
 
 type Contracts = 'QuadraticFundingCurator' | 'QuadraticVoteCollectModule';
 
@@ -11,6 +12,15 @@ task('deploy', 'Deploy contracts and verify')
   .addOptionalParam('moduleGlobals', 'The address of ModuleGlobals')
   .setAction(async ({ grantsRound, lensHub, moduleGlobals }, { ethers }) => {
     const [admin] = await ethers.getSigners();
+    let addresses;
+
+    if (hre.network.name == 'polygon-mainnet') {
+      addresses = lensPolygonAddresses;
+    } else if (hre.network.name == 'polygon-mumbai') {
+      addresses = lensMumbaiAddresses;
+    } else {
+      addresses = lensPolygonAddresses;
+    }
 
     const contracts: Record<Contracts, ContractFactory> = {
       QuadraticFundingCurator: await ethers.getContractFactory('QuadraticFundingCurator'),
@@ -22,56 +32,39 @@ task('deploy', 'Deploy contracts and verify')
       QuadraticVoteCollectModule: '',
     };
 
-    //TODO Correct arguments for Mumbai/Polygon
     const constructorArguments: Record<Contracts, string[]> = {
-      QuadraticFundingCurator: ['0x45cf9Ba12b43F6c8B7148E06A6f84c5B9ad3Dd44', admin.address],
+      QuadraticFundingCurator: [
+        grantsRound ? grantsRound : '0xCb964E66dD4868e7C71191D3A1353529Ad1ED2F5',
+        admin.address,
+      ],
       QuadraticVoteCollectModule: [
-        lensPolygonAddresses.lensHubImplementation,
-        lensPolygonAddresses.moduleGlobals,
+        lensHub ? lensHub : addresses.lensHubImplementation,
+        moduleGlobals ? moduleGlobals : addresses.moduleGlobals,
       ],
     };
 
-    const constructorArgumentsMumbai: Record<Contracts, string[]> = {
-      QuadraticFundingCurator: ['0x45cf9Ba12b43F6c8B7148E06A6f84c5B9ad3Dd44', admin.address],
-      QuadraticVoteCollectModule: [
-        lensMumbaiAddresses.lensHubImplementation,
-        lensMumbaiAddresses.moduleGlobals,
-      ],
-    };
-
-   const toFile = (path: string, deployment: Record<Contracts, string>) => {
+    const toFile = (path: string, deployment: Record<Contracts, string>) => {
       fs.writeFileSync(path, JSON.stringify(deployment), { encoding: 'utf-8' });
-    }
+    };
 
     for (const [name, contract] of Object.entries(contracts)) {
       console.log(`Starting deployment of ${name}`);
       const factory = contract;
-      let constructorArgs;
 
-      if (hre.network.name == 'polygon-mainnet') {
-        constructorArgs = Object.entries(constructorArguments).find((entry) => entry[0] === name)?.[1];
-        console.log(`Constructor arguments: ${constructorArgs}`);
-      } else if (hre.network.name == 'polygon-mumbai') {
-        constructorArgs = Object.entries(constructorArgumentsMumbai).find((entry) => entry[0] === name)?.[1];
-        console.log(`Constructor arguments: ${constructorArgs}`);
-      } else if (hre.network.name == 'hardhat') {
-       constructorArgs = Object.entries(constructorArgumentsMumbai).find((entry) => entry[0] === name)?.[1];
-       console.log(`Constructor arguments: ${constructorArgs}`);
-      } else {
-          throw new Error('Not a supported network');
-      }
+      const constructorArgs = Object.entries(constructorArguments).find((entry) => entry[0] === name)?.[1];
+      console.log(`Constructor arguments: ${constructorArgs}`);
 
       const instance = constructorArgs ? await factory.deploy(...constructorArgs) : await factory.deploy();
-      
+
       await instance.deployed();
 
       console.log(`${name} is deployed to address: ${instance.address}`);
-      
+
       deployments[name as Contracts] = instance.address;
-    
+
       toFile(`deployments/deployments-${hre.network.name}.json`, deployments);
-  
-      if (hre.network.config.chainId !== 31337) {
+
+      if (hre.network.name !== ('localhost' || 'hardhat')) {
         try {
           const code = await instance.instance?.provider.getCode(instance.address);
           if (code === '0x') {

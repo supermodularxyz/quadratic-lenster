@@ -16,42 +16,34 @@ task('verifyContract', 'verify')
       QuadraticVoteCollectModule: addresses.QuadraticVoteCollectModule,
     };
 
+    let constructorAddresses;
 
-    //TODO Correct arguments for Mumbai/Polygon
+    if (hre.network.name == 'polygon-mainnet') {
+      constructorAddresses = lensPolygonAddresses;
+    } else if (hre.network.name == 'polygon-mumbai') {
+      constructorAddresses = lensMumbaiAddresses;
+    } else {
+      constructorAddresses = lensPolygonAddresses;
+    }
+
     const constructorArguments: Record<Contracts, string[]> = {
-      QuadraticFundingCurator: ['0x45cf9Ba12b43F6c8B7148E06A6f84c5B9ad3Dd44', admin.address],
-      QuadraticVoteCollectModule: [
-        lensPolygonAddresses.lensHubImplementation,
-        lensPolygonAddresses.moduleGlobals,
+      QuadraticFundingCurator: [
+        grantsRound ? grantsRound : '0xCb964E66dD4868e7C71191D3A1353529Ad1ED2F5',
+        admin.address,
       ],
-    };
-
-    const constructorArgumentsMumbai: Record<Contracts, string[]> = {
-      QuadraticFundingCurator: ['0x45cf9Ba12b43F6c8B7148E06A6f84c5B9ad3Dd44', admin.address],
       QuadraticVoteCollectModule: [
-        lensMumbaiAddresses.lensHubImplementation,
-        lensMumbaiAddresses.moduleGlobals,
+        lensHub ? lensHub : constructorAddresses.lensHubImplementation,
+        moduleGlobals ? moduleGlobals : constructorAddresses.moduleGlobals,
       ],
     };
 
     for (const [name, address] of Object.entries(contracts)) {
       console.log(`Starting verification of ${name}`);
       console.log(name, address)
-      let constructorArgs;
 
-      if (hre.network.name == 'polygon-mainnet') {
-        constructorArgs = Object.entries(constructorArguments).find((entry) => entry[0] === name)?.[1];
-        console.log(`Constructor arguments: ${constructorArgs}`);
-      } else if (hre.network.name == 'polygon-mumbai') {
-        constructorArgs = Object.entries(constructorArgumentsMumbai).find((entry) => entry[0] === name)?.[1];
-        console.log(`Constructor arguments: ${constructorArgs}`);
-      } else if (hre.network.name == 'hardhat') {
-       constructorArgs = Object.entries(constructorArgumentsMumbai).find((entry) => entry[0] === name)?.[1];
-       console.log(`Constructor arguments: ${constructorArgs}`);
-      } else {
-          throw new Error('Not a supported network');
-      }
-
+      const constructorArgs = Object.entries(constructorArguments).find((entry) => entry[0] === name)?.[1];
+      console.log(`Constructor arguments: ${constructorArgs}`);
+     
     
   
       if (hre.network.config.chainId !== 31337) {

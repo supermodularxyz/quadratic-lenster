@@ -95,7 +95,7 @@
     "prettier:write": "prettier --write \"**/*.{js,json,md,sol,ts,yml}\"",
     "test": "hardhat test",
     "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain",
-    "runNode": "hardhat node"
+    "run-node": "hardhat node"
   },
   "dependencies": {
     "@defi-wonderland/smock": "^2.3.4"
