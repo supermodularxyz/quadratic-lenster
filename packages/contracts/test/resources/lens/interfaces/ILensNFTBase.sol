@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.10;
 
-import {DataTypes} from '../libraries/DataTypes.sol';
+import { DataTypes } from "../libraries/DataTypes.sol";
 
 /**
  * @title ILensNFTBase
@@ -22,11 +22,7 @@ interface ILensNFTBase {
      * @param tokenId The NFT token ID to approve.
      * @param sig The EIP712 signature struct.
      */
-    function permit(
-        address spender,
-        uint256 tokenId,
-        DataTypes.EIP712Signature calldata sig
-    ) external;
+    function permit(address spender, uint256 tokenId, DataTypes.EIP712Signature calldata sig) external;
 
     /**
      * @notice Implementation of an EIP-712 permit-style function for ERC-721 operator approvals. Allows

@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.10;
 
-import {DataTypes} from '../libraries/DataTypes.sol';
+import { DataTypes } from "../libraries/DataTypes.sol";
 
 /**
  * @title IFollowNFT
@@ -42,11 +42,7 @@ interface IFollowNFT {
      * @param delegatee The delegatee address, who is receiving the governance power delegation.
      * @param sig The EIP712Signature struct containing the necessary parameters to recover the delegator's signature.
      */
-    function delegateBySig(
-        address delegator,
-        address delegatee,
-        DataTypes.EIP712Signature calldata sig
-    ) external;
+    function delegateBySig(address delegator, address delegatee, DataTypes.EIP712Signature calldata sig) external;
 
     /**
      * @notice Returns the governance power for a given user at a specified block number.

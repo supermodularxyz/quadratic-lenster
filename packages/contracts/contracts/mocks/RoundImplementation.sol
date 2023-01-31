@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.17;
 
-import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
+import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import '@openzeppelin/contracts/utils/Address.sol';
+import '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
 
-import "./IVotingStrategy.sol";
-import "./IPayoutStrategy.sol";
+import './IVotingStrategy.sol';
+import './IPayoutStrategy.sol';
 
-import "../interfaces/MetaPtr.sol";
+import '../interfaces/MetaPtr.sol';
 
-import "hardhat/console.sol";
+import 'hardhat/console.sol';
 
 /**
  * @notice Contract deployed per Round which would managed by
@@ -26,7 +26,7 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
     // --- Roles ---
 
     /// @notice round operator role
-    bytes32 public constant ROUND_OPERATOR_ROLE = keccak256("ROUND_OPERATOR");
+    bytes32 public constant ROUND_OPERATOR_ROLE = keccak256('ROUND_OPERATOR');
 
     // --- Events ---
 
@@ -59,7 +59,7 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
     /// @notice modifier to check if round has not ended.
     modifier roundHasNotEnded() {
         // slither-disable-next-line timestamp
-        require(block.timestamp <= roundEndTime, "error: round has ended");
+        require(block.timestamp <= roundEndTime, 'error: round has ended');
         _;
     }
 
@@ -145,21 +145,21 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
             );
 
         // slither-disable-next-line timestamp
-        require(_applicationsStartTime >= block.timestamp, "initialize: applications start time has already passed");
+        require(_applicationsStartTime >= block.timestamp, 'initialize: applications start time has already passed');
         require(
             _applicationsEndTime > _applicationsStartTime,
-            "initialize: application end time should be after application start time"
+            'initialize: application end time should be after application start time'
         );
 
         require(
             _roundEndTime >= _applicationsEndTime,
-            "initialize: application end time should be before round end time"
+            'initialize: application end time should be before round end time'
         );
-        require(_roundEndTime > _roundStartTime, "initialize: end time should be after start time");
+        require(_roundEndTime > _roundStartTime, 'initialize: end time should be after start time');
 
         require(
             _roundStartTime >= _applicationsStartTime,
-            "initialize: round start time should be after application start time"
+            'initialize: round start time should be after application start time'
         );
 
         votingStrategy = _votingStrategy;
@@ -219,12 +219,12 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
     /// @param newRoundStartTime new roundStartTime
     function updateRoundStartTime(uint256 newRoundStartTime) external roundHasNotEnded onlyRole(ROUND_OPERATOR_ROLE) {
         // slither-disable-next-line timestamp
-        require(newRoundStartTime >= block.timestamp, "updateRoundStartTime: start time has already passed");
+        require(newRoundStartTime >= block.timestamp, 'updateRoundStartTime: start time has already passed');
         require(
             newRoundStartTime >= applicationsStartTime,
-            "updateRoundStartTime: start time should be after application start time"
+            'updateRoundStartTime: start time should be after application start time'
         );
-        require(newRoundStartTime < roundEndTime, "updateRoundStartTime: start time should be before round end time");
+        require(newRoundStartTime < roundEndTime, 'updateRoundStartTime: start time should be before round end time');
 
         emit RoundStartTimeUpdated(roundStartTime, newRoundStartTime);
 
@@ -235,11 +235,11 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
     /// @param newRoundEndTime new roundEndTime
     function updateRoundEndTime(uint256 newRoundEndTime) external roundHasNotEnded onlyRole(ROUND_OPERATOR_ROLE) {
         // slither-disable-next-line timestamp
-        require(newRoundEndTime >= block.timestamp, "updateRoundEndTime: end time has already passed");
-        require(newRoundEndTime > roundStartTime, "updateRoundEndTime: end time should be after start time");
+        require(newRoundEndTime >= block.timestamp, 'updateRoundEndTime: end time has already passed');
+        require(newRoundEndTime > roundStartTime, 'updateRoundEndTime: end time should be after start time');
         require(
             newRoundEndTime >= applicationsEndTime,
-            "updateRoundEndTime: end time should be after application end time"
+            'updateRoundEndTime: end time should be after application end time'
         );
 
         emit RoundEndTimeUpdated(roundEndTime, newRoundEndTime);
@@ -255,15 +255,15 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
         // slither-disable-next-line timestamp
         require(
             newApplicationsStartTime >= block.timestamp,
-            "updateApplicationsStartTime: application start time has already passed"
+            'updateApplicationsStartTime: application start time has already passed'
         );
         require(
             newApplicationsStartTime <= roundStartTime,
-            "updateApplicationsStartTime: should be before round start time"
+            'updateApplicationsStartTime: should be before round start time'
         );
         require(
             newApplicationsStartTime < applicationsEndTime,
-            "updateApplicationsStartTime: should be before application end time"
+            'updateApplicationsStartTime: should be before application end time'
         );
 
         emit ApplicationsStartTimeUpdated(applicationsStartTime, newApplicationsStartTime);
@@ -279,13 +279,13 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
         // slither-disable-next-line timestamp
         require(
             newApplicationsEndTime >= block.timestamp,
-            "updateApplicationsEndTime: application end time has already passed"
+            'updateApplicationsEndTime: application end time has already passed'
         );
         require(
             newApplicationsEndTime > applicationsStartTime,
-            "updateApplicationsEndTime: application end time should be after application start time"
+            'updateApplicationsEndTime: application end time should be after application start time'
         );
-        require(newApplicationsEndTime <= roundEndTime, "updateApplicationsEndTime: should be before round end time");
+        require(newApplicationsEndTime <= roundEndTime, 'updateApplicationsEndTime: should be before round end time');
 
         emit ApplicationsEndTimeUpdated(applicationsEndTime, newApplicationsEndTime);
 
@@ -309,7 +309,7 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
         // slither-disable-next-line timestamp
         require(
             applicationsStartTime <= block.timestamp && block.timestamp <= applicationsEndTime,
-            "applyToRound: round is not accepting application"
+            'applyToRound: round is not accepting application'
         );
         emit NewProjectApplication(projectID, newApplicationMetaPtr);
     }
@@ -319,7 +319,7 @@ contract RoundImplementation is AccessControlEnumerable, Initializable {
     /// @dev value is to handle native token voting
     function vote(bytes[] memory encodedVotes) external payable {
         // slither-disable-next-line timestamp
-        require(roundStartTime <= block.timestamp && block.timestamp <= roundEndTime, "vote: round is not active");
+        require(roundStartTime <= block.timestamp && block.timestamp <= roundEndTime, 'vote: round is not active');
 
         votingStrategy.vote{ value: msg.value }(encodedVotes, msg.sender);
     }

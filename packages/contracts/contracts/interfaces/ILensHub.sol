@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity>= 0.8.10;
+pragma solidity >=0.8.10;
 
 import { DataTypes } from "../libraries/DataTypes.sol";
 
@@ -107,9 +107,9 @@ interface ILensHub {
     function setDefaultProfile(uint256 profileId) external;
 
     /**
-     * @notice Sets the mapping between wallet and its main profile identity via signature with the specified parameters.
+     * @notice Sets the mapping between wallet and its main profile identity via signature with the specified parameters
      *
-     * @param vars A SetDefaultProfileWithSigData struct, including the regular parameters and an EIP712Signature struct.
+     * @param vars A SetDefaultProfileWithSigData struct, including the regular parameters and an EIP712Signature struct
      */
     function setDefaultProfileWithSig(DataTypes.SetDefaultProfileWithSigData calldata vars) external;
 
@@ -155,7 +155,7 @@ interface ILensHub {
     /**
      * @notice Sets a profile's URI via signature with the specified parameters.
      *
-     * @param vars A SetProfileImageURIWithSigData struct, including the regular parameters and an EIP712Signature struct.
+     * @param vars A SetProfileImageURIWithSigData struct including the regular parameters and an EIP712Signature struct
      */
     function setProfileImageURIWithSig(DataTypes.SetProfileImageURIWithSigData calldata vars) external;
 
@@ -229,10 +229,10 @@ interface ILensHub {
     function mirrorWithSig(DataTypes.MirrorWithSigData calldata vars) external returns (uint256);
 
     /**
-     * @notice Follows the given profiles, executing each profile's follow module logic (if any) and minting followNFTs to the caller.
-     *
-     * NOTE: Both the `profileIds` and `datas` arrays must be of the same length, regardless if the profiles do not have a follow module set.
-     *
+     * @notice Follows the given profiles, executing each profile's follow module logic (if any)
+     * and minting followNFTs to the caller.
+     * NOTE: Both the `profileIds` and `datas` arrays must be of the same length,
+     * regardless if the profiles do not have a follow module set.
      * @param profileIds The token ID array of the profiles to follow.
      * @param datas The arbitrary data array to pass to the follow module for each profile if needed.
      *
@@ -243,8 +243,8 @@ interface ILensHub {
     /**
      * @notice Follows a given profile via signature with the specified parameters.
      *
-     * @param vars A FollowWithSigData struct containing the regular parameters as well as the signing follower's address
-     * and an EIP712Signature struct.
+     * @param vars A FollowWithSigData struct containing the regular parameters as well as the signing follower's
+     * address and an EIP712Signature struct.
      *
      * @return uint256[] An array of integers representing the minted follow NFTs token IDs.
      */
@@ -272,8 +272,8 @@ interface ILensHub {
     function collectWithSig(DataTypes.CollectWithSigData calldata vars) external returns (uint256);
 
     /**
-     * @dev Helper function to emit a detailed followNFT transfer event from the hub, to be consumed by frontends to track
-     * followNFT transfers.
+     * @dev Helper function to emit a detailed followNFT transfer event from the hub, to be consumed by frontends
+     * to track followNFT transfers.
      *
      * @param profileId The token ID of the profile associated with the followNFT being transferred.
      * @param followNFTId The followNFT being transferred's token ID.
@@ -283,8 +283,8 @@ interface ILensHub {
     function emitFollowNFTTransferEvent(uint256 profileId, uint256 followNFTId, address from, address to) external;
 
     /**
-     * @dev Helper function to emit a detailed collectNFT transfer event from the hub, to be consumed by frontends to track
-     * collectNFT transfers.
+     * @dev Helper function to emit a detailed collectNFT transfer event from the hub, to be consumed by frontends
+     * to track collectNFT transfers.
      *
      * @param profileId The token ID of the profile associated with the collect NFT being transferred.
      * @param pubId The publication ID associated with the collect NFT being transferred.

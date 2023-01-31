@@ -2,8 +2,8 @@
 
 pragma solidity 0.8.10;
 
-import { DataTypes } from "./DataTypes.sol";
-import { Errors } from "./Errors.sol";
+import { DataTypes } from "../../libraries/DataTypes.sol";
+import { Errors } from "../../libraries/Errors.sol";
 
 /**
  * @title Helpers

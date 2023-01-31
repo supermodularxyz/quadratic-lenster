@@ -5,7 +5,7 @@ import { Contract } from "ethers";
 import { ethers } from "hardhat";
 
 import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
-import { getDefaultSigners } from "../utils/constants";
+import { getDefaultSigners } from "../utils/utils";
 import { deployGitcoinMumbaiFixture } from "./gitcoin.fixture";
 
 export const shouldBehaveLikeGrantsRound = () => {

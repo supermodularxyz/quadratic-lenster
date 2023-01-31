@@ -13,6 +13,7 @@ import { Events } from "./libraries/Events.sol";
  * `onlyHub` modifier.
  */
 abstract contract ModuleBase {
+    //solhint-disable-next-line var-name-mixedcase
     address public immutable HUB;
 
     modifier onlyHub() {

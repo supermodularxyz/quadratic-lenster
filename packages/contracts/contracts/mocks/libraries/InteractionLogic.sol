@@ -4,14 +4,14 @@ pragma solidity 0.8.10;
 
 import { FollowNFTProxy } from "../upgradeability/FollowNFTProxy.sol";
 import { Helpers } from "./Helpers.sol";
-import { DataTypes } from "./DataTypes.sol";
-import { Errors } from "./Errors.sol";
-import { Events } from "./Events.sol";
+import { DataTypes } from "../../libraries/DataTypes.sol";
+import { Errors } from "../../libraries/Errors.sol";
+import { Events } from "../../libraries/Events.sol";
 import { Constants } from "./Constants.sol";
 import { IFollowNFT } from "../interfaces/IFollowNFT.sol";
 import { ICollectNFT } from "../interfaces/ICollectNFT.sol";
-import { IFollowModule } from "../interfaces/IFollowModule.sol";
-import { ICollectModule } from "../interfaces/ICollectModule.sol";
+import { IFollowModule } from "../../interfaces/IFollowModule.sol";
+import { ICollectModule } from "../../interfaces/ICollectModule.sol";
 import { Clones } from "@openzeppelin/contracts/proxy/Clones.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 

@@ -2,13 +2,13 @@
 
 pragma solidity 0.8.10;
 
-import {ICollectNFT} from './interfaces/ICollectNFT.sol';
-import {IERC721} from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
-import {ILensHub} from './interfaces/ILensHub.sol';
-import {Errors} from './libraries/Errors.sol';
-import {Events} from './libraries/Events.sol';
-import {LensNFTBase} from './base/LensNFTBase.sol';
-import {ERC721Enumerable} from './base/ERC721Enumerable.sol';
+import { ICollectNFT } from "./interfaces/ICollectNFT.sol";
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import { ILensHub } from "./interfaces/ILensHub.sol";
+import { Errors } from "./libraries/Errors.sol";
+import { Events } from "./libraries/Events.sol";
+import { LensNFTBase } from "./base/LensNFTBase.sol";
+import { ERC721Enumerable } from "./base/ERC721Enumerable.sol";
 
 /**
  * @title CollectNFT
@@ -104,35 +104,21 @@ contract CollectNFT is LensNFTBase, ICollectNFT {
      * @return A tuple with the address who should receive the royalties and the royalty
      * payment amount for the given sale price.
      */
-    function royaltyInfo(uint256 tokenId, uint256 salePrice)
-        external
-        view
-        returns (address, uint256)
-    {
+    function royaltyInfo(uint256 tokenId, uint256 salePrice) external view returns (address, uint256) {
         return (IERC721(HUB).ownerOf(_profileId), (salePrice * _royaltyBasisPoints) / BASIS_POINTS);
     }
 
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(ERC721Enumerable)
-        returns (bool)
-    {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721Enumerable) returns (bool) {
         return interfaceId == INTERFACE_ID_ERC2981 || super.supportsInterface(interfaceId);
     }
 
     /**
      * @dev Upon transfers, we emit the transfer event in the hub.
      */
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override {
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override {
         super._beforeTokenTransfer(from, to, tokenId);
         ILensHub(HUB).emitCollectNFTTransferEvent(_profileId, _pubId, tokenId, from, to);
     }

@@ -2,12 +2,12 @@
 
 pragma solidity 0.8.10;
 
-import {ILensNFTBase} from './ILensNFTBase.sol';
-import {Errors} from '../libraries/Errors.sol';
-import {DataTypes} from '../libraries/DataTypes.sol';
-import {Events} from '../libraries/Events.sol';
-import {ERC721Time} from './ERC721Time.sol';
-import {ERC721Enumerable} from './ERC721Enumerable.sol';
+import { ILensNFTBase } from './ILensNFTBase.sol';
+import { Errors } from '../libraries/Errors.sol';
+import { DataTypes } from '../libraries/DataTypes.sol';
+import { Events } from '../libraries/Events.sol';
+import { ERC721Time } from './ERC721Time.sol';
+import { ERC721Enumerable } from './ERC721Enumerable.sol';
 
 /**
  * @title LensNFTBase
@@ -23,15 +23,11 @@ abstract contract LensNFTBase is ERC721Enumerable, ILensNFTBase {
     bytes32 internal constant PERMIT_TYPEHASH =
         keccak256('Permit(address spender,uint256 tokenId,uint256 nonce,uint256 deadline)');
     bytes32 internal constant PERMIT_FOR_ALL_TYPEHASH =
-        keccak256(
-            'PermitForAll(address owner,address operator,bool approved,uint256 nonce,uint256 deadline)'
-        );
+        keccak256('PermitForAll(address owner,address operator,bool approved,uint256 nonce,uint256 deadline)');
     bytes32 internal constant BURN_WITH_SIG_TYPEHASH =
         keccak256('BurnWithSig(uint256 tokenId,uint256 nonce,uint256 deadline)');
     bytes32 internal constant EIP712_DOMAIN_TYPEHASH =
-        keccak256(
-            'EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'
-        );
+        keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)');
 
     mapping(address => uint256) public sigNonces;
 
@@ -51,25 +47,13 @@ abstract contract LensNFTBase is ERC721Enumerable, ILensNFTBase {
     }
 
     /// @inheritdoc ILensNFTBase
-    function permit(
-        address spender,
-        uint256 tokenId,
-        DataTypes.EIP712Signature calldata sig
-    ) external override {
+    function permit(address spender, uint256 tokenId, DataTypes.EIP712Signature calldata sig) external override {
         if (spender == address(0)) revert Errors.ZeroSpender();
         address owner = ownerOf(tokenId);
         unchecked {
             _validateRecoveredAddress(
                 _calculateDigest(
-                    keccak256(
-                        abi.encode(
-                            PERMIT_TYPEHASH,
-                            spender,
-                            tokenId,
-                            sigNonces[owner]++,
-                            sig.deadline
-                        )
-                    )
+                    keccak256(abi.encode(PERMIT_TYPEHASH, spender, tokenId, sigNonces[owner]++, sig.deadline))
                 ),
                 owner,
                 sig
@@ -90,14 +74,7 @@ abstract contract LensNFTBase is ERC721Enumerable, ILensNFTBase {
             _validateRecoveredAddress(
                 _calculateDigest(
                     keccak256(
-                        abi.encode(
-                            PERMIT_FOR_ALL_TYPEHASH,
-                            owner,
-                            operator,
-                            approved,
-                            sigNonces[owner]++,
-                            sig.deadline
-                        )
+                        abi.encode(PERMIT_FOR_ALL_TYPEHASH, owner, operator, approved, sigNonces[owner]++, sig.deadline)
                     )
                 ),
                 owner,
@@ -119,23 +96,12 @@ abstract contract LensNFTBase is ERC721Enumerable, ILensNFTBase {
     }
 
     /// @inheritdoc ILensNFTBase
-    function burnWithSig(uint256 tokenId, DataTypes.EIP712Signature calldata sig)
-        public
-        virtual
-        override
-    {
+    function burnWithSig(uint256 tokenId, DataTypes.EIP712Signature calldata sig) public virtual override {
         address owner = ownerOf(tokenId);
         unchecked {
             _validateRecoveredAddress(
                 _calculateDigest(
-                    keccak256(
-                        abi.encode(
-                            BURN_WITH_SIG_TYPEHASH,
-                            tokenId,
-                            sigNonces[owner]++,
-                            sig.deadline
-                        )
-                    )
+                    keccak256(abi.encode(BURN_WITH_SIG_TYPEHASH, tokenId, sigNonces[owner]++, sig.deadline))
                 ),
                 owner,
                 sig
@@ -154,8 +120,7 @@ abstract contract LensNFTBase is ERC721Enumerable, ILensNFTBase {
     ) internal view {
         if (sig.deadline < block.timestamp) revert Errors.SignatureExpired();
         address recoveredAddress = ecrecover(digest, sig.v, sig.r, sig.s);
-        if (recoveredAddress == address(0) || recoveredAddress != expectedAddress)
-            revert Errors.SignatureInvalid();
+        if (recoveredAddress == address(0) || recoveredAddress != expectedAddress) revert Errors.SignatureInvalid();
     }
 
     /**
@@ -184,9 +149,7 @@ abstract contract LensNFTBase is ERC721Enumerable, ILensNFTBase {
     function _calculateDigest(bytes32 hashedMessage) internal view returns (bytes32) {
         bytes32 digest;
         unchecked {
-            digest = keccak256(
-                abi.encodePacked('\x19\x01', _calculateDomainSeparator(), hashedMessage)
-            );
+            digest = keccak256(abi.encodePacked('\x19\x01', _calculateDomainSeparator(), hashedMessage));
         }
         return digest;
     }

@@ -2,9 +2,9 @@
 
 pragma solidity 0.8.10;
 
-import {ICollectModule} from '../interfaces/ICollectModule.sol';
-import {ModuleBase} from '../ModuleBase.sol';
-import {FollowValidationModuleBase} from '../FollowValidationModuleBase.sol';
+import { ICollectModule } from "../interfaces/ICollectModule.sol";
+import { ModuleBase } from "../ModuleBase.sol";
+import { FollowValidationModuleBase } from "../FollowValidationModuleBase.sol";
 
 /**
  * @title FreeCollectModule
@@ -43,7 +43,6 @@ contract FreeCollectModule is FollowValidationModuleBase, ICollectModule {
         uint256 pubId,
         bytes calldata data
     ) external view override {
-        if (_followerOnlyByPublicationByProfile[profileId][pubId])
-            _checkFollowValidity(profileId, collector);
+        if (_followerOnlyByPublicationByProfile[profileId][pubId]) _checkFollowValidity(profileId, collector);
     }
 }

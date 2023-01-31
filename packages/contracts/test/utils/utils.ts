@@ -24,7 +24,7 @@ export const encodeProgramParameters = (params: []): string => {
  * @param params
  * @returns {string}
  */
-export const encodeRoundParameters = (params: any[]): string => {
+export const encodeRoundParameters = (params: []): string => {
   return ethers.utils.defaultAbiCoder.encode(
     [
       "address",
@@ -81,3 +81,12 @@ export function getCollectModulePubInitData(initModuleData: (string | number | B
 
   return collectModuleInitData;
 }
+
+export const getDefaultSigners = async () => {
+  const defaultSigners = await ethers.getSigners();
+  return {
+    admin: defaultSigners[0],
+    user: defaultSigners[1],
+    user2: defaultSigners[2],
+  };
+};
