@@ -16,6 +16,7 @@ import { IModuleGlobals } from "./interfaces/IModuleGlobals.sol";
 abstract contract FeeModuleBase {
     uint16 internal constant BPS_MAX = 10000;
 
+    //solhint-disable-next-line var-name-mixedcase
     address public immutable MODULE_GLOBALS;
 
     constructor(address moduleGlobals) {

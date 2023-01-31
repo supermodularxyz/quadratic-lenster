@@ -19,7 +19,7 @@ contract QuadraticFundingCurator is AccessControl, Pausable {
 
     // --- State ---
 
-    address grantRound;
+    address public grantRound;
 
     // --- Events ---
     event GrantsRoundUpdated(address newAddress);

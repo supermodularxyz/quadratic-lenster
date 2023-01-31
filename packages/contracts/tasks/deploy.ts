@@ -8,7 +8,7 @@ import LENS_POLYGON from "../deployments/lens-polygon.json";
 
 type Contracts = "QuadraticFundingCurator" | "QuadraticVoteCollectModule";
 
-task("deploy", "Deploy contracts and verify").setAction(async ({}, { ethers }) => {
+task("deploy", "Deploy contracts and verify").setAction(async (_, { ethers }) => {
   const [admin] = await ethers.getSigners();
   let addresses;
 

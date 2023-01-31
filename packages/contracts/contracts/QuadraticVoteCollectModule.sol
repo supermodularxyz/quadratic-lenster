@@ -39,6 +39,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
      */
     mapping(bytes32 => bool) internal _validVotes;
 
+    //solhint-disable-next-line no-empty-blocks
     constructor(address _lensHub, address _moduleGlobals) FeeModuleBase(_moduleGlobals) ModuleBase(_lensHub) {}
 
     function initializePublicationCollectModule(

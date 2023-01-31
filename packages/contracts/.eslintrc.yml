@@ -6,8 +6,8 @@ extends:
 parser: "@typescript-eslint/parser"
 parserOptions:
   project: "tsconfig.json"
-  tsconfigRootDir: "packages/contracts"
-plugins:
+  tsconfigRootDir: "."
+  plugins:
   - "@typescript-eslint"
 root: true
 
@@ -28,4 +28,4 @@ overrides:
     rules:
       quotes:
         - error
-        - single
+        - double

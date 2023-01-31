@@ -24,7 +24,7 @@ export const encodeProgramParameters = (params: []): string => {
  * @param params
  * @returns {string}
  */
-export const encodeRoundParameters = (params: any[]): string => {
+export const encodeRoundParameters = (params: []): string => {
   return ethers.utils.defaultAbiCoder.encode(
     [
       "address",

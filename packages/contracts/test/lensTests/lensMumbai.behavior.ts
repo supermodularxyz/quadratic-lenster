@@ -47,7 +47,7 @@ export const shouldBehaveLikeLensHubMumbai = () => {
       await _lensMumbai.connect(user).follow([FIRST_PROFILE_ID], [[]]);
       const tx = await _lensMumbai.connect(user).collect(FIRST_PROFILE_ID, 1, []);
       const promise = await tx.wait();
-      const event = promise?.events?.filter((e: any) => e.event == "Transfer");
+      const event = promise?.events?.filter((e) => e.event == "Transfer");
       const tokenId = event?.[0].args?.tokenId;
 
       await expect(tx).to.not.be.reverted;
