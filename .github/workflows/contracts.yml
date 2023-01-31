@@ -22,17 +22,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: bahmutov/npm-install@v1
+      - name: "Copy config"
+        run: |
+          mv ./.env.github .env
+          echo "::debug::$(less .env)"
+
       - name: Install
         run: yarn install
       
       - name: "Lint the contracts"
         run: "yarn lint"
 
-      - name: "Copy config"
-        run: |
-          mv .env.github .env
-          echo "::debug::$(less .env)"
-          
       - name: Test
         run: yarn test
  
