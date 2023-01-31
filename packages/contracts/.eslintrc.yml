@@ -8,7 +8,7 @@ parserOptions:
   project: "tsconfig.json"
   tsconfigRootDir: "."
   plugins:
-  - "@typescript-eslint"
+    - "@typescript-eslint"
 root: true
 
 rules:
@@ -21,11 +21,3 @@ rules:
     - error
     - argsIgnorePattern: "_"
       varsIgnorePattern: "_"
-overrides:
-  - files:
-      - test/*.ts
-      - tasks/*.ts
-    rules:
-      quotes:
-        - error
-        - double
