@@ -30,8 +30,9 @@ jobs:
 
       - name: "Copy config"
         run: |
-          mv ./.env.github .env
+          mv .env.github .env
           echo "::debug::$(less .env)"
+          
       - name: Test
         run: yarn test
  
