@@ -8,7 +8,7 @@ import { MerklePayoutStrategy } from "../../types/contracts/mocks/MerklePayoutSt
 import { QuadraticFundingVotingStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation";
 import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
 import { deployLensMumbaiFixture } from "../lensTests/lens.fixture";
-import { encodeRoundParameters,getDefaultSigners } from "../utils/utils";
+import { encodeRoundParameters, getDefaultSigners } from "../utils/utils";
 
 /* deploy gitcoin grants implementation on mumbai fork */
 export async function deployGitcoinMumbaiFixture() {

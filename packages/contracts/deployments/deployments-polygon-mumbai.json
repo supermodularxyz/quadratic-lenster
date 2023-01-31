@@ -1,1 +1,4 @@
-{"QuadraticFundingCurator":"0x4Aea85D9a99a8389dF3C55db746260C060989C07","QuadraticVoteCollectModule":"0x4Ff23872ca1C46410514f29FFA44F1e9a978fb1C"}
+{
+  "QuadraticFundingCurator": "0x4Aea85D9a99a8389dF3C55db746260C060989C07",
+  "QuadraticVoteCollectModule": "0x4Ff23872ca1C46410514f29FFA44F1e9a978fb1C"
+}

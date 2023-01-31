@@ -1,33 +1,33 @@
-import { ContractFactory } from 'ethers';
-import * as fs from 'fs';
-import { task } from 'hardhat/config';
+import { ContractFactory } from "ethers";
+import * as fs from "fs";
+import { task } from "hardhat/config";
 
-import GRANTS_MUMBAI from '../deployments/grants-polygon-mumbai.json';
-import LENS_MUMBAI from '../deployments/lens-polygon-mumbai.json';
-import LENS_POLYGON from '../deployments/lens-polygon.json';
+import GRANTS_MUMBAI from "../deployments/grants-polygon-mumbai.json";
+import LENS_MUMBAI from "../deployments/lens-polygon-mumbai.json";
+import LENS_POLYGON from "../deployments/lens-polygon.json";
 
-type Contracts = 'QuadraticFundingCurator' | 'QuadraticVoteCollectModule';
+type Contracts = "QuadraticFundingCurator" | "QuadraticVoteCollectModule";
 
-task('deploy', 'Deploy contracts and verify').setAction(async ({}, { ethers }) => {
+task("deploy", "Deploy contracts and verify").setAction(async ({}, { ethers }) => {
   const [admin] = await ethers.getSigners();
   let addresses;
 
-  if (hre.network.name == 'polygon-mainnet') {
+  if (hre.network.name == "polygon-mainnet") {
     addresses = LENS_POLYGON;
-  } else if (hre.network.name == 'polygon-mumbai') {
+  } else if (hre.network.name == "polygon-mumbai") {
     addresses = LENS_MUMBAI;
   } else {
     addresses = LENS_POLYGON;
   }
 
   const contracts: Record<Contracts, ContractFactory> = {
-    QuadraticFundingCurator: await ethers.getContractFactory('QuadraticFundingCurator'),
-    QuadraticVoteCollectModule: await ethers.getContractFactory('QuadraticVoteCollectModule'),
+    QuadraticFundingCurator: await ethers.getContractFactory("QuadraticFundingCurator"),
+    QuadraticVoteCollectModule: await ethers.getContractFactory("QuadraticVoteCollectModule"),
   };
 
   const deployments: Record<Contracts, string> = {
-    QuadraticFundingCurator: '',
-    QuadraticVoteCollectModule: '',
+    QuadraticFundingCurator: "",
+    QuadraticVoteCollectModule: "",
   };
 
   const constructorArguments: Record<Contracts, string[]> = {
@@ -36,7 +36,7 @@ task('deploy', 'Deploy contracts and verify').setAction(async ({}, { ethers }) =
   };
 
   const toFile = (path: string, deployment: Record<Contracts, string>) => {
-    fs.writeFileSync(path, JSON.stringify(deployment), { encoding: 'utf-8' });
+    fs.writeFileSync(path, JSON.stringify(deployment), { encoding: "utf-8" });
   };
 
   for (const [name, contract] of Object.entries(contracts)) {
@@ -56,21 +56,21 @@ task('deploy', 'Deploy contracts and verify').setAction(async ({}, { ethers }) =
 
     toFile(`deployments/deployments-${hre.network.name}.json`, deployments);
 
-    if (hre.network.name !== ('localhost' || 'hardhat')) {
+    if (hre.network.name !== ("localhost" || "hardhat")) {
       try {
         const code = await instance.instance?.provider.getCode(instance.address);
-        if (code === '0x') {
+        if (code === "0x") {
           console.log(`${instance.name} contract deployment has not completed. waiting to verify...`);
           await instance.instance?.deployed();
         }
 
-        await hre.run('verify:verify', {
+        await hre.run("verify:verify", {
           address: instance.address,
           constructorArguments: constructorArgs,
         });
       } catch ({ message }) {
-        if ((message as string).includes('Reason: Already Verified')) {
-          console.log('Reason: Already Verified');
+        if ((message as string).includes("Reason: Already Verified")) {
+          console.log("Reason: Already Verified");
         }
         console.error(message);
       }

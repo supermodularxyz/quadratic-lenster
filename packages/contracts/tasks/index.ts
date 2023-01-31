@@ -1,2 +1,2 @@
-export * from './deploy';
-export * from './verifyContract';
+export * from "./deploy";
+export * from "./verifyContract";

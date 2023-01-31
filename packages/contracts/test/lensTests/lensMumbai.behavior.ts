@@ -7,7 +7,7 @@ import CollectNFT from "../../importedABI/CollectNFT.json";
 import LensHubAbi from "../../importedABI/LensHub.json";
 import { LensHub } from "../../types/contracts/mocks/LensHub";
 import { FIRST_PROFILE_ID, lensMumbaiAddresses } from "../utils/constants";
-import { getTimestamp, getDefaultSigners } from "../utils/utils";
+import { getDefaultSigners, getTimestamp } from "../utils/utils";
 
 export const shouldBehaveLikeLensHubMumbai = () => {
   let _snapshot: SnapshotRestorer;

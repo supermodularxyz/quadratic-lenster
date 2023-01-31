@@ -2,8 +2,8 @@
 
 pragma solidity 0.8.10;
 
-import '@openzeppelin/contracts/utils/Base64.sol';
-import '@openzeppelin/contracts/utils/Strings.sol';
+import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 library ProfileTokenURILogic {
     uint8 internal constant DEFAULT_FONT_SIZE = 24;
@@ -30,11 +30,11 @@ library ProfileTokenURILogic {
         string memory handle,
         string memory imageURI
     ) external pure returns (string memory) {
-        string memory handleWithAtSymbol = string(abi.encodePacked('@', handle));
+        string memory handleWithAtSymbol = string(abi.encodePacked("@", handle));
         return
             string(
                 abi.encodePacked(
-                    'data:application/json;base64,',
+                    "data:application/json;base64,",
                     Base64.encode(
                         abi.encodePacked(
                             '{"name":"',
@@ -69,11 +69,10 @@ library ProfileTokenURILogic {
      *
      * @return string The profile token image as a base64-encoded SVG.
      */
-    function _getSVGImageBase64Encoded(string memory handleWithAtSymbol, string memory imageURI)
-        internal
-        pure
-        returns (string memory)
-    {
+    function _getSVGImageBase64Encoded(
+        string memory handleWithAtSymbol,
+        string memory imageURI
+    ) internal pure returns (string memory) {
         return
             Base64.encode(
                 abi.encodePacked(

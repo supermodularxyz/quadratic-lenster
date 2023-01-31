@@ -6,8 +6,8 @@ import { ethers } from "hardhat";
 import { QuadraticFundingCurator } from "../../types/contracts/QuadraticFundingCurator";
 import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
 import { MetaPtr } from "../utils/constants";
-import { deployCuratorFixture } from "./curator.fixture";
 import { getDefaultSigners } from "../utils/utils";
+import { deployCuratorFixture } from "./curator.fixture";
 
 export const shouldBehaveLikeCurator = () => {
   let _roundImplementation: RoundImplementation;

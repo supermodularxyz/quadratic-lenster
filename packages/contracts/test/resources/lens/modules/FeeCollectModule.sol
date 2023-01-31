@@ -2,14 +2,14 @@
 
 pragma solidity 0.8.10;
 
-import {ICollectModule} from '../interfaces/ICollectModule.sol';
-import {Errors} from '../libraries/Errors.sol';
-import {FeeModuleBase} from '../FeeModuleBase.sol';
-import {ModuleBase} from '../ModuleBase.sol';
-import {FollowValidationModuleBase} from '../FollowValidationModuleBase.sol';
-import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import {IERC721} from '@openzeppelin/contracts/token/ERC721/IERC721.sol';
+import { ICollectModule } from "../interfaces/ICollectModule.sol";
+import { Errors } from "../libraries/Errors.sol";
+import { FeeModuleBase } from "../FeeModuleBase.sol";
+import { ModuleBase } from "../ModuleBase.sol";
+import { FollowValidationModuleBase } from "../FollowValidationModuleBase.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 /**
  * @notice A struct containing the necessary data to execute collect actions on a publication.
@@ -40,8 +40,7 @@ struct ProfilePublicationData {
 contract FeeCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollectModule {
     using SafeERC20 for IERC20;
 
-    mapping(uint256 => mapping(uint256 => ProfilePublicationData))
-        internal _dataByPublicationByProfile;
+    mapping(uint256 => mapping(uint256 => ProfilePublicationData)) internal _dataByPublicationByProfile;
 
     constructor(address hub, address moduleGlobals) FeeModuleBase(moduleGlobals) ModuleBase(hub) {}
 
@@ -64,19 +63,12 @@ contract FeeCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollect
         uint256 pubId,
         bytes calldata data
     ) external override onlyHub returns (bytes memory) {
-        (
-            uint256 amount,
-            address currency,
-            address recipient,
-            uint16 referralFee,
-            bool followerOnly
-        ) = abi.decode(data, (uint256, address, address, uint16, bool));
-        if (
-            !_currencyWhitelisted(currency) ||
-            recipient == address(0) ||
-            referralFee > BPS_MAX ||
-            amount == 0
-        ) revert Errors.InitParamsInvalid();
+        (uint256 amount, address currency, address recipient, uint16 referralFee, bool followerOnly) = abi.decode(
+            data,
+            (uint256, address, address, uint16, bool)
+        );
+        if (!_currencyWhitelisted(currency) || recipient == address(0) || referralFee > BPS_MAX || amount == 0)
+            revert Errors.InitParamsInvalid();
 
         _dataByPublicationByProfile[profileId][pubId].amount = amount;
         _dataByPublicationByProfile[profileId][pubId].currency = currency;
@@ -99,8 +91,7 @@ contract FeeCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollect
         uint256 pubId,
         bytes calldata data
     ) external virtual override onlyHub {
-        if (_dataByPublicationByProfile[profileId][pubId].followerOnly)
-            _checkFollowValidity(profileId, collector);
+        if (_dataByPublicationByProfile[profileId][pubId].followerOnly) _checkFollowValidity(profileId, collector);
         if (referrerProfileId == profileId) {
             _processCollect(collector, profileId, pubId, data);
         } else {
@@ -117,20 +108,14 @@ contract FeeCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollect
      *
      * @return ProfilePublicationData The ProfilePublicationData struct mapped to that publication.
      */
-    function getPublicationData(uint256 profileId, uint256 pubId)
-        external
-        view
-        returns (ProfilePublicationData memory)
-    {
+    function getPublicationData(
+        uint256 profileId,
+        uint256 pubId
+    ) external view returns (ProfilePublicationData memory) {
         return _dataByPublicationByProfile[profileId][pubId];
     }
 
-    function _processCollect(
-        address collector,
-        uint256 profileId,
-        uint256 pubId,
-        bytes calldata data
-    ) internal {
+    function _processCollect(address collector, uint256 profileId, uint256 pubId, bytes calldata data) internal {
         uint256 amount = _dataByPublicationByProfile[profileId][pubId].amount;
         address currency = _dataByPublicationByProfile[profileId][pubId].currency;
         _validateDataIsExpected(data, currency, amount);
@@ -141,8 +126,7 @@ contract FeeCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollect
         uint256 adjustedAmount = amount - treasuryAmount;
 
         IERC20(currency).safeTransferFrom(collector, recipient, adjustedAmount);
-        if (treasuryAmount > 0)
-            IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
+        if (treasuryAmount > 0) IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
     }
 
     function _processCollectWithReferral(
@@ -182,7 +166,6 @@ contract FeeCollectModule is FeeModuleBase, FollowValidationModuleBase, ICollect
         address recipient = _dataByPublicationByProfile[profileId][pubId].recipient;
 
         IERC20(currency).safeTransferFrom(collector, recipient, adjustedAmount);
-        if (treasuryAmount > 0)
-            IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
+        if (treasuryAmount > 0) IERC20(currency).safeTransferFrom(collector, treasury, treasuryAmount);
     }
 }

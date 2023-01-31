@@ -2,20 +2,20 @@
 
 pragma solidity 0.8.10;
 
-import {ILensHub} from '../interfaces/ILensHub.sol';
-import {Events} from '../libraries/Events.sol';
-import {Helpers} from '../libraries/Helpers.sol';
-import {Constants} from '../libraries/Constants.sol';
-import {DataTypes} from '../libraries/DataTypes.sol';
-import {Errors} from '../libraries/Errors.sol';
-import {PublishingLogic} from '../libraries/PublishingLogic.sol';
-import {ProfileTokenURILogic} from '../libraries/ProfileTokenURILogic.sol';
-import {InteractionLogic} from '../libraries/InteractionLogic.sol';
-import {LensNFTBase} from './LensNFTBase.sol';
-import {LensMultiState} from './LensMultiState.sol';
-import {LensHubStorage} from './LensHubStorage.sol';
-import {VersionedInitializable} from './VersionedInitializable.sol';
-import {IERC721Enumerable} from '@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol';
+import { ILensHub } from "../interfaces/ILensHub.sol";
+import { Events } from "../libraries/Events.sol";
+import { Helpers } from "./libraries/Helpers.sol";
+import { Constants } from "./libraries/Constants.sol";
+import { DataTypes } from "../libraries/DataTypes.sol";
+import { Errors } from "../libraries/Errors.sol";
+import { PublishingLogic } from "./libraries/PublishingLogic.sol";
+import { ProfileTokenURILogic } from "./libraries/ProfileTokenURILogic.sol";
+import { InteractionLogic } from "./libraries/InteractionLogic.sol";
+import { LensNFTBase } from "./LensNFTBase.sol";
+import { LensMultiState } from "./LensMultiState.sol";
+import { LensHubStorage } from "./LensHubStorage.sol";
+import { VersionedInitializable } from "./VersionedInitializable.sol";
+import { IERC721Enumerable } from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 
 /**
  * @title LensHub
@@ -80,19 +80,13 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     function setEmergencyAdmin(address newEmergencyAdmin) external override onlyGov {
         address prevEmergencyAdmin = _emergencyAdmin;
         _emergencyAdmin = newEmergencyAdmin;
-        emit Events.EmergencyAdminSet(
-            msg.sender,
-            prevEmergencyAdmin,
-            newEmergencyAdmin,
-            block.timestamp
-        );
+        emit Events.EmergencyAdminSet(msg.sender, prevEmergencyAdmin, newEmergencyAdmin, block.timestamp);
     }
 
     /// @inheritdoc ILensHub
     function setState(DataTypes.ProtocolState newState) external override {
         if (msg.sender == _emergencyAdmin) {
-            if (newState == DataTypes.ProtocolState.Unpaused)
-                revert Errors.EmergencyAdminCannotUnpause();
+            if (newState == DataTypes.ProtocolState.Unpaused) revert Errors.EmergencyAdminCannotUnpause();
             _validateNotPaused();
         } else if (msg.sender != _governance) {
             revert Errors.NotGovernanceOrEmergencyAdmin();
@@ -101,11 +95,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     ///@inheritdoc ILensHub
-    function whitelistProfileCreator(address profileCreator, bool whitelist)
-        external
-        override
-        onlyGov
-    {
+    function whitelistProfileCreator(address profileCreator, bool whitelist) external override onlyGov {
         _profileCreatorWhitelisted[profileCreator] = whitelist;
         emit Events.ProfileCreatorWhitelisted(profileCreator, whitelist, block.timestamp);
     }
@@ -117,21 +107,13 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function whitelistReferenceModule(address referenceModule, bool whitelist)
-        external
-        override
-        onlyGov
-    {
+    function whitelistReferenceModule(address referenceModule, bool whitelist) external override onlyGov {
         _referenceModuleWhitelisted[referenceModule] = whitelist;
         emit Events.ReferenceModuleWhitelisted(referenceModule, whitelist, block.timestamp);
     }
 
     /// @inheritdoc ILensHub
-    function whitelistCollectModule(address collectModule, bool whitelist)
-        external
-        override
-        onlyGov
-    {
+    function whitelistCollectModule(address collectModule, bool whitelist) external override onlyGov {
         _collectModuleWhitelisted[collectModule] = whitelist;
         emit Events.CollectModuleWhitelisted(collectModule, whitelist, block.timestamp);
     }
@@ -141,12 +123,9 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     /// *********************************
 
     /// @inheritdoc ILensHub
-    function createProfile(DataTypes.CreateProfileData calldata vars)
-        external
-        override
-        whenNotPaused
-        returns (uint256)
-    {
+    function createProfile(
+        DataTypes.CreateProfileData calldata vars
+    ) external override whenNotPaused returns (uint256) {
         if (!_profileCreatorWhitelisted[msg.sender]) revert Errors.ProfileCreatorNotWhitelisted();
         unchecked {
             uint256 profileId = ++_profileCounter;
@@ -168,11 +147,9 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function setDefaultProfileWithSig(DataTypes.SetDefaultProfileWithSigData calldata vars)
-        external
-        override
-        whenNotPaused
-    {
+    function setDefaultProfileWithSig(
+        DataTypes.SetDefaultProfileWithSigData calldata vars
+    ) external override whenNotPaused {
         unchecked {
             _validateRecoveredAddress(
                 _calculateDigest(
@@ -210,11 +187,9 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function setFollowModuleWithSig(DataTypes.SetFollowModuleWithSigData calldata vars)
-        external
-        override
-        whenNotPaused
-    {
+    function setFollowModuleWithSig(
+        DataTypes.SetFollowModuleWithSigData calldata vars
+    ) external override whenNotPaused {
         address owner = ownerOf(vars.profileId);
         unchecked {
             _validateRecoveredAddress(
@@ -250,11 +225,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function setDispatcherWithSig(DataTypes.SetDispatcherWithSigData calldata vars)
-        external
-        override
-        whenNotPaused
-    {
+    function setDispatcherWithSig(DataTypes.SetDispatcherWithSigData calldata vars) external override whenNotPaused {
         address owner = ownerOf(vars.profileId);
         unchecked {
             _validateRecoveredAddress(
@@ -277,21 +248,15 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function setProfileImageURI(uint256 profileId, string calldata imageURI)
-        external
-        override
-        whenNotPaused
-    {
+    function setProfileImageURI(uint256 profileId, string calldata imageURI) external override whenNotPaused {
         _validateCallerIsProfileOwnerOrDispatcher(profileId);
         _setProfileImageURI(profileId, imageURI);
     }
 
     /// @inheritdoc ILensHub
-    function setProfileImageURIWithSig(DataTypes.SetProfileImageURIWithSigData calldata vars)
-        external
-        override
-        whenNotPaused
-    {
+    function setProfileImageURIWithSig(
+        DataTypes.SetProfileImageURIWithSigData calldata vars
+    ) external override whenNotPaused {
         address owner = ownerOf(vars.profileId);
         unchecked {
             _validateRecoveredAddress(
@@ -314,21 +279,15 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function setFollowNFTURI(uint256 profileId, string calldata followNFTURI)
-        external
-        override
-        whenNotPaused
-    {
+    function setFollowNFTURI(uint256 profileId, string calldata followNFTURI) external override whenNotPaused {
         _validateCallerIsProfileOwnerOrDispatcher(profileId);
         _setFollowNFTURI(profileId, followNFTURI);
     }
 
     /// @inheritdoc ILensHub
-    function setFollowNFTURIWithSig(DataTypes.SetFollowNFTURIWithSigData calldata vars)
-        external
-        override
-        whenNotPaused
-    {
+    function setFollowNFTURIWithSig(
+        DataTypes.SetFollowNFTURIWithSigData calldata vars
+    ) external override whenNotPaused {
         address owner = ownerOf(vars.profileId);
         unchecked {
             _validateRecoveredAddress(
@@ -351,12 +310,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function post(DataTypes.PostData calldata vars)
-        external
-        override
-        whenPublishingEnabled
-        returns (uint256)
-    {
+    function post(DataTypes.PostData calldata vars) external override whenPublishingEnabled returns (uint256) {
         _validateCallerIsProfileOwnerOrDispatcher(vars.profileId);
         return
             _createPost(
@@ -370,12 +324,9 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function postWithSig(DataTypes.PostWithSigData calldata vars)
-        external
-        override
-        whenPublishingEnabled
-        returns (uint256)
-    {
+    function postWithSig(
+        DataTypes.PostWithSigData calldata vars
+    ) external override whenPublishingEnabled returns (uint256) {
         address owner = ownerOf(vars.profileId);
         unchecked {
             _validateRecoveredAddress(
@@ -410,23 +361,15 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function comment(DataTypes.CommentData calldata vars)
-        external
-        override
-        whenPublishingEnabled
-        returns (uint256)
-    {
+    function comment(DataTypes.CommentData calldata vars) external override whenPublishingEnabled returns (uint256) {
         _validateCallerIsProfileOwnerOrDispatcher(vars.profileId);
         return _createComment(vars);
     }
 
     /// @inheritdoc ILensHub
-    function commentWithSig(DataTypes.CommentWithSigData calldata vars)
-        external
-        override
-        whenPublishingEnabled
-        returns (uint256)
-    {
+    function commentWithSig(
+        DataTypes.CommentWithSigData calldata vars
+    ) external override whenPublishingEnabled returns (uint256) {
         address owner = ownerOf(vars.profileId);
         unchecked {
             _validateRecoveredAddress(
@@ -469,23 +412,15 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function mirror(DataTypes.MirrorData calldata vars)
-        external
-        override
-        whenPublishingEnabled
-        returns (uint256)
-    {
+    function mirror(DataTypes.MirrorData calldata vars) external override whenPublishingEnabled returns (uint256) {
         _validateCallerIsProfileOwnerOrDispatcher(vars.profileId);
         return _createMirror(vars);
     }
 
     /// @inheritdoc ILensHub
-    function mirrorWithSig(DataTypes.MirrorWithSigData calldata vars)
-        external
-        override
-        whenPublishingEnabled
-        returns (uint256)
-    {
+    function mirrorWithSig(
+        DataTypes.MirrorWithSigData calldata vars
+    ) external override whenPublishingEnabled returns (uint256) {
         address owner = ownerOf(vars.profileId);
         unchecked {
             _validateRecoveredAddress(
@@ -540,11 +475,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
      * NOTE: This overrides the LensNFTBase contract's `burnWithSig()` function and calls it to fully burn
      * the NFT.
      */
-    function burnWithSig(uint256 tokenId, DataTypes.EIP712Signature calldata sig)
-        public
-        override
-        whenNotPaused
-    {
+    function burnWithSig(uint256 tokenId, DataTypes.EIP712Signature calldata sig) public override whenNotPaused {
         super.burnWithSig(tokenId, sig);
         _clearHandleHash(tokenId);
     }
@@ -554,29 +485,17 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     /// ***************************************
 
     /// @inheritdoc ILensHub
-    function follow(uint256[] calldata profileIds, bytes[] calldata datas)
-        external
-        override
-        whenNotPaused
-        returns (uint256[] memory)
-    {
-        return
-            InteractionLogic.follow(
-                msg.sender,
-                profileIds,
-                datas,
-                _profileById,
-                _profileIdByHandleHash
-            );
+    function follow(
+        uint256[] calldata profileIds,
+        bytes[] calldata datas
+    ) external override whenNotPaused returns (uint256[] memory) {
+        return InteractionLogic.follow(msg.sender, profileIds, datas, _profileById, _profileIdByHandleHash);
     }
 
     /// @inheritdoc ILensHub
-    function followWithSig(DataTypes.FollowWithSigData calldata vars)
-        external
-        override
-        whenNotPaused
-        returns (uint256[] memory)
-    {
+    function followWithSig(
+        DataTypes.FollowWithSigData calldata vars
+    ) external override whenNotPaused returns (uint256[] memory) {
         uint256 dataLength = vars.datas.length;
         bytes32[] memory dataHashes = new bytes32[](dataLength);
         for (uint256 i = 0; i < dataLength; ) {
@@ -603,13 +522,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
             );
         }
         return
-            InteractionLogic.follow(
-                vars.follower,
-                vars.profileIds,
-                vars.datas,
-                _profileById,
-                _profileIdByHandleHash
-            );
+            InteractionLogic.follow(vars.follower, vars.profileIds, vars.datas, _profileById, _profileIdByHandleHash);
     }
 
     /// @inheritdoc ILensHub
@@ -631,12 +544,9 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function collectWithSig(DataTypes.CollectWithSigData calldata vars)
-        external
-        override
-        whenNotPaused
-        returns (uint256)
-    {
+    function collectWithSig(
+        DataTypes.CollectWithSigData calldata vars
+    ) external override whenNotPaused returns (uint256) {
         unchecked {
             _validateRecoveredAddress(
                 _calculateDigest(
@@ -689,14 +599,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     ) external override {
         address expectedCollectNFT = _pubByIdByProfile[profileId][pubId].collectNFT;
         if (msg.sender != expectedCollectNFT) revert Errors.CallerNotCollectNFT();
-        emit Events.CollectNFTTransferred(
-            profileId,
-            pubId,
-            collectNFTId,
-            from,
-            to,
-            block.timestamp
-        );
+        emit Events.CollectNFTTransferred(profileId, pubId, collectNFTId, from, to, block.timestamp);
     }
 
     /// *********************************
@@ -704,12 +607,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     /// *********************************
 
     /// @inheritdoc ILensHub
-    function isProfileCreatorWhitelisted(address profileCreator)
-        external
-        view
-        override
-        returns (bool)
-    {
+    function isProfileCreatorWhitelisted(address profileCreator) external view override returns (bool) {
         return _profileCreatorWhitelisted[profileCreator];
     }
 
@@ -724,22 +622,12 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function isReferenceModuleWhitelisted(address referenceModule)
-        external
-        view
-        override
-        returns (bool)
-    {
+    function isReferenceModuleWhitelisted(address referenceModule) external view override returns (bool) {
         return _referenceModuleWhitelisted[referenceModule];
     }
 
     /// @inheritdoc ILensHub
-    function isCollectModuleWhitelisted(address collectModule)
-        external
-        view
-        override
-        returns (bool)
-    {
+    function isCollectModuleWhitelisted(address collectModule) external view override returns (bool) {
         return _collectModuleWhitelisted[collectModule];
     }
 
@@ -769,12 +657,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function getCollectNFT(uint256 profileId, uint256 pubId)
-        external
-        view
-        override
-        returns (address)
-    {
+    function getCollectNFT(uint256 profileId, uint256 pubId) external view override returns (address) {
         return _pubByIdByProfile[profileId][pubId].collectNFT;
     }
 
@@ -784,22 +667,12 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function getCollectModule(uint256 profileId, uint256 pubId)
-        external
-        view
-        override
-        returns (address)
-    {
+    function getCollectModule(uint256 profileId, uint256 pubId) external view override returns (address) {
         return _pubByIdByProfile[profileId][pubId].collectModule;
     }
 
     /// @inheritdoc ILensHub
-    function getReferenceModule(uint256 profileId, uint256 pubId)
-        external
-        view
-        override
-        returns (address)
-    {
+    function getReferenceModule(uint256 profileId, uint256 pubId) external view override returns (address) {
         return _pubByIdByProfile[profileId][pubId].referenceModule;
     }
 
@@ -809,29 +682,15 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function getPubPointer(uint256 profileId, uint256 pubId)
-        external
-        view
-        override
-        returns (uint256, uint256)
-    {
+    function getPubPointer(uint256 profileId, uint256 pubId) external view override returns (uint256, uint256) {
         uint256 profileIdPointed = _pubByIdByProfile[profileId][pubId].profileIdPointed;
         uint256 pubIdPointed = _pubByIdByProfile[profileId][pubId].pubIdPointed;
         return (profileIdPointed, pubIdPointed);
     }
 
     /// @inheritdoc ILensHub
-    function getContentURI(uint256 profileId, uint256 pubId)
-        external
-        view
-        override
-        returns (string memory)
-    {
-        (uint256 rootProfileId, uint256 rootPubId, ) = Helpers.getPointedIfMirror(
-            profileId,
-            pubId,
-            _pubByIdByProfile
-        );
+    function getContentURI(uint256 profileId, uint256 pubId) external view override returns (string memory) {
+        (uint256 rootProfileId, uint256 rootPubId, ) = Helpers.getPointedIfMirror(profileId, pubId, _pubByIdByProfile);
         return _pubByIdByProfile[rootProfileId][rootPubId].contentURI;
     }
 
@@ -842,32 +701,20 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     }
 
     /// @inheritdoc ILensHub
-    function getProfile(uint256 profileId)
-        external
-        view
-        override
-        returns (DataTypes.ProfileStruct memory)
-    {
+    function getProfile(uint256 profileId) external view override returns (DataTypes.ProfileStruct memory) {
         return _profileById[profileId];
     }
 
     /// @inheritdoc ILensHub
-    function getPub(uint256 profileId, uint256 pubId)
-        external
-        view
-        override
-        returns (DataTypes.PublicationStruct memory)
-    {
+    function getPub(
+        uint256 profileId,
+        uint256 pubId
+    ) external view override returns (DataTypes.PublicationStruct memory) {
         return _pubByIdByProfile[profileId][pubId];
     }
 
     /// @inheritdoc ILensHub
-    function getPubType(uint256 profileId, uint256 pubId)
-        external
-        view
-        override
-        returns (DataTypes.PubType)
-    {
+    function getPubType(uint256 profileId, uint256 pubId) external view override returns (DataTypes.PubType) {
         if (pubId == 0 || _profileById[profileId].pubCount < pubId) {
             return DataTypes.PubType.Nonexistent;
         } else if (_pubByIdByProfile[profileId][pubId].collectModule == address(0)) {
@@ -971,12 +818,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
     function _createMirror(DataTypes.MirrorData memory vars) internal returns (uint256) {
         unchecked {
             uint256 pubId = ++_profileById[vars.profileId].pubCount;
-            PublishingLogic.createMirror(
-                vars,
-                pubId,
-                _pubByIdByProfile,
-                _referenceModuleWhitelisted
-            );
+            PublishingLogic.createMirror(vars, pubId, _pubByIdByProfile, _referenceModuleWhitelisted);
             return pubId;
         }
     }
@@ -1003,11 +845,7 @@ contract LensHub is LensNFTBase, VersionedInitializable, LensMultiState, LensHub
         _profileIdByHandleHash[handleHash] = 0;
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override whenNotPaused {
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override whenNotPaused {
         if (_dispatcherByProfile[tokenId] != address(0)) {
             _setDispatcher(tokenId, address(0));
         }
