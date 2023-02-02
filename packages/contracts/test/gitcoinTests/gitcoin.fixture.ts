@@ -19,7 +19,7 @@ export async function deployGitcoinMumbaiFixture() {
   const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
 
   // Voting Strategy
-  const votingStrategyFactory = await ethers.getContractFactory("QuadraticFundingVotingStrategyImplementation");
+  const votingStrategyFactory = await ethers.getContractFactory("QuadraticFundingRelayStrategyImplementation");
   const votingStrategy = <QuadraticFundingVotingStrategyImplementation>await votingStrategyFactory.deploy();
   await votingStrategy.deployed();
 

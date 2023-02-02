@@ -44,7 +44,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
         .reverted;
     });
 
-    it("Should execute processCollect and vote", async () => {
+    it.only("Should execute processCollect and vote", async () => {
       const { user2 } = _signers;
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
@@ -57,16 +57,24 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
 
       //encode collect call data
       const collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WETH.address, DEFAULT_VOTE]);
-
+      // must approve voteCollectModule and VotingStrategy.
       await expect(_WETH.connect(user2).approve(_qVoteCollectModule.address, DEFAULT_VOTE)).to.emit(_WETH, "Approval");
-
-      const moduleWitUser = _qVoteCollectModule.connect(user2);
+      await expect(_WETH.connect(user2).approve(_votingStrategy.address, DEFAULT_VOTE)).to.emit(_WETH, "Approval");
 
       // TODO when fixed expect correct "Voted event parameters"
-      await expect(moduleWitUser.processCollect(1, user2.address, 1, 1, collectData)).to.be.reverted;
+      await expect(_qVoteCollectModule.connect(user2).processCollect(1, user2.address, 1, 1, collectData))
+        .to.emit(_votingStrategy, "Voted")
+        .withArgs(
+          _WETH.address,
+          "999900000000000000",
+          user2.address,
+          _roundImplementation.address,
+          "0x0000000000000000000000000000000000000000000000000000000000000001",
+          _roundImplementation.address,
+        );
     });
 
-    it("Should execute processCollect with referral and vote", async () => {
+    it.only("Should execute processCollect with referral and vote", async () => {
       const { user2 } = _signers;
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
@@ -74,16 +82,31 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
 
       const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
 
-      await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
+      //await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
 
       //encode collect call data
       const collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WETH.address, DEFAULT_VOTE]);
 
-      await _WETH.connect(user2).approve(_qVoteCollectModule.address, DEFAULT_VOTE);
+      await expect(_WETH.connect(user2).approve(_qVoteCollectModule.address, ethers.utils.parseEther("10"))).to.emit(
+        _WETH,
+        "Approval",
+      );
+      await expect(_WETH.connect(user2).approve(_votingStrategy.address, ethers.utils.parseEther("10"))).to.emit(
+        _WETH,
+        "Approval",
+      );
 
       // TODO when fixed expect "Voted event parameters"
-      await expect(_qVoteCollectModule.connect(user2).processCollect(22, user2.address, 1, 1, collectData)).to.be
-        .reverted;
+      await expect(_qVoteCollectModule.connect(user2).processCollect(22, user2.address, 1, 1, collectData))
+        .to.emit(_votingStrategy, "Voted")
+        .withArgs(
+          _WETH.address,
+          "989901000000000000",
+          user2.address,
+          _roundImplementation.address,
+          "0x0000000000000000000000000000000000000000000000000000000000000001",
+          _roundImplementation.address,
+        );
     });
   });
 };
