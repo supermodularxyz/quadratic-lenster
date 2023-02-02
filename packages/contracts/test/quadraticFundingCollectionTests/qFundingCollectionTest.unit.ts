@@ -80,10 +80,6 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
         .reverted;
 
-      const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
-
-      //await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
-
       //encode collect call data
       const collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WETH.address, DEFAULT_VOTE]);
 
