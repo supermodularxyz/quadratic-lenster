@@ -6,8 +6,8 @@ import { ethers } from "hardhat";
 import CollectNFT from "../../importedABI/CollectNFT.json";
 import LensHubAbi from "../../importedABI/LensHub.json";
 import { LensHub } from "../../types/contracts/mocks/LensHub";
-import { FIRST_PROFILE_ID, getDefaultSigners, lensMumbaiAddresses } from "../utils/constants";
-import { getTimestamp } from "../utils/utils";
+import { FIRST_PROFILE_ID, lensMumbaiAddresses } from "../utils/constants";
+import { getDefaultSigners, getTimestamp } from "../utils/utils";
 
 export const shouldBehaveLikeLensHubMumbai = () => {
   let _snapshot: SnapshotRestorer;
@@ -47,7 +47,7 @@ export const shouldBehaveLikeLensHubMumbai = () => {
       await _lensMumbai.connect(user).follow([FIRST_PROFILE_ID], [[]]);
       const tx = await _lensMumbai.connect(user).collect(FIRST_PROFILE_ID, 1, []);
       const promise = await tx.wait();
-      const event = promise?.events?.filter((e: any) => e.event == "Transfer");
+      const event = promise?.events?.filter((e) => e.event == "Transfer");
       const tokenId = event?.[0].args?.tokenId;
 
       await expect(tx).to.not.be.reverted;

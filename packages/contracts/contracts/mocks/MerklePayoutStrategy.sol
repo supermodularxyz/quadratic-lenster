@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.17;
 
-import "./IPayoutStrategy.sol";
+import './IPayoutStrategy.sol';
 
-import "../interfaces/MetaPtr.sol";
+import '../interfaces/MetaPtr.sol';
 
 /**
  * @notice Merkle Payout Strategy contract which is deployed once per round

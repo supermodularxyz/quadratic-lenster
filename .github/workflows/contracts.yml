@@ -1,0 +1,38 @@
+name: Contracts CI 
+
+defaults:
+  run:
+    working-directory: packages/contracts
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test-contracts:
+    # The type of runner that the job will run on
+    name: Build and test contracts
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bahmutov/npm-install@v1
+      - name: "Copy config"
+        run: |
+          mv ./.env.github .env
+          echo "::debug::$(less .env)"
+
+      - name: Install
+        run: yarn install
+      
+      - name: "Lint the contracts"
+        run: "yarn lint"
+
+      - name: Test
+        run: yarn test
+ 

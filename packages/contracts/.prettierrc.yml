@@ -1,14 +1,12 @@
 bracketSpacing: true
 printWidth: 120
 proseWrap: "always"
-singleQuote: false
 tabWidth: 2
 trailingComma: "all"
 
 overrides:
   - files: "*.sol"
     options:
-      compiler: "0.8.17"
       tabWidth: 4
   - files: "*.ts"
     options:

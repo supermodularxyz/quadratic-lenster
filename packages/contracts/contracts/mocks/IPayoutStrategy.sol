@@ -24,8 +24,8 @@ abstract contract IPayoutStrategy {
 
     /// @notice modifier to check if sender is round contract.
     modifier isRoundContract() {
-        require(roundAddress != address(0), "error: payout contract not linked to a round");
-        require(msg.sender == roundAddress, "error: can be invoked only by round contract");
+        require(roundAddress != address(0), 'error: payout contract not linked to a round');
+        require(msg.sender == roundAddress, 'error: can be invoked only by round contract');
         _;
     }
 
@@ -37,7 +37,7 @@ abstract contract IPayoutStrategy {
      *
      */
     function init() external {
-        require(roundAddress == address(0), "init: roundAddress already set");
+        require(roundAddress == address(0), 'init: roundAddress already set');
         roundAddress = msg.sender;
     }
 

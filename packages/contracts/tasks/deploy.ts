@@ -1,63 +1,79 @@
 import { ContractFactory } from "ethers";
+import * as fs from "fs";
 import { task } from "hardhat/config";
+
+import GRANTS_MUMBAI from "../deployments/grants-polygon-mumbai.json";
+import LENS_MUMBAI from "../deployments/lens-polygon-mumbai.json";
+import LENS_POLYGON from "../deployments/lens-polygon.json";
 
 type Contracts = "QuadraticFundingCurator" | "QuadraticVoteCollectModule";
 
-task("deploy", "Deploy contracts and verify")
-  .addOptionalParam("grantsRound", "The address of the active Grants Round")
-  .addOptionalParam("lensHub", "The address of the LensHub")
-  .addOptionalParam("moduleGlobals", "The address of ModuleGlobals")
-  .setAction(async ({ grantsRound, lensHub, moduleGlobals }, { ethers }) => {
-    const [admin] = await ethers.getSigners();
+task("deploy", "Deploy contracts and verify").setAction(async (_, { ethers }) => {
+  const [admin] = await ethers.getSigners();
+  let addresses;
 
-    const contracts: Record<Contracts, ContractFactory> = {
-      QuadraticFundingCurator: await ethers.getContractFactory("QuadraticFundingCurator"),
-      QuadraticVoteCollectModule: await ethers.getContractFactory("QuadraticVoteCollectModule"),
-    };
+  if (hre.network.name == "polygon-mainnet") {
+    addresses = LENS_POLYGON;
+  } else if (hre.network.name == "polygon-mumbai") {
+    addresses = LENS_MUMBAI;
+  } else {
+    addresses = LENS_POLYGON;
+  }
 
-    const deployments: Record<Contracts, string> = {
-      QuadraticFundingCurator: "",
-      QuadraticVoteCollectModule: "",
-    };
+  const contracts: Record<Contracts, ContractFactory> = {
+    QuadraticFundingCurator: await ethers.getContractFactory("QuadraticFundingCurator"),
+    QuadraticVoteCollectModule: await ethers.getContractFactory("QuadraticVoteCollectModule"),
+  };
 
-    //TODO Correct arguments for Mumbai/Polygon
-    const constructorArguments: Record<Contracts, string[]> = {
-      QuadraticFundingCurator: ["0x45cf9Ba12b43F6c8B7148E06A6f84c5B9ad3Dd44", admin.address],
-      QuadraticVoteCollectModule: [
-        "0x60Ae865ee4C725cd04353b5AAb364553f56ceF82",
-        "0x1353aAdfE5FeD85382826757A95DE908bd21C4f9",
-      ],
-    };
+  const deployments: Record<Contracts, string> = {
+    QuadraticFundingCurator: "",
+    QuadraticVoteCollectModule: "",
+  };
 
-    for (const [name, contract] of Object.entries(contracts)) {
-      console.log(`Starting deployment of ${name}`);
-      const factory = contract;
-      const constructorArgs = Object.entries(constructorArguments).find((entry) => entry[0] === name)?.[1];
-      console.log(`Constructor arguments: ${constructorArgs}`);
+  const constructorArguments: Record<Contracts, string[]> = {
+    QuadraticFundingCurator: [GRANTS_MUMBAI.GrantsRound, admin.address],
+    QuadraticVoteCollectModule: [addresses.lensHubImplementation, addresses.moduleGlobals],
+  };
 
-      const instance = constructorArgs ? await factory.deploy(...constructorArgs) : await factory.deploy();
-      await instance.deployed();
+  const toFile = (path: string, deployment: Record<Contracts, string>) => {
+    fs.writeFileSync(path, JSON.stringify(deployment), { encoding: "utf-8" });
+  };
 
-      console.log(`${name} is deployed to address: ${instance.address}`);
-      deployments[name as Contracts] = instance.address;
+  for (const [name, contract] of Object.entries(contracts)) {
+    console.log(`Starting deployment of ${name}`);
+    const factory = contract;
 
-      if (hre.network.name !== "hardhat") {
-        try {
-          const code = await instance.instance?.provider.getCode(instance.address);
-          if (code === "0x") {
-            console.log(`${instance.name} contract deployment has not completed. waiting to verify...`);
-            await instance.instance?.deployed();
-          }
-          await hre.run("verify:verify", {
-            address: instance.address,
-            constructorArgs,
-          });
-        } catch ({ message }) {
-          if ((message as string).includes("Reason: Already Verified")) {
-            console.log("Reason: Already Verified");
-          }
-          console.error(message);
+    const constructorArgs = Object.entries(constructorArguments).find((entry) => entry[0] === name)?.[1];
+    console.log(`Constructor arguments: ${constructorArgs}`);
+
+    const instance = constructorArgs ? await factory.deploy(...constructorArgs) : await factory.deploy();
+
+    await instance.deployed();
+
+    console.log(`${name} is deployed to address: ${instance.address}`);
+
+    deployments[name as Contracts] = instance.address;
+
+    toFile(`deployments/deployments-${hre.network.name}.json`, deployments);
+
+    if (hre.network.name !== ("localhost" || "hardhat")) {
+      try {
+        const code = await instance.instance?.provider.getCode(instance.address);
+        if (code === "0x") {
+          console.log(`${instance.name} contract deployment has not completed. waiting to verify...`);
+          await instance.instance?.deployed();
         }
+
+        await hre.run("verify:verify", {
+          address: instance.address,
+          constructorArguments: constructorArgs,
+        });
+      } catch ({ message }) {
+        if ((message as string).includes("Reason: Already Verified")) {
+          console.log("Reason: Already Verified");
+        }
+        console.error(message);
       }
     }
-  });
+  }
+});

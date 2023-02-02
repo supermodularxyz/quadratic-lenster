@@ -78,7 +78,8 @@ library DataTypes {
      * @param pubIdPointed The publication ID this publication points to, for mirrors and comments.
      * @param contentURI The URI associated with this publication.
      * @param referenceModule The address of the current reference module in use by this publication, can be empty.
-     * @param collectModule The address of the collect module associated with this publication, this exists for all publication.
+     * @param collectModule The address of the collect module associated with this publication
+     * , this exists for all publication.
      * @param collectNFT The address of the collectNFT associated with this publication, if any.
      */
     struct PublicationStruct {
@@ -140,8 +141,8 @@ library DataTypes {
     }
 
     /**
-     * @notice A struct containing the parameters required for the `setDispatcherWithSig()` function. Parameters are the same
-     * as the regular `setDispatcher()` function, with an added EIP712Signature.
+     * @notice A struct containing the parameters required for the `setDispatcherWithSig()` function. Parameters are
+     * the same as the regular `setDispatcher()` function, with an added EIP712Signature.
      *
      * @param profileId The token ID of the profile to set the dispatcher for.
      * @param dispatcher The dispatcher address to set for the profile.
@@ -154,8 +155,8 @@ library DataTypes {
     }
 
     /**
-     * @notice A struct containing the parameters required for the `setProfileImageURIWithSig()` function. Parameters are the same
-     * as the regular `setProfileImageURI()` function, with an added EIP712Signature.
+     * @notice A struct containing the parameters required for the `setProfileImageURIWithSig()` function. Parameters
+     * are the same as the regular `setProfileImageURI()` function, with an added EIP712Signature.
      *
      * @param profileId The token ID of the profile to set the URI for.
      * @param imageURI The URI to set for the given profile image.
@@ -168,8 +169,8 @@ library DataTypes {
     }
 
     /**
-     * @notice A struct containing the parameters required for the `setFollowNFTURIWithSig()` function. Parameters are the same
-     * as the regular `setFollowNFTURI()` function, with an added EIP712Signature.
+     * @notice A struct containing the parameters required for the `setFollowNFTURIWithSig()` function. Parameters are
+     * the same as the regular `setFollowNFTURI()` function, with an added EIP712Signature.
      *
      * @param profileId The token ID of the profile for which to set the followNFT URI.
      * @param followNFTURI The follow NFT URI to set.
@@ -248,8 +249,8 @@ library DataTypes {
     }
 
     /**
-     * @notice A struct containing the parameters required for the `commentWithSig()` function. Parameters are the same as
-     * the regular `comment()` function, with an added EIP712Signature.
+     * @notice A struct containing the parameters required for the `commentWithSig()` function. Parameters are
+     * the same as the regular `comment()` function, with an added EIP712Signature.
      *
      * @param profileId The token ID of the profile to publish to.
      * @param contentURI The URI to set for this new publication.
@@ -295,8 +296,8 @@ library DataTypes {
     }
 
     /**
-     * @notice A struct containing the parameters required for the `mirrorWithSig()` function. Parameters are the same as
-     * the regular `mirror()` function, with an added EIP712Signature.
+     * @notice A struct containing the parameters required for the `mirrorWithSig()` function. Parameters are
+     * the same as the regular `mirror()` function, with an added EIP712Signature.
      *
      * @param profileId The token ID of the profile to publish to.
      * @param profileIdPointed The profile token ID to point the mirror to.
@@ -333,8 +334,8 @@ library DataTypes {
     }
 
     /**
-     * @notice A struct containing the parameters required for the `collectWithSig()` function. Parameters are the same as
-     * the regular `collect()` function, with the collector's (signer) address and an EIP712Signature added.
+     * @notice A struct containing the parameters required for the `collectWithSig()` function. Parameters are
+     * the same as the regular `collect()` function, with the collector's (signer) address and an EIP712Signature added.
      *
      * @param collector The collector which is the message signer.
      * @param profileId The token ID of the profile that published the publication to collect.

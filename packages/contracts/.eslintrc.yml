@@ -6,9 +6,9 @@ extends:
 parser: "@typescript-eslint/parser"
 parserOptions:
   project: "tsconfig.json"
-  tsconfigRootDir: "packages/contracts"
-plugins:
-  - "@typescript-eslint"
+  tsconfigRootDir: "."
+  plugins:
+    - "@typescript-eslint"
 root: true
 
 rules:
@@ -21,11 +21,3 @@ rules:
     - error
     - argsIgnorePattern: "_"
       varsIgnorePattern: "_"
-overrides:
-  - files:
-      - test/*.ts
-      - tasks/*.ts
-    rules:
-      quotes:
-        - error
-        - single

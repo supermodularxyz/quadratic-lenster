@@ -5,7 +5,7 @@ import ERC721Abi from "../../artifacts/@openzeppelin/contracts/token/ERC721/IERC
 import LensHubAbi from "../../importedABI/LensHub.json";
 import ModuleGlobalsAbi from "../../importedABI/ModuleGlobals.json";
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
-import { getDefaultSigners } from "../utils/constants";
+import { getDefaultSigners } from "../utils/utils";
 
 export async function deployLensMumbaiFixture() {
   const { admin, user2 } = await getDefaultSigners();
