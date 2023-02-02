@@ -15,11 +15,7 @@ import "./IVotingStrategy.sol";
  *
  * Emits event upon every transfer.
  */
-contract QuadraticFundingRelayStrategyImplementation is
-    IVotingStrategy,
-    Initializable,
-    ReentrancyGuardUpgradeable
-{
+contract QuadraticFundingRelayStrategyImplementation is IVotingStrategy, Initializable, ReentrancyGuardUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     string public constant VERSION = "0.1.0";
@@ -63,16 +59,8 @@ contract QuadraticFundingRelayStrategyImplementation is
         /// @dev iterate over multiple donations and transfer funds
         for (uint256 i = 0; i < encodedVotes.length; i++) {
             /// @dev decode encoded vote
-            (
-                address _voterAddress,
-                address _token,
-                uint256 _amount,
-                address _grantAddress,
-                bytes32 _projectId
-            ) = abi.decode(
-                    encodedVotes[i],
-                    (address, address, uint256, address, bytes32)
-                );
+            (address _voterAddress, address _token, uint256 _amount, address _grantAddress, bytes32 _projectId) = abi
+                .decode(encodedVotes[i], (address, address, uint256, address, bytes32));
 
             if (_token == address(0)) {
                 /// @dev native token transfer to grant address
@@ -81,23 +69,11 @@ contract QuadraticFundingRelayStrategyImplementation is
             } else {
                 /// @dev erc20 transfer to grant address
                 // slither-disable-next-line arbitrary-send-erc20,reentrancy-events,
-                SafeERC20Upgradeable.safeTransferFrom(
-                    IERC20Upgradeable(_token),
-                    _voterAddress,
-                    _grantAddress,
-                    _amount
-                );
+                SafeERC20Upgradeable.safeTransferFrom(IERC20Upgradeable(_token), _voterAddress, _grantAddress, _amount);
             }
 
             /// @dev emit event for transfer
-            emit Voted(
-                _token,
-                _amount,
-                _voterAddress,
-                _grantAddress,
-                _projectId,
-                msg.sender
-            );
+            emit Voted(_token, _amount, _voterAddress, _grantAddress, _projectId, msg.sender);
         }
     }
 }
