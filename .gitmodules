@@ -2,3 +2,6 @@
 	path = packages/app
 	url = https://github.com/psparacino/qf-lenster.git
 	branch = qf-main
+[submodule "packages/grants"]
+	path = packages/grants
+	url = https://github.com/bitbeckers/grants-round
