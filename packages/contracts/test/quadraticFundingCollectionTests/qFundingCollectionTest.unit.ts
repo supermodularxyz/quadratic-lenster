@@ -5,18 +5,18 @@ import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
 
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
+import { QuadraticFundingRelayStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingRelayStrategyImplementation";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
 import { DEFAULT_VOTE } from "../utils/constants";
 import { getCollectModulePubInitData, getDefaultSigners } from "../utils/utils";
 import { ERC20 } from "./../../types/contracts/mocks/ERC20";
-import { QuadraticFundingVotingStrategyImplementation } from "./../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation";
 import { RoundImplementation } from "./../../types/contracts/mocks/RoundImplementation";
 
 export const shouldBehaveLikeQuadraticVoteModule = () => {
   let _qVoteCollectModule: QuadraticVoteCollectModule;
   let _WETH: ERC20;
   let _roundImplementation: RoundImplementation;
-  let _votingStrategy: QuadraticFundingVotingStrategyImplementation;
+  let _votingStrategy: QuadraticFundingRelayStrategyImplementation;
   let _signers: { [key: string]: SignerWithAddress };
   let _initData: (string | number | BigNumber)[];
   let collectModuleInitData: string;
