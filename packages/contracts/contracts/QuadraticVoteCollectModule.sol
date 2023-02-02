@@ -148,7 +148,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         address grantsRoundAddress = _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress;
         address votingStrategyAddress = _dataByPublicationByProfile[profileId][pubId].votingStrategyAddress;
         // encode vote
-        bytes memory vote = abi.encode(msg.sender ,currency, amount, grantsRoundAddress, profileId);
+        bytes memory vote = abi.encode(msg.sender, currency, amount, grantsRoundAddress, profileId);
 
         /// declare votes array
         bytes[] memory votes = new bytes[](1);
