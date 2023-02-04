@@ -1,8 +1,6 @@
-import * as dotenv from "dotenv";
 import { BigNumber, BigNumberish } from "ethers";
-import hre, { ethers } from "hardhat";
+import { ethers } from "hardhat";
 
-dotenv.config();
 /* GitCoin Utils */
 
 /**
@@ -68,8 +66,8 @@ export function getAbbreviation(handle: string) {
 }
 
 export async function getTimestamp(): Promise<number> {
-  const blockNumber = await hre.ethers.provider.send("eth_blockNumber", []);
-  const block = await hre.ethers.provider.send("eth_getBlockByNumber", [blockNumber, false]);
+  const blockNumber = await ethers.provider.send("eth_blockNumber", []);
+  const block = await ethers.provider.send("eth_getBlockByNumber", [blockNumber, false]);
   return block.timestamp;
 }
 
