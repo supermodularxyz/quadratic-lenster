@@ -32,7 +32,7 @@ task("deploy", "Deploy contracts and verify").setAction(async (_, { ethers }) =>
 
   const constructorArguments: Record<Contracts, string[]> = {
     QuadraticFundingCurator: [GRANTS_MUMBAI.GrantsRound, admin.address],
-    QuadraticVoteCollectModule: [addresses.lensHubImplementation, addresses.moduleGlobals],
+    QuadraticVoteCollectModule: [addresses.LensHubProxy, addresses.moduleGlobals],
   };
 
   const toFile = (path: string, deployment: Record<Contracts, string>) => {
