@@ -5,6 +5,7 @@ import { task } from "hardhat/config";
 import GRANTS_MUMBAI from "../deployments/grants-polygon-mumbai.json";
 import LENS_MUMBAI from "../deployments/lens-polygon-mumbai.json";
 import LENS_POLYGON from "../deployments/lens-polygon.json";
+import SANDBOX_MUMBAI from "../deployments/sandbox-mumbai.json";
 
 type Contracts = "QuadraticFundingCurator" | "QuadraticVoteCollectModule";
 
@@ -16,6 +17,8 @@ task("deploy", "Deploy contracts and verify").setAction(async (_, { ethers }) =>
     addresses = LENS_POLYGON;
   } else if (hre.network.name == "polygon-mumbai") {
     addresses = LENS_MUMBAI;
+  } else if (hre.network.name == "sandbox-mumbai") {
+    addresses = SANDBOX_MUMBAI;
   } else {
     addresses = LENS_POLYGON;
   }
@@ -32,7 +35,7 @@ task("deploy", "Deploy contracts and verify").setAction(async (_, { ethers }) =>
 
   const constructorArguments: Record<Contracts, string[]> = {
     QuadraticFundingCurator: [GRANTS_MUMBAI.GrantsRound, admin.address],
-    QuadraticVoteCollectModule: [addresses.lensHubImplementation, addresses.moduleGlobals],
+    QuadraticVoteCollectModule: [addresses.LensHubProxy, addresses.moduleGlobals],
   };
 
   const toFile = (path: string, deployment: Record<Contracts, string>) => {
