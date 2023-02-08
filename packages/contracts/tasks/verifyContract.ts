@@ -33,7 +33,7 @@ task("verifyContract", "verify")
         admin.address,
       ],
       QuadraticVoteCollectModule: [
-        lensHub ? lensHub : constructorAddresses.lensHubImplementation,
+        lensHub ? lensHub : constructorAddresses.LensHubProxy,
         moduleGlobals ? moduleGlobals : constructorAddresses.moduleGlobals,
       ],
     };
