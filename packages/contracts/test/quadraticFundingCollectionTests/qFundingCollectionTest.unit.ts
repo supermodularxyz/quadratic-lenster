@@ -20,7 +20,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
   let _signers: { [key: string]: SignerWithAddress };
   let _initData: (string | number | BigNumber)[];
   let collectModuleInitData: string;
-  before("Setup QFVM", async () => {
+  beforeEach("Setup QFVM", async () => {
     const signers = await getDefaultSigners();
     _signers = signers;
 
@@ -34,7 +34,6 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
     _roundImplementation = roundImplementation;
     _votingStrategy = votingStrategy;
     _initData = [_WETH.address, 100, _roundImplementation.address, _votingStrategy.address];
-
     collectModuleInitData = getCollectModulePubInitData(_initData);
   });
 
@@ -83,6 +82,10 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
       //encode collect call data
       const collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WETH.address, DEFAULT_VOTE]);
 
+      const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
+
+      await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
+
       await expect(_WETH.connect(user2).approve(_qVoteCollectModule.address, ethers.utils.parseEther("10"))).to.emit(
         _WETH,
         "Approval",
@@ -92,7 +95,6 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
         "Approval",
       );
 
-      // TODO when fixed expect "Voted event parameters"
       await expect(_qVoteCollectModule.connect(user2).processCollect(22, user2.address, 1, 1, collectData))
         .to.emit(_votingStrategy, "Voted")
         .withArgs(
