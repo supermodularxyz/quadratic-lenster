@@ -50,7 +50,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
         .reverted;
     });
 
-    it.only("Should execute processCollect and vote", async () => {
+    it("Should execute processCollect and vote", async () => {
       const { user2 } = _signers;
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
@@ -82,7 +82,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
         );
     });
 
-    it.only("Should execute processCollect with referral and vote", async () => {
+    it("Should execute processCollect with referral and vote", async () => {
       const { user2 } = _signers;
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be

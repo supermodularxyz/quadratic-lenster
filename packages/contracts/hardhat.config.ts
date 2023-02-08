@@ -28,6 +28,7 @@ const chainIds = {
   hardhat: 31337,
   "polygon-mainnet": 137,
   "polygon-mumbai": 80001,
+  "sandbox-mumbai": 80001,
 };
 
 const getChainConfig = (chain: keyof typeof chainIds): NetworkUserConfig => {
@@ -71,6 +72,7 @@ const config: HardhatUserConfig = {
     },
     "polygon-mainnet": { ...getChainConfig("polygon-mainnet"), url: "https://rpc.ankr.com/polygon" },
     "polygon-mumbai": { ...getChainConfig("polygon-mumbai"), url: "https://rpc.ankr.com/polygon_mumbai" },
+    "sandbox-mumbai": { ...getChainConfig("sandbox-mumbai"), url: "https://rpc.ankr.com/polygon_mumbai" },
   },
   paths: {
     artifacts: "./artifacts",

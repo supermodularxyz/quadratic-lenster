@@ -163,4 +163,11 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         // TODO find way to not have contract as msg.sender
         IRoundImplementation(grantsRoundAddress).vote(votes);
     }
+
+    function getPublicationData(
+        uint256 profileId,
+        uint256 pubId
+    ) external view returns (ProfilePublicationData memory) {
+        return _dataByPublicationByProfile[profileId][pubId];
+    }
 }
