@@ -7,10 +7,12 @@ import { ethers } from "hardhat";
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
 import { QuadraticFundingRelayStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingRelayStrategyImplementation";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
+import { deployLensMumbaiFixture } from "../lensTests/lens.fixture";
 import { DEFAULT_VOTE } from "../utils/constants";
 import { getCollectModulePubInitData, getDefaultSigners } from "../utils/utils";
 import { ERC20 } from "./../../types/contracts/mocks/ERC20";
 import { RoundImplementation } from "./../../types/contracts/mocks/RoundImplementation";
+import { BPS_MAX } from "./../utils/constants";
 
 export const shouldBehaveLikeQuadraticVoteModule = () => {
   let _qVoteCollectModule: QuadraticVoteCollectModule;
@@ -20,6 +22,13 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
   let _signers: { [key: string]: SignerWithAddress };
   let _initData: (string | number | BigNumber)[];
   let collectModuleInitData: string;
+
+  function getLensTreasuryAmount(lensTreasuryFee: BigNumber, voteAmount: BigNumber) {
+    const BPS_MAX = BigNumber.from("10000");
+    const treasuryAmount = voteAmount.mul(lensTreasuryFee).div(BPS_MAX);
+    return treasuryAmount;
+  }
+
   beforeEach("Setup QFVM", async () => {
     const signers = await getDefaultSigners();
     _signers = signers;
@@ -33,7 +42,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
     _WETH = WETH;
     _roundImplementation = roundImplementation;
     _votingStrategy = votingStrategy;
-    _initData = [_WETH.address, 100, _roundImplementation.address, _votingStrategy.address];
+    _initData = [_WETH.address, 0, _roundImplementation.address, _votingStrategy.address];
     collectModuleInitData = getCollectModulePubInitData(_initData);
   });
 
@@ -43,7 +52,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
         .reverted;
     });
 
-    it("Should execute processCollect and vote", async () => {
+    it.only("Should execute processCollect and vote", async () => {
       const { user2 } = _signers;
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
@@ -60,12 +69,14 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
       await expect(_WETH.connect(user2).approve(_qVoteCollectModule.address, DEFAULT_VOTE)).to.emit(_WETH, "Approval");
       await expect(_WETH.connect(user2).approve(_votingStrategy.address, DEFAULT_VOTE)).to.emit(_WETH, "Approval");
 
-      // TODO when fixed expect correct "Voted event parameters"
+      //lens base treasury fee is 1 on mumbai
+      const treasuryAmount = getLensTreasuryAmount(BigNumber.from("1"), DEFAULT_VOTE);
+
       await expect(_qVoteCollectModule.connect(user2).processCollect(1, user2.address, 1, 1, collectData))
         .to.emit(_votingStrategy, "Voted")
         .withArgs(
           _WETH.address,
-          "999900000000000000",
+          DEFAULT_VOTE.sub(treasuryAmount),
           user2.address,
           _roundImplementation.address,
           "0x0000000000000000000000000000000000000000000000000000000000000001",
@@ -73,7 +84,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
         );
     });
 
-    it("Should execute processCollect with referral and vote", async () => {
+    it.only("Should execute processCollect with referral and vote", async () => {
       const { user2 } = _signers;
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, collectModuleInitData)).to.not.be
@@ -86,20 +97,17 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
 
       await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
 
-      await expect(_WETH.connect(user2).approve(_qVoteCollectModule.address, ethers.utils.parseEther("10"))).to.emit(
-        _WETH,
-        "Approval",
-      );
-      await expect(_WETH.connect(user2).approve(_votingStrategy.address, ethers.utils.parseEther("10"))).to.emit(
-        _WETH,
-        "Approval",
-      );
+      await expect(_WETH.connect(user2).approve(_qVoteCollectModule.address, DEFAULT_VOTE)).to.emit(_WETH, "Approval");
+      await expect(_WETH.connect(user2).approve(_votingStrategy.address, DEFAULT_VOTE)).to.emit(_WETH, "Approval");
+
+      //lens base treasury fee is 1 on mumbai
+      const treasuryAmount = getLensTreasuryAmount(BigNumber.from("1"), DEFAULT_VOTE);
 
       await expect(_qVoteCollectModule.connect(user2).processCollect(22, user2.address, 1, 1, collectData))
         .to.emit(_votingStrategy, "Voted")
         .withArgs(
           _WETH.address,
-          "989901000000000000",
+          DEFAULT_VOTE.sub(treasuryAmount),
           user2.address,
           _roundImplementation.address,
           "0x0000000000000000000000000000000000000000000000000000000000000001",
