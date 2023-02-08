@@ -40,13 +40,13 @@ export function shouldBehaveLikeQFCollectionModule() {
 
     await expect(roundImplementation.vote(encodedVotes)).to.not.be.reverted;
     // whitelist collect module
-    // TODO Gov signer
-    await expect(lensHub.connect(signers.gov).whitelistCollectModule(qVoteCollectModule.address, true)).to.not.be
+    // TODO Gov signer?
+    await expect(lensHub.connect(signers.admin).whitelistCollectModule(qVoteCollectModule.address, true)).to.not.be
       .reverted;
 
-    await expect(moduleGlobals.connect(signers.gov).whitelistCurrency(WETH.address, true)).to.not.be.reverted;
+    await expect(moduleGlobals.connect(signers.admin).whitelistCurrency(WETH.address, true)).to.not.be.reverted;
 
-    const tx = await lensHub.connect(signers.gov).whitelistProfileCreator(signers.user.address, true);
+    const tx = await lensHub.connect(signers.admin).whitelistProfileCreator(signers.user.address, true);
     await tx.wait();
 
     expect(await lensHub.isProfileCreatorWhitelisted(signers.user.address)).to.be.eq(true);
