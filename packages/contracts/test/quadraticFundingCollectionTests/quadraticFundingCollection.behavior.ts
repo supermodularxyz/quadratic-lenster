@@ -1,6 +1,8 @@
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
+import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
 import {
   FIRST_PROFILE_ID,
   MOCK_FOLLOW_NFT_URI,
@@ -9,40 +11,49 @@ import {
   MOCK_URI,
   REFERRAL_FEE_BPS,
 } from "../utils/constants";
+import { getDefaultSigners } from "../utils/utils";
 
 export function shouldBehaveLikeQFCollectionModule() {
   it("Should collect a post and simultaneously vote in an active round", async function () {
-    expect(ethers.utils.formatEther(await this.WETH.balanceOf(this.signers.user.address))).to.equal("10.0");
-    await this.WETH.approve(this.votingStrategy.address, 100);
+    const signers = await getDefaultSigners();
+    // deploy gitcoin fixture
+    const {
+      qVoteCollectModule,
+      roundImplementation,
+      WETH,
+      votingStrategy,
+      currentBlockTimestamp,
+      lensHub,
+      moduleGlobals,
+    } = await loadFixture(deployGitcoinMumbaiFixture);
+    expect(ethers.utils.formatEther(await WETH.balanceOf(signers.user.address))).to.equal("10.0");
+    await WETH.approve(votingStrategy.address, 100);
 
-    const encodedVotes = [];
     // Prepare Votes
-    const votes = [[this.WETH.address, 5, this.signers.user.address]];
+    const votes = [[WETH.address, 5, signers.user.address]];
 
-    for (let i = 0; i < votes.length; i++) {
-      encodedVotes.push(ethers.utils.defaultAbiCoder.encode(["address", "uint256", "address"], votes[i]));
-    }
+    const encodedVotes = votes.map((vote) =>
+      ethers.utils.defaultAbiCoder.encode(["address", "uint256", "address"], vote),
+    );
 
-    // const mockTime = await _roundImplementation.applicationsStartTime();
+    await ethers.provider.send("evm_mine", [currentBlockTimestamp + 750]); /* wait for round to start */
 
-    await ethers.provider.send("evm_mine", [this.currentBlockTimestamp + 750]); /* wait for round to start */
-
-    await expect(this.roundImplementation.vote(encodedVotes)).to.not.be.reverted;
+    await expect(roundImplementation.vote(encodedVotes)).to.not.be.reverted;
     // whitelist collect module
-    await expect(this.lensMumbai.connect(this.signers.gov).whitelistCollectModule(this.qfCollectModule.address, true))
-      .to.not.be.reverted;
-
-    await expect(this.moduleGlobals.connect(this.signers.gov).whitelistCurrency(this.WETH.address, true)).to.not.be
+    // TODO Gov signer
+    await expect(lensHub.connect(signers.gov).whitelistCollectModule(qVoteCollectModule.address, true)).to.not.be
       .reverted;
 
-    const tx = await this.lensMumbai.connect(this.signers.gov).whitelistProfileCreator(this.signers.user.address, true);
+    await expect(moduleGlobals.connect(signers.gov).whitelistCurrency(WETH.address, true)).to.not.be.reverted;
+
+    const tx = await lensHub.connect(signers.gov).whitelistProfileCreator(signers.user.address, true);
     await tx.wait();
 
-    expect(await this.lensMumbai.isProfileCreatorWhitelisted(this.signers.user.address)).to.be.eq(true);
+    expect(await lensHub.isProfileCreatorWhitelisted(signers.user.address)).to.be.eq(true);
 
     //create profile variables
     const profileVariables = {
-      to: this.signers.user.address,
+      to: signers.user.address,
       handle: "testuserrrrr",
       imageURI: "https://ipfs.io/ipfs/QmY9dUwYu67puaWBMxRKW98LPbXCznPwHUbhX5NeWnCJbX",
       followModule: ethers.constants.AddressZero,
@@ -51,35 +62,33 @@ export function shouldBehaveLikeQFCollectionModule() {
     };
 
     // get profileId
-    const profileId = await this.lensMumbai.connect(this.signers.user).callStatic.createProfile(profileVariables);
+    const profileId = await lensHub.connect(signers.user).callStatic.createProfile(profileVariables);
 
     //create profile
-    const txn = await this.lensMumbai.connect(this.signers.user).createProfile(profileVariables);
+    const txn = await lensHub.connect(signers.user).createProfile(profileVariables);
     await txn.wait();
 
     const DEFAULT_COLLECT_PRICE = ethers.utils.parseEther("1");
 
     const collectModuleInitData = ethers.utils.defaultAbiCoder.encode(
       ["uint256", "address", "address", "uint16", "bool"],
-      [DEFAULT_COLLECT_PRICE, this.WETH.address, this.signers.user.address, 100, true],
+      [DEFAULT_COLLECT_PRICE, WETH.address, signers.user.address, 100, true],
     );
-    expect(await this.lensMumbai.isCollectModuleWhitelisted(this.qfCollectModule.address)).to.be.eq(true);
-    expect(await this.moduleGlobals.isCurrencyWhitelisted(this.WETH.address)).to.be.eq(true);
+    expect(await lensHub.isCollectModuleWhitelisted(qVoteCollectModule.address)).to.be.eq(true);
+    expect(await moduleGlobals.isCurrencyWhitelisted(WETH.address)).to.be.eq(true);
 
     const wethAmount = ethers.utils.parseEther("10");
 
     //approve module to spend weth
-    await expect(this.WETH.connect(this.signers.user).approve(this.qfCollectModule.address, wethAmount)).to.not.be
-      .reverted;
-    await expect(this.WETH.connect(this.signers.user).approve(this.lensMumbai.address, wethAmount)).to.not.be.reverted;
-    await expect(this.WETH.connect(this.signers.user).approve(this.moduleGlobals.address, wethAmount)).to.not.be
-      .reverted;
+    await expect(WETH.connect(signers.user).approve(qVoteCollectModule.address, wethAmount)).to.not.be.reverted;
+    await expect(WETH.connect(signers.user).approve(lensHub.address, wethAmount)).to.not.be.reverted;
+    await expect(WETH.connect(signers.user).approve(moduleGlobals.address, wethAmount)).to.not.be.reverted;
 
     try {
-      const tx = await this.lensMumbai.connect(this.signers.user).post({
+      const tx = await lensHub.connect(this.signers.user).post({
         profileId: profileId,
         contentURI: MOCK_URI,
-        collectModule: this.qfCollectModule.address,
+        collectModule: qVoteCollectModule.address,
         collectModuleInitData: collectModuleInitData,
         referenceModule: ethers.constants.AddressZero,
         referenceModuleInitData: [],
@@ -92,11 +101,11 @@ export function shouldBehaveLikeQFCollectionModule() {
       console.error("THERE'S BEEN AN ERROR: ", err);
       console.log(
         "lenshub: ",
-        this.lensMumbai.address,
+        lensHub.address,
         "qf module: ",
-        this.qfCollectModule.address,
+        qVoteCollectModule.address,
         "USER: ",
-        this.signers.user.address,
+        signers.user.address,
       );
     }
   });

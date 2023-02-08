@@ -33,5 +33,5 @@ export async function deployLensMumbaiFixture() {
   await _mockLenshub.mock.getFollowNFT.returns(_mockERC721.address);
   await _mockERC721.mock.balanceOf.returns(1);
 
-  return { qVoteCollectModule };
+  return { qVoteCollectModule, lensHub: _mockLenshub, moduleGlobals: _mockModuleGlobals };
 }
