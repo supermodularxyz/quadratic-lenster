@@ -7,7 +7,6 @@ import { ethers } from "hardhat";
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
 import { QuadraticFundingRelayStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingRelayStrategyImplementation";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
-import { deployLensMumbaiFixture } from "../lensTests/lens.fixture";
 import { DEFAULT_VOTE } from "../utils/constants";
 import { getCollectModulePubInitData, getDefaultSigners } from "../utils/utils";
 import { ERC20 } from "./../../types/contracts/mocks/ERC20";
@@ -24,7 +23,6 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
   let collectModuleInitData: string;
 
   function getLensTreasuryAmount(lensTreasuryFee: BigNumber, voteAmount: BigNumber) {
-    const BPS_MAX = BigNumber.from("10000");
     const treasuryAmount = voteAmount.mul(lensTreasuryFee).div(BPS_MAX);
     return treasuryAmount;
   }

@@ -80,7 +80,6 @@ export function getCollectModulePubInitData(initModuleData: (string | number | B
   return collectModuleInitData;
 }
 
-
 export const getDefaultSigners = async () => {
   const defaultSigners = await ethers.getSigners();
   return {
