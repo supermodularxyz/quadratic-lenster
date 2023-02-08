@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers';
 import { deployMockContract } from "@ethereum-waffle/mock-contract";
 import { ethers } from "hardhat";
 
@@ -31,6 +32,10 @@ export async function deployLensMumbaiFixture() {
   await _mockLenshub.mock.ownerOf.returns(user2.address);
   await _mockLenshub.mock.getFollowModule.returns(ethers.constants.AddressZero);
   await _mockLenshub.mock.getFollowNFT.returns(_mockERC721.address);
+  await _mockLenshub.mock.whitelistCollectModule.returns();
+  await _mockLenshub.mock.isCollectModuleWhitelisted.returns(true);
+  await _mockLenshub.mock.createProfile.returns(1);
+  await _mockLenshub.mock.post.returns(1);
   await _mockERC721.mock.balanceOf.returns(1);
 
   return { qVoteCollectModule, lensHub: _mockLenshub, moduleGlobals: _mockModuleGlobals };

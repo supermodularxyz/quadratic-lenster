@@ -76,6 +76,6 @@ export async function deployGitcoinMumbaiFixture() {
     WETH,
     currentBlockTimestamp,
     lensHub,
-    moduleGlobals,
+    moduleGlobals
   };
 }
