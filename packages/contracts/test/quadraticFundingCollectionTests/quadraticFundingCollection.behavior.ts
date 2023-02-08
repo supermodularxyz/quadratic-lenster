@@ -11,7 +11,7 @@ import {
 } from "../utils/constants";
 
 export function shouldBehaveLikeQFCollectionModule() {
-  it.skip("Should collect a post and simultaneously vote in an active round", async function () {
+  it("Should collect a post and simultaneously vote in an active round", async function () {
     expect(ethers.utils.formatEther(await this.WETH.balanceOf(this.signers.user.address))).to.equal("10.0");
     await this.WETH.approve(this.votingStrategy.address, 100);
 
