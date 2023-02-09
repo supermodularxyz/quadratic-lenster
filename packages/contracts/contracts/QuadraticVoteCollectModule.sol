@@ -165,11 +165,10 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         IRoundImplementation(grantsRoundAddress).vote(votes);
     }
 
-        function getPublicationData(uint256 profileId, uint256 pubId)
-        external
-        view
-        returns (ProfilePublicationData memory)
-    {
+    function getPublicationData(
+        uint256 profileId,
+        uint256 pubId
+    ) external view returns (ProfilePublicationData memory) {
         return _dataByPublicationByProfile[profileId][pubId];
     }
 }

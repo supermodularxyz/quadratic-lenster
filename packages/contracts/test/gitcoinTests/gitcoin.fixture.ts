@@ -77,6 +77,6 @@ export async function deployGitcoinMumbaiFixture() {
     currentBlockTimestamp,
     lensHub,
     moduleGlobals,
-    _mockERC721
+    _mockERC721,
   };
 }

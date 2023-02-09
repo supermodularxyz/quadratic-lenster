@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers';
 import { deployMockContract } from "@ethereum-waffle/mock-contract";
 import { ethers } from "hardhat";
 
@@ -40,8 +39,6 @@ export async function deployLensMumbaiFixture() {
   await _mockLenshub.mock.createProfile.returns(1);
   await _mockLenshub.mock.post.returns(1);
   await _mockLenshub.mock.collect.returns(1);
-
-
 
   return { qVoteCollectModule, lensHub: _mockLenshub, moduleGlobals: _mockModuleGlobals, _mockERC721 };
 }
