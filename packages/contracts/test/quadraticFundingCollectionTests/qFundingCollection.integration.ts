@@ -6,10 +6,12 @@ import { ethers } from "hardhat";
 
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
 import { ERC20 } from "../../types/contracts/mocks/ERC20";
+import { LensHub } from "../../types/contracts/mocks/LensHub";
 import { ProfileCreationProxy } from "../../types/contracts/mocks/ProfileCreationProxy";
 import { QuadraticFundingRelayStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingRelayStrategyImplementation";
 import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
+import { LensUser } from "../lensTests/lens.fixture";
 import { buildPostData, getDefaultSigners } from "../utils/utils";
 
 export function shouldBehaveLikeQFCollectionModule() {
@@ -20,10 +22,10 @@ export function shouldBehaveLikeQFCollectionModule() {
   let _votingStrategy: QuadraticFundingRelayStrategyImplementation;
   let _currentBlockTimestamp: number;
 
-  let _lensHub: any;
+  let _lensHub: LensHub;
   let _moduleGlobals: any;
   let _profileCreation: ProfileCreationProxy;
-  let _profiles: any;
+  let _profiles: { [key: string]: LensUser };
 
   beforeEach("setup test", async function () {
     signers = await getDefaultSigners();
@@ -52,10 +54,14 @@ export function shouldBehaveLikeQFCollectionModule() {
     _lensHub = lensHub;
   });
 
-  it("Should collect a post and simultaneously vote in an active round", async function () {
+  it.only("Should collect a post and simultaneously vote in an active round", async function () {
     const { admin, grant } = signers;
     const { creator, collector } = _profiles;
     const voteAmount = ethers.utils.parseEther("2");
+
+    // Start round
+
+    await ethers.provider.send("evm_mine", [_currentBlockTimestamp + 750]); /* wait for round to start */
 
     // Currency is ERC20 and whitelisted
 
@@ -63,23 +69,7 @@ export function shouldBehaveLikeQFCollectionModule() {
     expect(ethers.utils.formatEther(await _WMATIC.balanceOf(collector.account.address))).to.equal("10.0");
     await _WMATIC.connect(collector.account).approve(_votingStrategy.address, voteAmount);
     await _WMATIC.connect(collector.account).approve(_qVoteCollectModule.address, voteAmount);
-
-    // We can cast a Vote in a Grants Round
-
-    // Prepare Votes
-
-    const votes = [
-      [collector.account.address, _WMATIC.address, voteAmount, grant.address, ethers.utils.id("testProject")],
-    ];
-    const encodedVotes = votes.map((vote) =>
-      ethers.utils.defaultAbiCoder.encode(["address", "address", "uint256", "address", "bytes32"], vote),
-    );
-
-    await ethers.provider.send("evm_mine", [_currentBlockTimestamp + 750]); /* wait for round to start */
-
-    await expect(_roundImplementation.connect(collector.account).vote(encodedVotes)).to.emit(_votingStrategy, "Voted");
-
-    // // We can whitelist a Collect module
+    await _WMATIC.connect(collector.account).approve(_lensHub.address, voteAmount);
 
     //TODO test for emitted event
     await expect(_lensHub.connect(admin).whitelistCollectModule(_qVoteCollectModule.address, true)).to.not.be.reverted;
@@ -89,13 +79,15 @@ export function shouldBehaveLikeQFCollectionModule() {
 
     const _initData = [_WMATIC.address, 0, _roundImplementation.address, _votingStrategy.address];
     const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "address"], _initData);
+
     const postData = buildPostData(1, _qVoteCollectModule.address, initQFCollect);
 
     await expect(_lensHub.connect(creator.account).post(postData)).to.not.be.reverted;
 
     // We can collect a post as a second user that triggers the collect module
 
-    //TODO continue testing
-    expect(await _lensHub.connect(collector.account).collect(1, 1, [])).to.eq(1);
+    const _collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WMATIC.address, voteAmount]);
+
+    expect(await _lensHub.connect(collector.account).collect(1, 1, _collectData)).to.emit(_votingStrategy, "Voted");
   });
 }

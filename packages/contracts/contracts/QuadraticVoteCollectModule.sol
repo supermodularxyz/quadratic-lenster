@@ -77,9 +77,16 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
     }
 
     function _processCollect(address collector, uint256 profileId, uint256 pubId, bytes calldata data) internal {
+        console.log("Decoding");
+
         (address _currency, uint256 _amount) = abi.decode(data, (address, uint256));
 
+        console.log("Decoded currency: ", _currency);
+        console.log("Decoded amount: ", _amount);
+
         _validateDataIsExpected(data, _currency, _amount);
+
+        console.log("Valid data");
 
         address treasury;
         uint256 treasuryAmount;
@@ -145,6 +152,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
 
         if (treasuryAmount != 0) {
             console.log("Treasury");
+            console.log("Currency: ", _currency);
 
             IERC20(_currency).safeTransferFrom(collector, treasury, treasuryAmount);
         }
