@@ -5,7 +5,7 @@ import { ethers } from "hardhat";
 // import wethAbi from "../../importedABI/WETH.json";
 import { ERC20 } from "../../types/contracts/mocks/ERC20";
 import { MerklePayoutStrategy } from "../../types/contracts/mocks/MerklePayoutStrategy";
-import { QuadraticFundingVotingStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation";
+import { QuadraticFundingRelayStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingRelayStrategyImplementation";
 import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
 import { deployLensMumbaiFixture } from "../lensTests/lens.fixture";
 import { encodeRoundParameters, getDefaultSigners } from "../utils/utils";
@@ -19,8 +19,8 @@ export async function deployGitcoinMumbaiFixture() {
   const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
 
   // Voting Strategy
-  const votingStrategyFactory = await ethers.getContractFactory("QuadraticFundingVotingStrategyImplementation");
-  const votingStrategy = <QuadraticFundingVotingStrategyImplementation>await votingStrategyFactory.deploy();
+  const votingStrategyFactory = await ethers.getContractFactory("QuadraticFundingRelayStrategyImplementation");
+  const votingStrategy = <QuadraticFundingRelayStrategyImplementation>await votingStrategyFactory.deploy();
   await votingStrategy.deployed();
 
   // Payout Strategy
