@@ -14,7 +14,7 @@ import { encodeRoundParameters, getDefaultSigners } from "../utils/utils";
 export async function deployGitcoinMumbaiFixture() {
   const signers = await getDefaultSigners();
   // deploy lens fixture
-  const { qVoteCollectModule, lensHub, moduleGlobals } = await loadFixture(deployLensMumbaiFixture);
+  const { qVoteCollectModule, lensHub, moduleGlobals, _mockERC721 } = await loadFixture(deployLensMumbaiFixture);
 
   const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
 
@@ -76,6 +76,7 @@ export async function deployGitcoinMumbaiFixture() {
     WETH,
     currentBlockTimestamp,
     lensHub,
-    moduleGlobals
+    moduleGlobals,
+    _mockERC721
   };
 }

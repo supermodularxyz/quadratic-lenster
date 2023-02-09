@@ -1,10 +1,16 @@
-import { InteractionLogic } from './../../types/contracts/mocks/libraries/InteractionLogic';
-import { lensMumbaiAddresses } from './../utils/constants';
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+import { MockContract } from "@defi-wonderland/smock";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+import { pbkdf2, sign } from "crypto";
+import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
 
+import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
+import { ERC20 } from "../../types/contracts/mocks/ERC20";
+import { LensHub } from "../../types/contracts/mocks/LensHub";
+import { QuadraticFundingVotingStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation";
+import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
 import {
   FIRST_PROFILE_ID,
@@ -15,14 +21,9 @@ import {
   REFERRAL_FEE_BPS,
 } from "../utils/constants";
 import { getDefaultSigners } from "../utils/utils";
-import { QuadraticVoteCollectModule } from '../../types/contracts/QuadraticVoteCollectModule';
-import { ERC20 } from '../../types/contracts/mocks/ERC20';
-import { RoundImplementation } from '../../types/contracts/mocks/RoundImplementation';
-import { QuadraticFundingVotingStrategyImplementation } from '../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation';
-import { BigNumber } from 'ethers';
-import { MockContract } from '@defi-wonderland/smock';
-import { LensHub } from '../../types/contracts/mocks/LensHub';
-import { pbkdf2 } from 'crypto';
+import { InteractionLogic } from "./../../types/contracts/mocks/libraries/InteractionLogic";
+import { LensHub__factory } from "./../../types/factories/contracts/mocks/LensHub__factory";
+import { lensMumbaiAddresses } from "./../utils/constants";
 
 export function shouldBehaveLikeQFCollectionModule() {
   let signers: { [key: string]: SignerWithAddress };
@@ -39,56 +40,61 @@ export function shouldBehaveLikeQFCollectionModule() {
   beforeEach("setup test", async function () {
     signers = await getDefaultSigners();
 
-       // deploy gitcoin fixture
-       const {
-        qVoteCollectModule,
-        roundImplementation,
-        WETH,
-        votingStrategy,
-        currentBlockTimestamp,
-        lensHub,
-        moduleGlobals
-      } = await loadFixture(deployGitcoinMumbaiFixture);
+    // deploy gitcoin fixture
+    const {
+      qVoteCollectModule,
+      roundImplementation,
+      WETH,
+      votingStrategy,
+      currentBlockTimestamp,
+      lensHub,
+      moduleGlobals,
+      _mockERC721,
+    } = await loadFixture(deployGitcoinMumbaiFixture);
 
-      _qVoteCollectModule = qVoteCollectModule;
-      _WMATIC = WETH;
-      _roundImplementation = roundImplementation;
-      _votingStrategy = votingStrategy;
-      _currentBlockTimestamp = currentBlockTimestamp;
+    _qVoteCollectModule = qVoteCollectModule;
+    _WMATIC = WETH;
+    _roundImplementation = roundImplementation;
+    _votingStrategy = votingStrategy;
+    _currentBlockTimestamp = currentBlockTimestamp;
+    _moduleGlobals = moduleGlobals;
 
-      _lensHub = lensHub;
+    _initData = [_WMATIC.address, 0, _roundImplementation.address, _votingStrategy.address];
 
-    //deploy lenshub locally (failed attempt)
+    _lensHub = lensHub;
+
+    //deploy lenshub locally (fails in constructor with unpredictable gas error)
+    
     //   const PublishingLogic = await ethers.getContractFactory("PublishingLogic");
     //   const publishingLogic = await PublishingLogic.deploy()
     //   const InteractionLogic = await ethers.getContractFactory("InteractionLogic");
     //   const interactionLogic = await InteractionLogic.deploy();
     //   const ProfileTokenURILogic = await ethers.getContractFactory("ProfileTokenURILogic");
     //   const profileTokenURILogic = await ProfileTokenURILogic.deploy();
+
     //  const hubLibs = {
-    //   'contracts/mocks/libraries/InteractionLogic.sol:\InteractionLogic': interactionLogic.address,
+    //   'contracts/mocks/libraries/PublishingLogic.sol:PublishingLogic': publishingLogic.address,
+    //   'contracts/mocks/libraries/InteractionLogic.sol:InteractionLogic': interactionLogic.address,
     //   'contracts/mocks/libraries/ProfileTokenURILogic.sol:ProfileTokenURILogic':
     //   profileTokenURILogic.address,
-    //     'contracts/mocks/libraries/PublishingLogic.sol:PublishingLogic': publishingLogic.address,
-
     //   };
+
+    // //  _lensHub = await new LensHub__factory(hubLibs, signers.admin).deploy(_mockERC721.address, _mockERC721.address);
+
     //   const LensHub = await ethers.getContractFactory("LensHub", {libraries: hubLibs});
-    //   _lensHub = await LensHub.deploy(ethers.constants.AddressZero, ethers.constants.AddressZero);
+    //   _lensHub = await LensHub.connect(signers.admin).deploy(_mockERC721.address, _mockERC721.address)
 
-      _moduleGlobals = moduleGlobals;
-      _initData = [_WMATIC.address, 100, _roundImplementation.address, _votingStrategy.address];
 
-      //deploy sandbox mock contracts
-      const MockSandboxGovernance = await ethers.getContractFactory("MockSandboxGovernance");
-      _mockSandboxGovernance = await MockSandboxGovernance.deploy(_lensHub.address, signers.admin.address);
 
-      const MockProfileCreationProxy =  await ethers.getContractFactory("MockProfileCreationProxy");
-      _mockProfileCreationProxy = await MockProfileCreationProxy.deploy(_lensHub.address);
-      
-  })
+    //deploy sandbox mock contracts
+    const MockSandboxGovernance = await ethers.getContractFactory("MockSandboxGovernance");
+    _mockSandboxGovernance = await MockSandboxGovernance.deploy(_lensHub.address, signers.admin.address);
+
+    const MockProfileCreationProxy = await ethers.getContractFactory("MockProfileCreationProxy");
+    _mockProfileCreationProxy = await MockProfileCreationProxy.deploy(_lensHub.address);
+  });
+
   it.only("Should collect a post and simultaneously vote in an active round", async function () {
-    
- 
     expect(ethers.utils.formatEther(await _WMATIC.balanceOf(signers.user.address))).to.equal("10.0");
     await _WMATIC.approve(_votingStrategy.address, 100);
 
@@ -104,11 +110,7 @@ export function shouldBehaveLikeQFCollectionModule() {
     await expect(_roundImplementation.vote(encodedVotes)).to.not.be.reverted;
     // whitelist collect module
     // this is here to make sure we have all the steps in place to collect in the lens sandbox
-    await expect(_mockSandboxGovernance.whitelistCollectModule(_qVoteCollectModule.address, true)).to.not.be
-      .reverted;
-
-
-
+    await expect(_mockSandboxGovernance.whitelistCollectModule(_qVoteCollectModule.address, true)).to.not.be.reverted;
 
     //create profile variables
     const profileVariables = {
@@ -121,18 +123,19 @@ export function shouldBehaveLikeQFCollectionModule() {
     };
 
     // get profileId
-    const profileId = await _mockProfileCreationProxy.connect(signers.user).callStatic.proxyCreateProfile(profileVariables);
+    const profileId = await _mockProfileCreationProxy
+      .connect(signers.user)
+      .callStatic.proxyCreateProfile(profileVariables);
 
     //create profile
     const txn = await _mockProfileCreationProxy.connect(signers.user).proxyCreateProfile(profileVariables);
     await txn.wait();
 
-    const DEFAULT_COLLECT_PRICE = ethers.utils.parseEther("1");
-
     const collectModuleInitData = ethers.utils.defaultAbiCoder.encode(
-      ["uint256", "address", "address", "uint16", "bool"],
-      [DEFAULT_COLLECT_PRICE, _WMATIC.address, signers.user.address, 100, true],
+      ["address", "uint16", "address", "address"],
+      _initData,
     );
+
     expect(await _lensHub.isCollectModuleWhitelisted(_qVoteCollectModule.address)).to.be.eq(true);
     expect(await _moduleGlobals.isCurrencyWhitelisted(_WMATIC.address)).to.be.eq(true);
 
@@ -140,22 +143,19 @@ export function shouldBehaveLikeQFCollectionModule() {
 
     //approve module to spend weth
     await expect(_WMATIC.connect(signers.user).approve(_qVoteCollectModule.address, wethAmount)).to.not.be.reverted;
-    await expect(_WMATIC.connect(signers.user).approve(_lensHub.address, wethAmount)).to.not.be.reverted;
-    await expect(_WMATIC.connect(signers.user).approve(_moduleGlobals.address, wethAmount)).to.not.be.reverted;
 
-    
-      const tx = await _lensHub.connect(signers.user).post({
-        profileId: 1,
-        contentURI: MOCK_URI,
-        collectModule: _qVoteCollectModule.address,
-        collectModuleInitData: collectModuleInitData,
-        referenceModule: ethers.constants.AddressZero,
-        referenceModuleInitData: [],
-      });
+    const tx = await _lensHub.connect(signers.user).post({
+      profileId: 1,
+      contentURI: MOCK_URI,
+      collectModule: _qVoteCollectModule.address,
+      collectModuleInitData: collectModuleInitData,
+      referenceModule: ethers.constants.AddressZero,
+      referenceModuleInitData: [],
+    });
 
-      expect(tx).to.not.be.reverted;
+    expect(tx).to.not.be.reverted;
+    const collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WMATIC.address, 0]);
 
-      const recp = await tx.wait();
-
+    await expect(_lensHub.collect(1, 1, collectData)).to.not.be.reverted;
   });
 }
