@@ -1,44 +1,161 @@
-import { deployMockContract } from "@ethereum-waffle/mock-contract";
-import { ethers } from "hardhat";
+import { MockContract, deployMockContract } from "@ethereum-waffle/mock-contract";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { getContractAddress } from "ethers/lib/utils";
+import { ethers, upgrades } from "hardhat";
 
-import ERC721Abi from "../../artifacts/@openzeppelin/contracts/token/ERC721/IERC721.sol/IERC721.json";
-import LensHubAbi from "../../importedABI/LensHub.json";
 import ModuleGlobalsAbi from "../../importedABI/ModuleGlobals.json";
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
+import { CollectNFT } from "../../types/contracts/mocks/CollectNFT";
+import { FollowNFT } from "../../types/contracts/mocks/FollowNFT";
+import { FreeCollectModule } from "../../types/contracts/mocks/FreeCollectModule";
+import { LensHub } from "../../types/contracts/mocks/LensHub";
+import { ProfileCreationProxy } from "../../types/contracts/mocks/ProfileCreationProxy";
+import { SandboxGovernance } from "../../types/contracts/mocks/SandboxGovernance";
+import { InteractionLogic } from "../../types/contracts/mocks/libraries/InteractionLogic";
+import { ProfileTokenURILogic } from "../../types/contracts/mocks/libraries/ProfileTokenURILogic";
+import { PublishingLogic } from "../../types/contracts/mocks/libraries/PublishingLogic";
 import { getDefaultSigners } from "../utils/utils";
 
-export async function deployLensMumbaiFixture() {
-  const { admin, treasury } = await getDefaultSigners();
+type LensFixture = {
+  qVoteCollectModule: QuadraticVoteCollectModule;
+  freeCollectModule: FreeCollectModule;
+  lensHub: LensHub;
+  moduleGlobals: MockContract;
+  profileCreation: ProfileCreationProxy;
+  collectNFT: CollectNFT;
+  followNFT: FollowNFT;
+  profiles: { [key: string]: LensUser };
+};
 
-  //Mocks
-  //deploy mock lenshub
-  const _mockLenshub = await deployMockContract(admin, LensHubAbi.abi);
-  //deploy mock module globals contract
+export type LensUser = { account: SignerWithAddress; profile: ProfileData };
+
+export type ProfileData = {
+  to: string;
+  handle: string;
+  imageURI: string;
+  followModule: string;
+  followModuleInitData: [];
+  followNFTURI: string;
+};
+
+const buildProfileData = (user: SignerWithAddress, handle: string) => {
+  return {
+    to: user.address,
+    handle,
+    imageURI: "https://ipfs.io/ipfs/QmY9dUwYu67puaWBMxRKW98LPbXCznPwHUbhX5NeWnCJbX",
+    followModule: ethers.constants.AddressZero,
+    followModuleInitData: [],
+    followNFTURI: "https://ipfs.io/ipfs/QmTFLSXdEQ6qsSzaXaCSNtiv6wA56qq87ytXJ182dXDQJS",
+  } as ProfileData;
+};
+
+export async function deployLensFixture() {
+  const { admin, treasury, user, user2 } = await getDefaultSigners();
+
+  // Libraries
+  const InteractionLogicFactory = await ethers.getContractFactory("InteractionLogic");
+  const _interactionLogic = <InteractionLogic>await InteractionLogicFactory.connect(admin).deploy();
+  await _interactionLogic.deployed();
+
+  const ProfileTokenURILogicFactory = await ethers.getContractFactory("ProfileTokenURILogic");
+  const _profileTokenURILogic = <ProfileTokenURILogic>await ProfileTokenURILogicFactory.connect(admin).deploy();
+  await _profileTokenURILogic.deployed();
+
+  const PublishingLogicFactory = await ethers.getContractFactory("PublishingLogic");
+  const _publishingLogic = <PublishingLogic>await PublishingLogicFactory.connect(admin).deploy();
+  await _publishingLogic.deployed();
+
+  // Collect NFT
+
+  const transactionCount = await admin.getTransactionCount();
+
+  let futureAddress = getContractAddress({
+    from: admin.address,
+    nonce: transactionCount + 4, // ~ 1, CollectNFT, 2 FollownNFT, 3 Implementation, 4 Proxy
+  });
+  const CollectNFTFactory = await ethers.getContractFactory("CollectNFT");
+  const _collectNFT = <CollectNFT>await CollectNFTFactory.connect(admin).deploy(futureAddress);
+  await _collectNFT.deployed();
+
+  const FollowNFTFactory = await ethers.getContractFactory("FollowNFT");
+  const _followNFT = <FollowNFT>await FollowNFTFactory.connect(admin).deploy(futureAddress);
+  await _followNFT.deployed();
+
+  // LensHub
+  const LensHub = await ethers.getContractFactory("LensHub", {
+    libraries: {
+      InteractionLogic: _interactionLogic.address,
+      ProfileTokenURILogic: _profileTokenURILogic.address,
+      PublishingLogic: _publishingLogic.address,
+    },
+  });
+
+  const _lensHub = <LensHub>await upgrades.deployProxy(LensHub, ["LensHub", "HUB", admin.address], {
+    kind: "transparent",
+    constructorArgs: [_followNFT.address, _collectNFT.address],
+    unsafeAllow: [
+      "constructor",
+      "external-library-linking",
+      "state-variable-immutable",
+      "state-variable-assignment",
+      "delegatecall",
+    ],
+  });
+
+  await _lensHub.setState(0);
   const _mockModuleGlobals = await deployMockContract(admin, ModuleGlobalsAbi.abi);
-  //deploy mock erc721
-  const _mockERC721 = await deployMockContract(admin, ERC721Abi.abi);
+
+  //deploy governance
+  const GovernanceFactory = await ethers.getContractFactory("SandboxGovernance");
+  const _governance = <SandboxGovernance>await GovernanceFactory.connect(admin).deploy(_lensHub.address, admin.address);
+  await _governance.deployed();
+
+  //deploy profile creation
+  const ProfileCreationProxyFactory = await ethers.getContractFactory("ProfileCreationProxy");
+  const _profileCreation = <ProfileCreationProxy>(
+    await ProfileCreationProxyFactory.connect(admin).deploy(_lensHub.address)
+  );
+  await _profileCreation.deployed();
+
+  await _lensHub.whitelistProfileCreator(_profileCreation.address, true);
+
+  //deploy Free Collection Module.
+  const FreeCollectModule = await ethers.getContractFactory("FreeCollectModule");
+  const freeCollectModule = <FreeCollectModule>await FreeCollectModule.connect(admin).deploy(_lensHub.address);
+  await freeCollectModule.deployed();
+
+  await _lensHub.whitelistCollectModule(freeCollectModule.address, true);
 
   //deploy QF Collection Module.
   const QFCollectModule = await ethers.getContractFactory("QuadraticVoteCollectModule");
   const qVoteCollectModule = <QuadraticVoteCollectModule>(
-    await QFCollectModule.connect(admin).deploy(_mockLenshub.address, _mockModuleGlobals.address)
+    await QFCollectModule.connect(admin).deploy(_lensHub.address, _mockModuleGlobals.address)
   );
   await qVoteCollectModule.deployed();
 
   //set mocked contracts to return data needed for tests
   await _mockModuleGlobals.mock.isCurrencyWhitelisted.returns(true);
   await _mockModuleGlobals.mock.getTreasuryData.returns(treasury.address, 1);
-  await _mockLenshub.mock.ownerOf.returns(admin.address);
-  await _mockLenshub.mock.getFollowModule.returns(ethers.constants.AddressZero);
-  await _mockLenshub.mock.getFollowNFT.returns(_mockERC721.address);
-  await _mockERC721.mock.balanceOf.returns(1);
 
-  // //TODO mocks for collect tests
-  // await _mockLenshub.mock.whitelistCollectModule.returns();
-  // await _mockLenshub.mock.isCollectModuleWhitelisted.returns(true);
-  // await _mockLenshub.mock.createProfile.returns(1);
-  // await _mockLenshub.mock.post.returns(1);
-  // await _mockLenshub.mock.collect.returns(1);
+  // Profiles
 
-  return { qVoteCollectModule, lensHub: _mockLenshub, moduleGlobals: _mockModuleGlobals, _mockERC721 };
+  const _creator = buildProfileData(user, "creator");
+  const _collector = buildProfileData(user2, "collector");
+
+  await _profileCreation.connect(admin).proxyCreateProfile(_creator);
+  await _profileCreation.connect(admin).proxyCreateProfile(_collector);
+
+  return {
+    qVoteCollectModule,
+    lensHub: _lensHub,
+    freeCollectModule,
+    moduleGlobals: _mockModuleGlobals,
+    profileCreation: _profileCreation,
+    collectNFT: _collectNFT,
+    followNFT: _followNFT,
+    profiles: {
+      creator: { account: user, profile: _creator },
+      collector: { account: user2, profile: _collector },
+    },
+  } as LensFixture;
 }

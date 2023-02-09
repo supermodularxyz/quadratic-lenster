@@ -125,11 +125,18 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         if (referralFee != 0) {
+            console.log("Referal");
+
             // Avoids stack too deep
             {
                 uint256 referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
                 adjustedAmount = _amount - treasuryAmount - referralAmount;
+
+                console.log("Adjusted amount: ", adjustedAmount);
+
                 address referralRecipient = IERC721(HUB).ownerOf(referrerProfileId);
+
+                console.log("Referal recipient: ", referralRecipient);
 
                 // Send referral fee in normal ERC20 tokens
                 IERC20(_currency).safeTransferFrom(collector, referralRecipient, referralAmount);
@@ -137,6 +144,8 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         if (treasuryAmount != 0) {
+            console.log("Treasury");
+
             IERC20(_currency).safeTransferFrom(collector, treasury, treasuryAmount);
         }
 

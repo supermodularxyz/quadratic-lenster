@@ -87,5 +87,17 @@ export const getDefaultSigners = async () => {
     user: defaultSigners[1],
     user2: defaultSigners[2],
     treasury: defaultSigners[3],
+    grant: defaultSigners[4],
+  };
+};
+
+export const buildPostData = (profileId: number, collectModuleAddress: string, initData: any) => {
+  return {
+    profileId,
+    contentURI: "ipfs://example",
+    collectModule: collectModuleAddress,
+    collectModuleInitData: initData,
+    referenceModule: ethers.constants.AddressZero,
+    referenceModuleInitData: [],
   };
 };

@@ -1,8 +1,8 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0xcF3a88a6666e08a10e66fe8e23c48dFeD4c482b3",
-    "txHash": "0xa7137745af2d6b055dcca1c34649595d4310e42225e0ffc90c42ea312a3f7987"
+    "address": "0x79Ea391369845428cd204C0bcf97bb6081717BBA",
+    "txHash": "0xd936b4af59e103ef71086052fb2fbdc00bb6879b1c799695648b84a6f9864549"
   },
   "proxies": [
     {
@@ -63,6 +63,51 @@
     {
       "address": "0xA86837773d8167C20f648Fcc11dB7eA4B95B4b7A",
       "txHash": "0x81d619ecd44e98dafe6574729a118a02727e86186efd5c81cc27e5cfa86672d7",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xD37aB5C56906A749058cA27402D8DD0a1b4595Cd",
+      "txHash": "0x6f72b74dab0201b1800d40568cb650dee66121789f83ce763cbdd20e43848f68",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x79Ea391369845428cd204C0bcf97bb6081717BBA",
+      "txHash": "0xcdae86f63abd2600b54ef6b430823170e4c5407660c7274a050837d0550abf0c",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xBAe9eFeE8D4D95149a1618a8604371982573F5c6",
+      "txHash": "0x19cd51dffe88688bbed37756e730d519b3bc97e7003c7c5a13da1b2d5c2ff5aa",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xC95d8FfeC670Ce663DA7d7821141567205E39F2E",
+      "txHash": "0xc8439cd3a72556067f80719d87918fe5aa41de6d0ac3ec54e1d32c0638b7cca7",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x1565b674872ecFFf30a3eAe2d4A22B330B9C9C8D",
+      "txHash": "0x9721830f95449be1736d3770609dc99dc1564b5e004d877dcd5cee625257af58",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9Ea3Ee1A0D06f59fA2174BC1840219a3892bf870",
+      "txHash": "0x7bd72edc912c226213c5de5358eba8546a420db6885bf12526440b76e25b0304",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x2bfe504e5C145F5d5b95df2b7798Ec1C422C5Bc1",
+      "txHash": "0x3c0e3f3305645027d7d77cc69aa7ac73470dda4e4fc0f46121eb514fcb7c18b2",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x4ef92B5bE63605A0c27433F5AF88746384c379e5",
+      "txHash": "0x5f654dd76ae281166d5da76dd60736114a7d3758296c01b73be1738ea357b22b",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x078c65Ff670580196C52BFa29892BaCab493a740",
+      "txHash": "0x2a4f6c31ad9ea08437f5d86e75d8d53fa8c233d50b00ee0f9adc87f7b29bfdc9",
       "kind": "transparent"
     }
   ],
@@ -384,6 +429,3552 @@
           "t_uint8": {
             "label": "uint8",
             "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "d421212721d6ec9ea5a694c2da45beeb6933e8f689f7c13ad458f3153c9bdfe3": {
+      "address": "0xD052F9CFa326F00Df773c57e73A989cC6D88cA61",
+      "txHash": "0xd9c52f0b0a0c16144a2e9b6694d763a028f0bc4c8dda350cf6c8d1a67aea06bb",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)5528_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)3537",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)3564_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)3577_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)3537": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)3577_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)3564_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)3577_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)5528_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)3564_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)3577_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)5528_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "77ccb98506a2b20a6e4feabd21eb26e765fe84bc379f0fc213d5ea2218a45653": {
+      "address": "0x126abf1ca4db7389b1f5fd3B8a84b3434313854d",
+      "txHash": "0xa3a25caa14be1a6066d4bc519a48e3c106cdc8dd895fe9c7ef8f2a9c33c0abf0",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)5547_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)3556",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)3583_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)3596_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)3556": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)3596_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)3583_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)3596_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)5547_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)3583_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)3596_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)5547_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "81382cf26a096af80369f5e77fd2b476490ffae35e2b848b1330d94ebc1564ed": {
+      "address": "0xd1Cd5e48C9e98aCcCa5066997dF60e4BEb64eA2A",
+      "txHash": "0x24b32bbd202baa6998a74cb350eb9437527e50e12017cfc4a6d385187836b290",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)4584_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)2395",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)2395": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)4584_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)2422_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)2435_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)4584_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "6d4ad0205aba996d6753fd44f8f68d7af7c4e85498689cb28d3b015d7e8ae672": {
+      "address": "0x8222562D89d4Bd5E81aAb9Bf0A71d09c384fD79D",
+      "txHash": "0x4fc9ca12318a732b2032d500c3c6f94e4ca9f8a4ed7a9ec0c99fadb06daa2ee3",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)4584_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)2395",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)2395": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)4584_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)2422_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)2435_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)4584_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "a261bf906410b1b3f0cbb9ca20dd74977c224486e6cef9b8098bdb58938d5d64": {
+      "address": "0x0e92528803F04A82e96Af5d43D5b9faEaF8F28D8",
+      "txHash": "0x8b2f54cc499dad0fede67b122f026637c326ac3409be801220a89ac1b93b60d7",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)4584_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)2395",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)2395": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)4584_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)2422_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)2435_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)4584_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "85e3ef115297dcdcb77c699bb153b3f9df0dfda12a61ea317dbbc43d2070f0c7": {
+      "address": "0x3Bfe3F24379f9d5ddEC5C8128205e120AE828826",
+      "txHash": "0xff7b860ee23bc5e9c625e0b23ed7d1a4038b300587f4f57e1cc2846981e612f9",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)4584_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)2395",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)2395": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)4584_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)2422_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)2435_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)4584_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "fbf6085ce3cdcbfbfe438b2c3b30819f1cf847606fcf20f8474e9b9e7afb244a": {
+      "address": "0x0a21c5d7aA2e9b36C213842762ABDDd13aa21761",
+      "txHash": "0x1f914d60285a59c49ae40864c54645dda2cf2ff9ecdc0fd80d1128abf6a6c0a0",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)4584_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)2395",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)2395": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)4584_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)2422_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)2435_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)4584_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "6ad7197b42153ddc002f28f1a4d7efb02db739c48f197e0ede4f1421d10c0bad": {
+      "address": "0xC6D513643A9A9497b375A6baAFa951158d16e566",
+      "txHash": "0x6d10638abd63b57ac118cadc6a15c69177868e86127aa4be6d6cada1eb19f4f2",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)4584_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)2395",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)2395": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)4584_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)2422_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)2435_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)4584_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
+          }
+        }
+      }
+    },
+    "113bbc640f442f6f4ea3c3bafa94bec3e6739fbec36f4dd45439b6be8d168cee": {
+      "address": "0xF8Ff08a263D258c0618394734feD493806bd60cd",
+      "txHash": "0x120940c8955f338d6ead7684264edbe5eca239a7dbaa3f038daec9351c42fd45",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:28"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:31"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)4584_storage)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:35"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:38"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:41"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Time",
+            "src": "contracts/mocks/ERC721Time.sol:44"
+          },
+          {
+            "label": "_ownedTokens",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:17"
+          },
+          {
+            "label": "_ownedTokensIndex",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:20"
+          },
+          {
+            "label": "_allTokens",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:23"
+          },
+          {
+            "label": "_allTokensIndex",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "ERC721Enumerable",
+            "src": "contracts/mocks/ERC721Enumerable.sol:26"
+          },
+          {
+            "label": "sigNonces",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensNFTBase",
+            "src": "contracts/mocks/LensNFTBase.sol:32"
+          },
+          {
+            "label": "lastInitializedRevision",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "VersionedInitializable",
+            "src": "contracts/mocks/VersionedInitializable.sol:29"
+          },
+          {
+            "label": "_state",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_enum(ProtocolState)2395",
+            "contract": "LensMultiState",
+            "src": "contracts/mocks/LensMultiState.sol:18"
+          },
+          {
+            "label": "_profileCreatorWhitelisted",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:45"
+          },
+          {
+            "label": "_followModuleWhitelisted",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:46"
+          },
+          {
+            "label": "_collectModuleWhitelisted",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:47"
+          },
+          {
+            "label": "_referenceModuleWhitelisted",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:48"
+          },
+          {
+            "label": "_dispatcherByProfile",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:50"
+          },
+          {
+            "label": "_profileIdByHandleHash",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_bytes32,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:51"
+          },
+          {
+            "label": "_profileById",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:52"
+          },
+          {
+            "label": "_pubByIdByProfile",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:53"
+          },
+          {
+            "label": "_defaultProfileByAddress",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:55"
+          },
+          {
+            "label": "_profileCounter",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:57"
+          },
+          {
+            "label": "_governance",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:58"
+          },
+          {
+            "label": "_emergencyAdmin",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_address",
+            "contract": "LensHubStorage",
+            "src": "contracts/mocks/LensHubStorage.sol:59"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(ProtocolState)2395": {
+            "label": "enum DataTypes.ProtocolState",
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(address => mapping(uint256 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage))": {
+            "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(ProfileStruct)2422_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(PublicationStruct)2435_storage)": {
+            "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenData)4584_storage)": {
+            "label": "mapping(uint256 => struct IERC721Time.TokenData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(ProfileStruct)2422_storage": {
+            "label": "struct DataTypes.ProfileStruct",
+            "members": [
+              {
+                "label": "pubCount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "followModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "followNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "handle",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "imageURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "followNFTURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(PublicationStruct)2435_storage": {
+            "label": "struct DataTypes.PublicationStruct",
+            "members": [
+              {
+                "label": "profileIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "pubIdPointed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "contentURI",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referenceModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "collectModule",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "collectNFT",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(TokenData)4584_storage": {
+            "label": "struct IERC721Time.TokenData",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintTimestamp",
+                "type": "t_uint96",
+                "offset": 20,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint96": {
+            "label": "uint96",
+            "numberOfBytes": "12"
           }
         }
       }

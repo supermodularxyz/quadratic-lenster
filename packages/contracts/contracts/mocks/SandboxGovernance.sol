@@ -12,7 +12,7 @@ import {DataTypes} from '../libraries/DataTypes.sol';
  * @notice Only whitelisting of Follow/Reference/Collect modules are allowed to be called publicly.
  * @notice The rest of onlyGov functions are restricted to this contract's owner.
  */
-contract MockSandboxGovernance {
+contract SandboxGovernance {
     ILensHub public immutable LENS_HUB;
     address public owner;
 

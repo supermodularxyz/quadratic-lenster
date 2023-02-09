@@ -37,15 +37,12 @@ export const shouldBehaveLikeGrantsRound = () => {
       expect(ethers.utils.formatEther(await _WETH.balanceOf(user.address))).to.equal("10.0");
       await _WETH.connect(user).approve(_votingStrategy.address, 100);
 
-      const encodedVotes = [];
       // Prepare Votes
       const votes = [[user.address, _WETH.address, 5, user.address, ethers.utils.formatBytes32String("1")]];
 
-      for (let i = 0; i < votes.length; i++) {
-        encodedVotes.push(
-          ethers.utils.defaultAbiCoder.encode(["address", "address", "uint256", "address", "bytes32"], votes[i]),
-        );
-      }
+      const encodedVotes = votes.map((vote) =>
+        ethers.utils.defaultAbiCoder.encode(["address", "address", "uint256", "address", "bytes32"], vote),
+      );
 
       await ethers.provider.send("evm_mine", [_currentBlockTimestamp + 750]); /* wait for round to start */
       await expect(_roundImplementation.connect(user).vote(encodedVotes)).to.emit(_votingStrategy, "Voted");

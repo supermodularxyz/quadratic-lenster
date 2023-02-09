@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.10;
 
-import { DataTypes } from '../libraries/DataTypes.sol';
+import { DataTypes } from "../libraries/DataTypes.sol";
 
 /**
  * @title ILensNFTBase
