@@ -69,7 +69,6 @@ export function shouldBehaveLikeQFCollectionModule() {
     expect(ethers.utils.formatEther(await _WMATIC.balanceOf(collector.account.address))).to.equal("10.0");
     await _WMATIC.connect(collector.account).approve(_votingStrategy.address, voteAmount);
     await _WMATIC.connect(collector.account).approve(_qVoteCollectModule.address, voteAmount);
-    await _WMATIC.connect(collector.account).approve(_lensHub.address, voteAmount);
 
     await _lensHub.connect(admin).whitelistCollectModule(_qVoteCollectModule.address, true);
     expect(await _lensHub.isCollectModuleWhitelisted(_qVoteCollectModule.address)).to.be.true;
