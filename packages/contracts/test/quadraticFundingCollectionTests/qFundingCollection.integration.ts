@@ -54,8 +54,8 @@ export function shouldBehaveLikeQFCollectionModule() {
     _lensHub = lensHub;
   });
 
-  it.only("Should collect a post and simultaneously vote in an active round", async function () {
-    const { admin, grant } = signers;
+  it("Should collect a post and simultaneously vote in an active round", async function () {
+    const { admin } = signers;
     const { creator, collector } = _profiles;
     const voteAmount = ethers.utils.parseEther("2");
 
@@ -71,8 +71,7 @@ export function shouldBehaveLikeQFCollectionModule() {
     await _WMATIC.connect(collector.account).approve(_qVoteCollectModule.address, voteAmount);
     await _WMATIC.connect(collector.account).approve(_lensHub.address, voteAmount);
 
-    //TODO test for emitted event
-    await expect(_lensHub.connect(admin).whitelistCollectModule(_qVoteCollectModule.address, true)).to.not.be.reverted;
+    await _lensHub.connect(admin).whitelistCollectModule(_qVoteCollectModule.address, true);
     expect(await _lensHub.isCollectModuleWhitelisted(_qVoteCollectModule.address)).to.be.true;
 
     // We can create a post that uses our collect module

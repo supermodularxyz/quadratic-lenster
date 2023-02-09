@@ -1,4 +1,3 @@
-import { MockContract } from "@ethereum-waffle/mock-contract";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { expect } from "chai";

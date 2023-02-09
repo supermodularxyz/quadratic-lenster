@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.10;
 
-import "hardhat/console.sol";
-
 import { ICollectModule } from "./interfaces/ICollectModule.sol";
 import { Errors } from "./libraries/Errors.sol";
 import { FeeModuleBase } from "./FeeModuleBase.sol";
@@ -77,16 +75,9 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
     }
 
     function _processCollect(address collector, uint256 profileId, uint256 pubId, bytes calldata data) internal {
-        console.log("Decoding");
-
         (address _currency, uint256 _amount) = abi.decode(data, (address, uint256));
 
-        console.log("Decoded currency: ", _currency);
-        console.log("Decoded amount: ", _amount);
-
         _validateDataIsExpected(data, _currency, _amount);
-
-        console.log("Valid data");
 
         address treasury;
         uint256 treasuryAmount;
@@ -105,7 +96,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         //cast vote
-        _vote(profileId, pubId, adjustedAmount, _currency);
+        _vote(collector, profileId, pubId, adjustedAmount, _currency);
     }
 
     function _processCollectWithReferral(
@@ -132,18 +123,13 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         if (referralFee != 0) {
-            console.log("Referal");
 
             // Avoids stack too deep
             {
                 uint256 referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
                 adjustedAmount = _amount - treasuryAmount - referralAmount;
 
-                console.log("Adjusted amount: ", adjustedAmount);
-
                 address referralRecipient = IERC721(HUB).ownerOf(referrerProfileId);
-
-                console.log("Referal recipient: ", referralRecipient);
 
                 // Send referral fee in normal ERC20 tokens
                 IERC20(_currency).safeTransferFrom(collector, referralRecipient, referralAmount);
@@ -151,21 +137,19 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         if (treasuryAmount != 0) {
-            console.log("Treasury");
-            console.log("Currency: ", _currency);
 
             IERC20(_currency).safeTransferFrom(collector, treasury, treasuryAmount);
         }
 
         //cast vote
-        _vote(profileId, pubId, adjustedAmount, _currency);
+        _vote(collector, profileId, pubId, adjustedAmount, _currency);
     }
 
-    function _vote(uint256 profileId, uint256 pubId, uint256 amount, address currency) internal {
+    function _vote(address voter, uint256 profileId, uint256 pubId, uint256 amount, address currency) internal {
         address grantsRoundAddress = _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress;
         address votingStrategyAddress = _dataByPublicationByProfile[profileId][pubId].votingStrategyAddress;
         // encode vote
-        bytes memory vote = abi.encode(msg.sender, currency, amount, grantsRoundAddress, profileId);
+        bytes memory vote = abi.encode(voter, currency, amount, grantsRoundAddress, profileId);
 
         /// declare votes array
         bytes[] memory votes = new bytes[](1);
@@ -177,7 +161,6 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         IERC20(currency).approve(votingStrategyAddress, amount);
 
         /// vote
-        // TODO find way to not have contract as msg.sender
         IRoundImplementation(grantsRoundAddress).vote(votes);
     }
 
