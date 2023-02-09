@@ -1,6 +1,6 @@
 import { BigNumberish, utils } from "ethers";
 
-import LENS_MUMBAI from "../../deployments/lens-polygon-mumbai.json";
+import LENS_SANDBOX from "../../deployments/lens-sandbox-polygon-mumbai.json";
 import LENS_POLYGON from "../../deployments/lens-polygon.json";
 
 export type MetaPtr = {
@@ -11,7 +11,7 @@ export type MetaPtr = {
 export const DEFAULT_VOTE = utils.parseEther("1");
 
 /*objects that contain all the deployed contract addresses for lens */
-export const lensMumbaiAddresses = LENS_MUMBAI;
+export const lensSandboxAddresses = LENS_SANDBOX;
 export const lensPolygonAddresses = LENS_POLYGON;
 
 /* Gitcoin test constants */
@@ -52,7 +52,6 @@ export const LENS_HUB_NFT_NAME = "Lens Protocol Profiles";
 export const LENS_HUB_NFT_SYMBOL = "LPP";
 export const MOCK_PROFILE_HANDLE = "plant1ghost.eth";
 export const LENS_PERIPHERY_NAME = "LensPeriphery";
-export const FIRST_PROFILE_ID = 1;
 export const MOCK_URI = "https://ipfs.io/ipfs/QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR";
 export const OTHER_MOCK_URI = "https://ipfs.io/ipfs/QmSfyMcnh1wnJHrAWCBjZHapTS859oNSsuDFiAPPdAHgHP";
 export const MOCK_PROFILE_URI = "https://ipfs.io/ipfs/Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu";

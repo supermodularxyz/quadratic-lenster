@@ -18,8 +18,8 @@ import {
   REFERRAL_FEE_BPS,
 } from "../utils/constants";
 import { getDefaultSigners } from "../utils/utils";
-import { MockProfileCreationProxy } from "./../../types/contracts/mocks/MockProfileCreationProxy";
-import { MockSandboxGovernance } from "./../../types/contracts/mocks/MockSandboxGovernance";
+import { MockProfileCreationProxy } from "../../types/contracts/mocks/MockProfileCreationProxy";
+import { MockSandboxGovernance } from "../../types/contracts/mocks/MockSandboxGovernance";
 
 export function shouldBehaveLikeQFCollectionModule() {
   let signers: { [key: string]: SignerWithAddress };
@@ -92,7 +92,7 @@ export function shouldBehaveLikeQFCollectionModule() {
     _mockProfileCreationProxy = <MockProfileCreationProxy>await MockProfileCreationProxy.deploy(_lensHub.address);
   });
 
-  it.only("Should collect a post and simultaneously vote in an active round", async function () {
+  it("Should collect a post and simultaneously vote in an active round", async function () {
     expect(ethers.utils.formatEther(await _WMATIC.balanceOf(signers.user.address))).to.equal("10.0");
     await _WMATIC.approve(_votingStrategy.address, 100);
 

@@ -5,7 +5,7 @@ import { task } from "hardhat/config";
 import GRANTS_MUMBAI from "../deployments/grants-polygon-mumbai.json";
 import LENS_MUMBAI from "../deployments/lens-polygon-mumbai.json";
 import LENS_POLYGON from "../deployments/lens-polygon.json";
-import SANDBOX_MUMBAI from "../deployments/sandbox-mumbai.json";
+import SANDBOX_MUMBAI from "../deployments/lens-sandbox-polygon-mumbai.json";
 
 type Contracts = "QuadraticFundingCurator" | "QuadraticVoteCollectModule";
 

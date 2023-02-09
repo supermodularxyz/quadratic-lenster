@@ -5,12 +5,12 @@ import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
 
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
+import { ERC20 } from "../../types/contracts/mocks/ERC20";
+import { QuadraticFundingVotingStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation";
+import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
 import { deployGitcoinMumbaiFixture } from "../gitcoinTests/gitcoin.fixture";
 import { DEFAULT_VOTE } from "../utils/constants";
 import { getCollectModulePubInitData, getDefaultSigners } from "../utils/utils";
-import { ERC20 } from "./../../types/contracts/mocks/ERC20";
-import { QuadraticFundingVotingStrategyImplementation } from "./../../types/contracts/mocks/QuadraticFundingVotingStrategyImplementation";
-import { RoundImplementation } from "./../../types/contracts/mocks/RoundImplementation";
 
 export const shouldBehaveLikeQuadraticVoteModule = () => {
   let _qVoteCollectModule: QuadraticVoteCollectModule;
@@ -21,8 +21,7 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
   let _initData: (string | number | BigNumber)[];
   let collectModuleInitData: string;
   before("Setup QFVM", async () => {
-    const signers = await getDefaultSigners();
-    _signers = signers;
+    _signers = await getDefaultSigners();
 
     // deploy gitcoin fixture
     const { qVoteCollectModule, roundImplementation, WETH, votingStrategy } = await loadFixture(

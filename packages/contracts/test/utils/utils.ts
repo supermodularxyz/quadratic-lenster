@@ -86,5 +86,6 @@ export const getDefaultSigners = async () => {
     admin: defaultSigners[0],
     user: defaultSigners[1],
     user2: defaultSigners[2],
+    treasury: defaultSigners[3],
   };
 };

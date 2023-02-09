@@ -8,7 +8,7 @@ import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteC
 import { getDefaultSigners } from "../utils/utils";
 
 export async function deployLensMumbaiFixture() {
-  const { admin, user2 } = await getDefaultSigners();
+  const { admin, treasury } = await getDefaultSigners();
 
   //Mocks
   //deploy mock lenshub
@@ -27,18 +27,18 @@ export async function deployLensMumbaiFixture() {
 
   //set mocked contracts to return data needed for tests
   await _mockModuleGlobals.mock.isCurrencyWhitelisted.returns(true);
-  await _mockModuleGlobals.mock.getTreasuryData.returns(qVoteCollectModule.address, 1);
-  await _mockLenshub.mock.ownerOf.returns(user2.address);
+  await _mockModuleGlobals.mock.getTreasuryData.returns(treasury.address, 1);
+  await _mockLenshub.mock.ownerOf.returns(admin.address);
   await _mockLenshub.mock.getFollowModule.returns(ethers.constants.AddressZero);
   await _mockLenshub.mock.getFollowNFT.returns(_mockERC721.address);
   await _mockERC721.mock.balanceOf.returns(1);
 
-  //TODO mocks for collect tests
-  await _mockLenshub.mock.whitelistCollectModule.returns();
-  await _mockLenshub.mock.isCollectModuleWhitelisted.returns(true);
-  await _mockLenshub.mock.createProfile.returns(1);
-  await _mockLenshub.mock.post.returns(1);
-  await _mockLenshub.mock.collect.returns(1);
+  // //TODO mocks for collect tests
+  // await _mockLenshub.mock.whitelistCollectModule.returns();
+  // await _mockLenshub.mock.isCollectModuleWhitelisted.returns(true);
+  // await _mockLenshub.mock.createProfile.returns(1);
+  // await _mockLenshub.mock.post.returns(1);
+  // await _mockLenshub.mock.collect.returns(1);
 
   return { qVoteCollectModule, lensHub: _mockLenshub, moduleGlobals: _mockModuleGlobals, _mockERC721 };
 }

@@ -1,5 +1,5 @@
-import { shouldBehaveLikeLensHubMumbai } from "./lensMumbai.behavior";
+import { shouldBehaveLikeLensHub } from "./lens.behavior";
 
 describe("Lens Unit tests", function () {
-  shouldBehaveLikeLensHubMumbai();
+  shouldBehaveLikeLensHub();
 });
