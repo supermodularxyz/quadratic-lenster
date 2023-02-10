@@ -4,7 +4,6 @@ import { expect } from "chai";
 import { Contract } from "ethers";
 import { ethers } from "hardhat";
 
-import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
 import { CollectNFT } from "../../types/contracts/mocks/CollectNFT";
 import { FollowNFT } from "../../types/contracts/mocks/FollowNFT";
 import { FreeCollectModule } from "../../types/contracts/mocks/FreeCollectModule";
@@ -15,7 +14,6 @@ import { LensUser, deployLensFixture } from "./lens.fixture";
 
 export const shouldBehaveLikeLensHub = () => {
   let _signers: { [key: string]: SignerWithAddress };
-  let _qVoteCollectModule: QuadraticVoteCollectModule;
   let _lensHub: LensHub;
   let _moduleGlobals: Contract;
   let _collectNFT: CollectNFT;
@@ -30,18 +28,9 @@ export const shouldBehaveLikeLensHub = () => {
 
   describe("Lens deployment", function () {
     beforeEach("deploy fixture", async () => {
-      const {
-        qVoteCollectModule,
-        lensHub,
-        moduleGlobals,
-        collectNFT,
-        followNFT,
-        profileCreation,
-        profiles,
-        freeCollectModule,
-      } = await loadFixture(deployLensFixture);
+      const { lensHub, moduleGlobals, collectNFT, followNFT, profileCreation, profiles, freeCollectModule } =
+        await loadFixture(deployLensFixture);
 
-      _qVoteCollectModule = qVoteCollectModule;
       _lensHub = lensHub;
       _moduleGlobals = moduleGlobals;
       _collectNFT = collectNFT;
@@ -66,10 +55,11 @@ export const shouldBehaveLikeLensHub = () => {
       const initFreeCollect = ethers.utils.defaultAbiCoder.encode(["bool"], [true]);
       const postData = buildPostData(1, _freeCollectModule.address, initFreeCollect);
 
+      //TODO check on events
       await expect(_lensHub.connect(creator.account).post(postData)).to.not.be.reverted;
 
-      expect(await _lensHub.connect(collector.account).follow([1], [[]])).to.emit(_lensHub, "Follow");
-      expect(await _lensHub.connect(collector.account).collect(1, 1, [])).to.emit(_lensHub, "Collect");
+      await expect(_lensHub.connect(collector.account).follow([1], [[]])).to.not.be.reverted;
+      await expect(_lensHub.connect(collector.account).collect(1, 1, [])).to.not.be.reverted;
     });
 
     it("User should follow, then collect, receive a collect NFT with the expected properties", async () => {

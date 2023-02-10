@@ -1,7 +1,7 @@
 import { BigNumberish, utils } from "ethers";
 
-import LENS_SANDBOX from "../../deployments/lens-sandbox-polygon-mumbai.json";
 import LENS_POLYGON from "../../deployments/lens-polygon.json";
+import LENS_SANDBOX from "../../deployments/lens-sandbox-polygon-mumbai.json";
 
 export type MetaPtr = {
   protocol: BigNumberish;

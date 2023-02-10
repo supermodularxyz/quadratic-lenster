@@ -1,7 +1,7 @@
+import { MockContract } from "@ethereum-waffle/mock-contract";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
 
 import { QuadraticVoteCollectModule } from "../../types/contracts/QuadraticVoteCollectModule";
@@ -23,7 +23,7 @@ export function shouldBehaveLikeQFCollectionModule() {
   let _currentBlockTimestamp: number;
 
   let _lensHub: LensHub;
-  let _moduleGlobals: any;
+  let _moduleGlobals: MockContract;
   let _profileCreation: ProfileCreationProxy;
   let _profiles: { [key: string]: LensUser };
 
@@ -75,8 +75,10 @@ export function shouldBehaveLikeQFCollectionModule() {
 
     // We can create a post that uses our collect module
 
-    const _initData = [_WMATIC.address, 0, _roundImplementation.address, _votingStrategy.address];
-    const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "address"], _initData);
+    const deadline = await _roundImplementation.roundEndTime();
+
+    const _initData = [_WMATIC.address, 0, _roundImplementation.address, deadline];
+    const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "uint256"], _initData);
 
     const postData = buildPostData(1, _qVoteCollectModule.address, initQFCollect);
 
@@ -86,6 +88,6 @@ export function shouldBehaveLikeQFCollectionModule() {
 
     const _collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WMATIC.address, voteAmount]);
 
-    expect(await _lensHub.connect(collector.account).collect(1, 1, _collectData)).to.emit(_votingStrategy, "Voted");
+    await expect(_lensHub.connect(collector.account).collect(1, 1, _collectData)).to.emit(_votingStrategy, "Voted");
   });
 }

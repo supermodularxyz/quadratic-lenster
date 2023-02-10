@@ -2127,33 +2127,15 @@
     "absolutePath": "contracts/core/FollowNFT.sol",
     "id": 1194,
     "exportedSymbols": {
-      "Constants": [
-        10103
-      ],
-      "DataTypes": [
-        10349
-      ],
-      "Errors": [
-        10434
-      ],
-      "Events": [
-        10842
-      ],
-      "FollowNFT": [
-        1193
-      ],
-      "IFollowModule": [
-        9400
-      ],
-      "IFollowNFT": [
-        9455
-      ],
-      "ILensHub": [
-        9927
-      ],
-      "LensNFTBase": [
-        5257
-      ]
+      "Constants": [10103],
+      "DataTypes": [10349],
+      "Errors": [10434],
+      "Events": [10842],
+      "FollowNFT": [1193],
+      "IFollowModule": [9400],
+      "IFollowNFT": [9455],
+      "ILensHub": [9927],
+      "LensNFTBase": [5257]
     },
     "nodeType": "SourceUnit",
     "src": "33:11732:1",
@@ -2163,11 +2145,7 @@
         "nodeType": "PragmaDirective",
         "src": "33:23:1",
         "nodes": [],
-        "literals": [
-          "solidity",
-          "0.8",
-          ".10"
-        ]
+        "literals": ["solidity", "0.8", ".10"]
       },
       {
         "id": 313,
@@ -3452,9 +3430,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              9411
-            ],
+            "baseFunctions": [9411],
             "documentation": {
               "id": 399,
               "nodeType": "StructuredDocumentation",
@@ -3646,9 +3622,7 @@
                   "src": "2284:130:1",
                   "statements": [
                     {
-                      "assignments": [
-                        449
-                      ],
+                      "assignments": [449],
                       "declarations": [
                         {
                           "constant": false,
@@ -3800,9 +3774,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              9419
-            ],
+            "baseFunctions": [9419],
             "documentation": {
               "id": 430,
               "nodeType": "StructuredDocumentation",
@@ -3991,9 +3963,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              9425
-            ],
+            "baseFunctions": [9425],
             "documentation": {
               "id": 463,
               "nodeType": "StructuredDocumentation",
@@ -4473,9 +4443,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              9436
-            ],
+            "baseFunctions": [9436],
             "documentation": {
               "id": 477,
               "nodeType": "StructuredDocumentation",
@@ -4725,9 +4693,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    538
-                  ],
+                  "assignments": [538],
                   "declarations": [
                     {
                       "constant": false,
@@ -4984,9 +4950,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              9446
-            ],
+            "baseFunctions": [9446],
             "documentation": {
               "id": 517,
               "nodeType": "StructuredDocumentation",
@@ -5229,9 +5193,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    578
-                  ],
+                  "assignments": [578],
                   "declarations": [
                     {
                       "constant": false,
@@ -5438,9 +5400,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              9454
-            ],
+            "baseFunctions": [9454],
             "documentation": {
               "id": 559,
               "nodeType": "StructuredDocumentation",
@@ -5544,9 +5504,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    601
-                  ],
+                  "assignments": [601],
                   "declarations": [
                     {
                       "constant": false,
@@ -5824,9 +5782,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              4062
-            ],
+            "baseFunctions": [4062],
             "functionSelector": "06fdde03",
             "implemented": true,
             "kind": "function",
@@ -5896,9 +5852,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    627
-                  ],
+                  "assignments": [627],
                   "declarations": [
                     {
                       "constant": false,
@@ -6032,9 +5986,7 @@
                   "src": "4673:58:1"
                 },
                 {
-                  "assignments": [
-                    636
-                  ],
+                  "assignments": [636],
                   "declarations": [
                     {
                       "constant": false,
@@ -6313,9 +6265,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              4072
-            ],
+            "baseFunctions": [4072],
             "functionSelector": "95d89b41",
             "implemented": true,
             "kind": "function",
@@ -6390,9 +6340,7 @@
                   "src": "5085:848:1",
                   "statements": [
                     {
-                      "assignments": [
-                        671
-                      ],
+                      "assignments": [671],
                       "declarations": [
                         {
                           "constant": false,
@@ -6443,9 +6391,7 @@
                       "src": "5109:17:1"
                     },
                     {
-                      "assignments": [
-                        675
-                      ],
+                      "assignments": [675],
                       "declarations": [
                         {
                           "constant": false,
@@ -6786,9 +6732,7 @@
                         "src": "5461:422:1",
                         "statements": [
                           {
-                            "assignments": [
-                              705
-                            ],
+                            "assignments": [705],
                             "declarations": [
                               {
                                 "constant": false,
@@ -6945,9 +6889,7 @@
                             "src": "5479:44:1"
                           },
                           {
-                            "assignments": [
-                              717
-                            ],
+                            "assignments": [717],
                             "declarations": [
                               {
                                 "constant": false,
@@ -7827,9 +7769,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              4114
-            ],
+            "baseFunctions": [4114],
             "documentation": {
               "id": 758,
               "nodeType": "StructuredDocumentation",
@@ -7933,9 +7873,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    796
-                  ],
+                  "assignments": [796],
                   "declarations": [
                     {
                       "constant": false,
@@ -8008,9 +7946,7 @@
                   "src": "6496:40:1"
                 },
                 {
-                  "assignments": [
-                    802
-                  ],
+                  "assignments": [802],
                   "declarations": [
                     {
                       "constant": false,
@@ -8083,9 +8019,7 @@
                   "src": "6546:36:1"
                 },
                 {
-                  "assignments": [
-                    808
-                  ],
+                  "assignments": [808],
                   "declarations": [
                     {
                       "constant": false,
@@ -8816,9 +8750,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              3680
-            ],
+            "baseFunctions": [3680],
             "documentation": {
               "id": 785,
               "nodeType": "StructuredDocumentation",
@@ -8949,9 +8881,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    867
-                  ],
+                  "assignments": [867],
                   "declarations": [
                     {
                       "constant": false,
@@ -9034,9 +8964,7 @@
                   "src": "7086:47:1"
                 },
                 {
-                  "assignments": [
-                    873
-                  ],
+                  "assignments": [873],
                   "declarations": [
                     {
                       "constant": false,
@@ -9359,9 +9287,7 @@
                   "src": "7431:2850:1",
                   "statements": [
                     {
-                      "assignments": [
-                        901
-                      ],
+                      "assignments": [901],
                       "declarations": [
                         {
                           "constant": false,
@@ -9522,9 +9448,7 @@
                         "src": "7518:520:1",
                         "statements": [
                           {
-                            "assignments": [
-                              912
-                            ],
+                            "assignments": [912],
                             "declarations": [
                               {
                                 "constant": false,
@@ -9596,9 +9520,7 @@
                             "src": "7536:48:1"
                           },
                           {
-                            "assignments": [
-                              918
-                            ],
+                            "assignments": [918],
                             "declarations": [
                               {
                                 "constant": false,
@@ -9744,9 +9666,7 @@
                             "src": "7735:64:1"
                           },
                           {
-                            "assignments": [
-                              929
-                            ],
+                            "assignments": [929],
                             "declarations": [
                               {
                                 "constant": false,
@@ -10201,9 +10121,7 @@
                               "src": "9532:725:1",
                               "statements": [
                                 {
-                                  "assignments": [
-                                    1035
-                                  ],
+                                  "assignments": [1035],
                                   "declarations": [
                                     {
                                       "constant": false,
@@ -10250,9 +10168,7 @@
                                   "src": "9894:56:1"
                                 },
                                 {
-                                  "assignments": [
-                                    1039
-                                  ],
+                                  "assignments": [1039],
                                   "declarations": [
                                     {
                                       "constant": false,
@@ -10373,9 +10289,7 @@
                                   "src": "9972:106:1"
                                 },
                                 {
-                                  "assignments": [
-                                    1048
-                                  ],
+                                  "assignments": [1048],
                                   "declarations": [
                                     {
                                       "constant": false,
@@ -10599,9 +10513,7 @@
                               "src": "8205:559:1",
                               "statements": [
                                 {
-                                  "assignments": [
-                                    962
-                                  ],
+                                  "assignments": [962],
                                   "declarations": [
                                     {
                                       "constant": false,
@@ -10648,9 +10560,7 @@
                                   "src": "8401:56:1"
                                 },
                                 {
-                                  "assignments": [
-                                    966
-                                  ],
+                                  "assignments": [966],
                                   "declarations": [
                                     {
                                       "constant": false,
@@ -10771,9 +10681,7 @@
                                   "src": "8479:106:1"
                                 },
                                 {
-                                  "assignments": [
-                                    975
-                                  ],
+                                  "assignments": [975],
                                   "declarations": [
                                     {
                                       "constant": false,
@@ -10966,9 +10874,7 @@
                             }
                           },
                           {
-                            "assignments": [
-                              991
-                            ],
+                            "assignments": [991],
                             "declarations": [
                               {
                                 "constant": false,
@@ -11040,9 +10946,7 @@
                             "src": "8949:44:1"
                           },
                           {
-                            "assignments": [
-                              997
-                            ],
+                            "assignments": [997],
                             "declarations": [
                               {
                                 "constant": false,
@@ -11188,9 +11092,7 @@
                             "src": "9011:60:1"
                           },
                           {
-                            "assignments": [
-                              1008
-                            ],
+                            "assignments": [1008],
                             "declarations": [
                               {
                                 "constant": false,
@@ -11639,9 +11541,7 @@
                   "src": "10427:642:1",
                   "statements": [
                     {
-                      "assignments": [
-                        1077
-                      ],
+                      "assignments": [1077],
                       "declarations": [
                         {
                           "constant": false,
@@ -11746,9 +11646,7 @@
                       "src": "10451:44:1"
                     },
                     {
-                      "assignments": [
-                        1088
-                      ],
+                      "assignments": [1088],
                       "declarations": [
                         {
                           "constant": false,
@@ -12509,9 +12407,7 @@
                   "src": "11177:579:1",
                   "statements": [
                     {
-                      "assignments": [
-                        1144
-                      ],
+                      "assignments": [1144],
                       "declarations": [
                         {
                           "constant": false,
@@ -13247,35 +13143,11 @@
           "text": " @title FollowNFT\n @author Lens Protocol\n @notice This contract is the NFT that is minted upon following a given profile. It is cloned upon first follow for a\n given profile, and includes built-in governance power and delegation mechanisms.\n NOTE: This contract assumes total NFT supply for this follow NFT will never exceed 2^128 - 1"
         },
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          1193,
-          9455,
-          5257,
-          9978,
-          3842,
-          15800,
-          4752,
-          15827,
-          4789,
-          15751,
-          16478,
-          16490,
-          16191
-        ],
+        "linearizedBaseContracts": [1193, 9455, 5257, 9978, 3842, 15800, 4752, 15827, 4789, 15751, 16478, 16490, 16191],
         "name": "FollowNFT",
         "nameLocation": "856:9:1",
         "scope": 1194,
-        "usedErrors": [
-          10355,
-          10357,
-          10359,
-          10361,
-          10363,
-          10365,
-          10367,
-          10407,
-          10417
-        ]
+        "usedErrors": [10355, 10357, 10359, 10361, 10363, 10365, 10367, 10407, 10417]
       }
     ],
     "license": "MIT"

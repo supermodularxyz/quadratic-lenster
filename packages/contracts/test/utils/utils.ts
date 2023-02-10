@@ -91,7 +91,7 @@ export const getDefaultSigners = async () => {
   };
 };
 
-export const buildPostData = (profileId: number, collectModuleAddress: string, initData: any) => {
+export const buildPostData = (profileId: number, collectModuleAddress: string, initData: string) => {
   return {
     profileId,
     contentURI: "ipfs://example",

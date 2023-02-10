@@ -40,8 +40,9 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
 
   describe("QuadraticVoteCollectModule unit tests", () => {
     it("Should initialize the QVCM with ERC20", async () => {
-      const _initData = [_WETH.address, 0, _roundImplementation.address, _votingStrategy.address];
-      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "address"], _initData);
+      const _deadline = await _roundImplementation.roundEndTime();
+      const _initData = [_WETH.address, 0, _roundImplementation.address, _deadline];
+      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "uint256"], _initData);
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, initQFCollect)).to.not.be.reverted;
     });
@@ -49,8 +50,10 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
     it("Should execute processCollect and vote", async () => {
       const { user2 } = _signers;
       const { collector } = _profiles;
-      const _initData = [_WETH.address, 0, _roundImplementation.address, _votingStrategy.address];
-      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "address"], _initData);
+      const _deadline = await _roundImplementation.roundEndTime();
+
+      const _initData = [_WETH.address, 0, _roundImplementation.address, _deadline];
+      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "uint256"], _initData);
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, initQFCollect)).to.not.be.reverted;
 
@@ -74,8 +77,10 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
     it("Should execute processCollect with referral and vote", async () => {
       const { collector } = _profiles;
 
-      const _initData = [_WETH.address, 0, _roundImplementation.address, _votingStrategy.address];
-      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "address"], _initData);
+      const _deadline = await _roundImplementation.roundEndTime();
+
+      const _initData = [_WETH.address, 0, _roundImplementation.address, _deadline];
+      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "uint256"], _initData);
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, initQFCollect)).to.not.be.reverted;
 

@@ -17,14 +17,14 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
  *
  * @param currency The currency associated with this publication.
  * @param referralFee The referral fee associated with this publication.
- * @param followerOnly True if only followers of publisher may collect the post.
+ * @param grantsRoundAddress True if only followers of publisher may collect the post.
  * @param endTimestamp The end timestamp after which collecting is impossible. 0 for no expiry.
  */
 struct ProfilePublicationData {
     address currency;
     uint16 referralFee;
     address grantsRoundAddress;
-    address votingStrategyAddress;
+    uint256 endTimestamp;
 }
 
 contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule {
@@ -45,9 +45,9 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         uint256 pubId,
         bytes calldata data
     ) external returns (bytes memory) {
-        (address currency, uint16 referralFee, address grantsRoundAddress, address votingStrategyAddress) = abi.decode(
+        (address currency, uint16 referralFee, address grantsRoundAddress, uint256 endTimestamp) = abi.decode(
             data,
-            (address, uint16, address, address)
+            (address, uint16, address, uint256)
         );
 
         if (!_currencyWhitelisted(currency) || referralFee > BPS_MAX) revert Errors.InitParamsInvalid();
@@ -55,7 +55,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         _dataByPublicationByProfile[profileId][pubId].currency = currency;
         _dataByPublicationByProfile[profileId][pubId].referralFee = referralFee;
         _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress = grantsRoundAddress;
-        _dataByPublicationByProfile[profileId][pubId].votingStrategyAddress = votingStrategyAddress;
+        _dataByPublicationByProfile[profileId][pubId].endTimestamp = endTimestamp;
 
         return data;
     }
@@ -123,7 +123,6 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         if (referralFee != 0) {
-
             // Avoids stack too deep
             {
                 uint256 referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
@@ -137,7 +136,6 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         if (treasuryAmount != 0) {
-
             IERC20(_currency).safeTransferFrom(collector, treasury, treasuryAmount);
         }
 
@@ -147,7 +145,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
 
     function _vote(address voter, uint256 profileId, uint256 pubId, uint256 amount, address currency) internal {
         address grantsRoundAddress = _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress;
-        address votingStrategyAddress = _dataByPublicationByProfile[profileId][pubId].votingStrategyAddress;
+        uint256 endTimestamp = _dataByPublicationByProfile[profileId][pubId].endTimestamp;
         // encode vote
         bytes memory vote = abi.encode(voter, currency, amount, grantsRoundAddress, profileId);
 
@@ -157,11 +155,11 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         /// cast vote into array because that's how gitcoin likes it.
         votes[0] = vote;
 
-        // approve voting strategy to spend erc20
-        IERC20(currency).approve(votingStrategyAddress, amount);
-
         /// vote
-        IRoundImplementation(grantsRoundAddress).vote(votes);
+        // TODO how to handle voting after round ends
+        if (block.timestamp < endTimestamp) {
+            IRoundImplementation(grantsRoundAddress).vote(votes);
+        }
     }
 
     function getPublicationData(

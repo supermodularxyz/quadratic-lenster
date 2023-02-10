@@ -69,7 +69,7 @@ export async function deployLensFixture() {
 
   const transactionCount = await admin.getTransactionCount();
 
-  let futureAddress = getContractAddress({
+  const futureAddress = getContractAddress({
     from: admin.address,
     nonce: transactionCount + 4, // ~ 1, CollectNFT, 2 FollownNFT, 3 Implementation, 4 Proxy
   });
