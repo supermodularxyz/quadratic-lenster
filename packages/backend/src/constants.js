@@ -21,3 +21,4 @@ export const DEFAULT_ROUND_IMPLEMENTATION = deployments.RoundImplementation;
 export const CURATOR_ABI = curatorAbi;
 export const ROUND_IMPLEMENTATION_ABI = roundImplementationAbi;
 
+export const ROUND_IMPLEMENTATION_ADDRESS = process.env.ROUND_IMPLEMENTATION_ADDRESS || '';

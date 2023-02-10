@@ -5,12 +5,11 @@ import {
   DEFAULT_NOTIFICATION_CHANNEL,
   ROUND_IMPLEMENTATION_ABI,
   DEFAULT_AUTOTASK,
-  AUTOTASK_WEBHOOK
 } from "./constants.js";
-import { SentinelClient } from "defender-sentinel-client";
-import inquirer, { Question } from "inquirer";
+import {SentinelClient} from "defender-sentinel-client";
+import inquirer, {Question} from "inquirer";
 
-const creds = { apiKey: ADMIN_API_KEY, apiSecret: ADMIN_API_SECRET };
+const creds = {apiKey: ADMIN_API_KEY, apiSecret: ADMIN_API_SECRET};
 const client = new SentinelClient(creds);
 
 const autotaskQuestion: Question = {
@@ -47,7 +46,7 @@ const prompt = async () => {
       sendCreateSentinelRequest(
         answers["name"],
         answers["address"],
-        answers["notificationID"].
+        answers["notificationID"],
         answers["autotaskID"]
       );
     })
@@ -76,7 +75,7 @@ const sendCreateSentinelRequest = async (
       abi: JSON.stringify(ROUND_IMPLEMENTATION_ABI),
       paused: false,
       eventConditions: [],
-      functionConditions: [{ functionSignature: "vote(bytes[])" }],
+      functionConditions: [{functionSignature: "vote(bytes[])"}],
       txCondition: "success",
       alertTimeoutMs: 0,
       notificationChannels: [notificationID],
