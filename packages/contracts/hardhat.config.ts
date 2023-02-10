@@ -66,9 +66,6 @@ const config: HardhatUserConfig = {
         mnemonic,
       },
       chainId: chainIds.hardhat,
-      // forking: {
-      //   url: "https://rpc.ankr.com/polygon_mumbai",
-      // },
       allowUnlimitedContractSize: true,
     },
     "polygon-mainnet": { ...getChainConfig("polygon-mainnet"), url: "https://rpc.ankr.com/polygon" },
