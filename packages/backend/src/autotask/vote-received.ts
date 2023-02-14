@@ -40,18 +40,18 @@ export async function handler(event: AutotaskEvent) {
   const contractPayload = event.request.body as BlockTriggerEvent;
   const {transaction, matchReasons} = contractPayload;
 
-  console.log("Transaction: ", transaction);
-  console.log("matchReasons: ", matchReasons);
+  console.log("ℹ Transaction: ", transaction);
+  console.log("ℹ matchReasons: ", matchReasons);
 
 
   // @ts-ignore
   const decodedVotes = matchReasons[0].params.encodedVotes.map(x => ethers.utils.defaultAbiCoder.decode(["address", "address", "uint256"], x) as [string, string, string]);
   const creatorAddresses = decodedVotes.map((vote: any) => vote[1] as string);
-  console.log("Creator addresses", creatorAddresses);
+  console.log("ℹ Creator addresses", creatorAddresses);
   // @ts-ignore
   const contractAddress = contractPayload.matchReasons[0].address as string;
 
-  console.log('Decoded votes', decodedVotes);
+  console.log('ℹ Decoded votes', decodedVotes);
 
   const provider = new DefenderRelayProvider(event as RelayerParams);
   const signer = new DefenderRelaySigner(event as RelayerParams, provider, {
@@ -88,13 +88,13 @@ export async function handler(event: AutotaskEvent) {
     return;
   }
 
-  console.log("✅ Current projects meta:", currentProjectsMeta);
+  console.log("ℹ Current projects meta:", currentProjectsMeta);
   const newProjectsMeta = [...currentProjectsMeta];
 
   creatorAddresses.forEach((creatorAddress: string) => {
     const currentUserInProjects = newProjectsMeta.map(project => project.payoutAddress).includes(creatorAddress);
     if (currentUserInProjects) {
-      console.log("User already added to ptr, does not have to be added to metadata");
+      console.log("💡 User already added to ptr, does not have to be added to metadata");
       return;
     }
     newProjectsMeta.push({
@@ -104,10 +104,10 @@ export async function handler(event: AutotaskEvent) {
     })
   })
 
-  console.log("✅ New projects meta", newProjectsMeta);
+  console.log("ℹ New projects meta", newProjectsMeta);
 
   if (currentProjectsMeta.length === newProjectsMeta.length) {
-    console.log("No new applicants, no need to update projectsMetaPtr");
+    console.log("💡 No new applicants, no need to update projectsMetaPtr");
     return;
   }
 
