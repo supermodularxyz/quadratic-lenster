@@ -1,6 +1,6 @@
-import deployments from "../deploys.json" assert { type: "json" };
-import curatorAbi from "../abi/Curator.json" assert { type: "json" };
-import roundImplementationAbi from "../abi/RoundImplementation.json" assert { type: "json" };
+import deployments from "../deploys.json" assert {type: "json"};
+import curatorAbi from "../abi/Curator.json" assert {type: "json"};
+import roundImplementationAbi from "../abi/RoundImplementation.json" assert {type: "json"};
 
 import * as dotenv from "dotenv";
 
@@ -22,3 +22,5 @@ export const CURATOR_ABI = curatorAbi;
 export const ROUND_IMPLEMENTATION_ABI = roundImplementationAbi;
 
 export const ROUND_IMPLEMENTATION_ADDRESS = process.env.ROUND_IMPLEMENTATION_ADDRESS || '';
+
+export const RELAYER_ID = process.env.RELAYER_ID || '';

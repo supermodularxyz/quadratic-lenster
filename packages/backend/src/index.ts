@@ -1,6 +1,6 @@
 import {SentinelClient} from "defender-sentinel-client";
 import {AutotaskClient} from "defender-autotask-client";
-import {ADMIN_API_KEY, ADMIN_API_SECRET, ROUND_IMPLEMENTATION_ADDRESS} from "./constants.js";
+import {ADMIN_API_KEY, ADMIN_API_SECRET, RELAYER_ID, ROUND_IMPLEMENTATION_ADDRESS} from "./constants.js";
 import {createTask} from "./create/create-autotask.js";
 import {createSentinel} from "./create/create-sentinel.js";
 
@@ -37,7 +37,7 @@ const setup = async () => {
   const autoTaskOnAllowlistCreated = await createTask(
     name,
     "vote-received",
-    "8e42d8c4-1cf0-4cac-863b-fce50420997e"
+    RELAYER_ID,
   );
   if (!autoTaskOnAllowlistCreated) {
     console.log(autoTaskOnAllowlistCreated);
