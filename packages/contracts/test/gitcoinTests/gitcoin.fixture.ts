@@ -7,14 +7,15 @@ import { ERC20 } from "../../types/contracts/mocks/ERC20";
 import { MerklePayoutStrategy } from "../../types/contracts/mocks/MerklePayoutStrategy";
 import { QuadraticFundingRelayStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingRelayStrategyImplementation";
 import { RoundImplementation } from "../../types/contracts/mocks/RoundImplementation";
-import { deployLensMumbaiFixture } from "../lensTests/lens.fixture";
+import { deployLensFixture } from "../lensTests/lens.fixture";
 import { encodeRoundParameters, getDefaultSigners } from "../utils/utils";
 
 /* deploy gitcoin grants implementation on mumbai fork */
 export async function deployGitcoinMumbaiFixture() {
   const signers = await getDefaultSigners();
   // deploy lens fixture
-  const { qVoteCollectModule } = await loadFixture(deployLensMumbaiFixture);
+  const { qVoteCollectModule, lensHub, moduleGlobals, collectNFT, followNFT, profileCreation, profiles } =
+    await loadFixture(deployLensFixture);
 
   const currentBlockTimestamp = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp;
 
@@ -75,5 +76,11 @@ export async function deployGitcoinMumbaiFixture() {
     roundImplementation,
     WETH,
     currentBlockTimestamp,
+    lensHub,
+    moduleGlobals,
+    collectNFT,
+    followNFT,
+    profileCreation,
+    profiles,
   };
 }

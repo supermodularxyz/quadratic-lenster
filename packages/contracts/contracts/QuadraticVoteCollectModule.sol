@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.10;
 
-import "hardhat/console.sol";
-
 import { ICollectModule } from "./interfaces/ICollectModule.sol";
 import { Errors } from "./libraries/Errors.sol";
 import { FeeModuleBase } from "./FeeModuleBase.sol";
@@ -19,14 +17,14 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
  *
  * @param currency The currency associated with this publication.
  * @param referralFee The referral fee associated with this publication.
- * @param followerOnly True if only followers of publisher may collect the post.
+ * @param grantsRoundAddress True if only followers of publisher may collect the post.
  * @param endTimestamp The end timestamp after which collecting is impossible. 0 for no expiry.
  */
 struct ProfilePublicationData {
     address currency;
     uint16 referralFee;
     address grantsRoundAddress;
-    address votingStrategyAddress;
+    uint256 endTimestamp;
 }
 
 contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule {
@@ -47,9 +45,9 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         uint256 pubId,
         bytes calldata data
     ) external returns (bytes memory) {
-        (address currency, uint16 referralFee, address grantsRoundAddress, address votingStrategyAddress) = abi.decode(
+        (address currency, uint16 referralFee, address grantsRoundAddress, uint256 endTimestamp) = abi.decode(
             data,
-            (address, uint16, address, address)
+            (address, uint16, address, uint256)
         );
 
         if (!_currencyWhitelisted(currency) || referralFee > BPS_MAX) revert Errors.InitParamsInvalid();
@@ -57,7 +55,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         _dataByPublicationByProfile[profileId][pubId].currency = currency;
         _dataByPublicationByProfile[profileId][pubId].referralFee = referralFee;
         _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress = grantsRoundAddress;
-        _dataByPublicationByProfile[profileId][pubId].votingStrategyAddress = votingStrategyAddress;
+        _dataByPublicationByProfile[profileId][pubId].endTimestamp = endTimestamp;
 
         return data;
     }
@@ -98,7 +96,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         //cast vote
-        _vote(profileId, pubId, adjustedAmount, _currency);
+        _vote(collector, profileId, pubId, adjustedAmount, _currency);
     }
 
     function _processCollectWithReferral(
@@ -129,6 +127,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
             {
                 uint256 referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
                 adjustedAmount = _amount - treasuryAmount - referralAmount;
+
                 address referralRecipient = IERC721(HUB).ownerOf(referrerProfileId);
 
                 // Send referral fee in normal ERC20 tokens
@@ -141,14 +140,14 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         //cast vote
-        _vote(profileId, pubId, adjustedAmount, _currency);
+        _vote(collector, profileId, pubId, adjustedAmount, _currency);
     }
 
-    function _vote(uint256 profileId, uint256 pubId, uint256 amount, address currency) internal {
+    function _vote(address voter, uint256 profileId, uint256 pubId, uint256 amount, address currency) internal {
         address grantsRoundAddress = _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress;
-        address votingStrategyAddress = _dataByPublicationByProfile[profileId][pubId].votingStrategyAddress;
+        uint256 endTimestamp = _dataByPublicationByProfile[profileId][pubId].endTimestamp;
         // encode vote
-        bytes memory vote = abi.encode(msg.sender, currency, amount, grantsRoundAddress, profileId);
+        bytes memory vote = abi.encode(voter, currency, amount, grantsRoundAddress, profileId);
 
         /// declare votes array
         bytes[] memory votes = new bytes[](1);
@@ -156,12 +155,11 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         /// cast vote into array because that's how gitcoin likes it.
         votes[0] = vote;
 
-        // approve voting strategy to spend erc20
-        IERC20(currency).approve(votingStrategyAddress, amount);
-
         /// vote
-        // TODO find way to not have contract as msg.sender
-        IRoundImplementation(grantsRoundAddress).vote(votes);
+        // TODO how to handle voting after round ends
+        if (block.timestamp < endTimestamp) {
+            IRoundImplementation(grantsRoundAddress).vote(votes);
+        }
     }
 
     function getPublicationData(
