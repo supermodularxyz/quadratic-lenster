@@ -1,10 +1,10 @@
-import { AutotaskClient } from "defender-autotask-client";
-import { ADMIN_API_SECRET, ADMIN_API_KEY, } from "../constants.js";
-import { SentinelTrigger } from "defender-autotask-client/lib/models/autotask.js";
+import {AutotaskClient} from "defender-autotask-client";
+import {DEFENDER_ADMIN_API_SECRET, DEFENDER_ADMIN_API_KEY,} from "../constants.js";
+import {SentinelTrigger} from "defender-autotask-client/lib/models/autotask.js";
 
 const credentials = {
-  apiKey: ADMIN_API_KEY,
-  apiSecret: ADMIN_API_SECRET,
+  apiKey: DEFENDER_ADMIN_API_KEY,
+  apiSecret: DEFENDER_ADMIN_API_SECRET,
 };
 
 export const createTask = async (name: string, file: string, relayerId: string) => {
@@ -18,7 +18,7 @@ export const createTask = async (name: string, file: string, relayerId: string) 
       ),
       relayerId,
       paused: false,
-      trigger: { type: "sentinel" } as SentinelTrigger,
+      trigger: {type: "sentinel"} as SentinelTrigger,
 
     })
     .then((res) => {

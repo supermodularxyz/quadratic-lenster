@@ -1,12 +1,17 @@
 import {SentinelClient} from "defender-sentinel-client";
 import {AutotaskClient} from "defender-autotask-client";
-import {ADMIN_API_KEY, ADMIN_API_SECRET, RELAYER_ID, ROUND_IMPLEMENTATION_ADDRESS} from "./constants.js";
+import {
+  DEFENDER_ADMIN_API_KEY,
+  DEFENDER_ADMIN_API_SECRET,
+  RELAYER_ID,
+  ROUND_IMPLEMENTATION_ADDRESS
+} from "./constants.js";
 import {createTask} from "./create/create-autotask.js";
 import {createSentinel} from "./create/create-sentinel.js";
 
 const credentials = {
-  apiKey: ADMIN_API_KEY,
-  apiSecret: ADMIN_API_SECRET,
+  apiKey: DEFENDER_ADMIN_API_KEY,
+  apiSecret: DEFENDER_ADMIN_API_SECRET,
 };
 
 const name = 'ql - on vote received';

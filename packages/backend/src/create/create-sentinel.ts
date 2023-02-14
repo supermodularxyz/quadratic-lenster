@@ -3,12 +3,12 @@ import {
   EventCondition,
   FunctionCondition,
 } from "defender-sentinel-client/lib/models/subscriber.js";
-import {ADMIN_API_KEY, ADMIN_API_SECRET} from "../constants.js";
+import {DEFENDER_ADMIN_API_KEY, DEFENDER_ADMIN_API_SECRET} from "../constants.js";
 
 
 const credentials = {
-  apiKey: ADMIN_API_KEY,
-  apiSecret: ADMIN_API_SECRET,
+  apiKey: DEFENDER_ADMIN_API_KEY,
+  apiSecret: DEFENDER_ADMIN_API_SECRET,
 };
 
 const client = new SentinelClient(credentials);

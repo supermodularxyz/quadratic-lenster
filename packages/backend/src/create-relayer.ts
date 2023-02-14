@@ -1,12 +1,12 @@
 import {
-  ADMIN_API_KEY,
-  ADMIN_API_SECRET,
+  DEFENDER_ADMIN_API_KEY,
+  DEFENDER_ADMIN_API_SECRET,
   DEFAULT_ROUND_IMPLEMENTATION,
 } from "./constants.js";
-import { RelayClient } from "defender-relay-client";
-import inquirer, { Question } from "inquirer";
+import {RelayClient} from "defender-relay-client";
+import inquirer, {Question} from "inquirer";
 
-const creds = { apiKey: ADMIN_API_KEY, apiSecret: ADMIN_API_SECRET };
+const creds = {apiKey: DEFENDER_ADMIN_API_KEY, apiSecret: DEFENDER_ADMIN_API_SECRET};
 const client = new RelayClient(creds);
 
 const nameQuestion: Question = {

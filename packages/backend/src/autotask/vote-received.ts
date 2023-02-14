@@ -33,7 +33,6 @@ export async function handler(event: AutotaskEvent) {
   }
   const {
     GRAPGHQL_ENDPOINT,
-    ROUND_CONTRACT_ADDRESS,
     PINATA_JWT,
   } = event.secrets || {} as Record<string, string | undefined>;
 
@@ -49,7 +48,8 @@ export async function handler(event: AutotaskEvent) {
   const decodedVotes = matchReasons[0].params.encodedVotes.map(x => ethers.utils.defaultAbiCoder.decode(["address", "address", "uint256"], x) as [string, string, string]);
   const creatorAddresses = decodedVotes.map((vote: any) => vote[1] as string);
   console.log("Creator addresses", creatorAddresses);
-  const contractAddress = contractPayload.matchedAddresses[0];
+  // @ts-ignore
+  const contractAddress = contractPayload.matchReasons[0].address as string;
 
   console.log('Decoded votes', decodedVotes);
 
@@ -58,8 +58,7 @@ export async function handler(event: AutotaskEvent) {
     speed: "fast",
   });
 
-  console.log("Contract Address", ROUND_CONTRACT_ADDRESS);
-  const forwarder = new ethers.Contract(ROUND_CONTRACT_ADDRESS!, roundImplementationAbi, signer);
+  const forwarder = new ethers.Contract(contractAddress!, roundImplementationAbi, signer);
 
 
   let currentProjectsMeta: ProjectMetaEntry[] = [];
