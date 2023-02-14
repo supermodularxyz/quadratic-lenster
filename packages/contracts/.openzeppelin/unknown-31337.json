@@ -238,7 +238,11 @@
           },
           "t_enum(ProtocolState)3556": {
             "label": "enum DataTypes.ProtocolState",
-            "members": ["Unpaused", "PublishingPaused", "Paused"],
+            "members": [
+              "Unpaused",
+              "PublishingPaused",
+              "Paused"
+            ],
             "numberOfBytes": "1"
           },
           "t_mapping(t_address,t_bool)": {
