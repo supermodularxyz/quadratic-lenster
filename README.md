@@ -15,6 +15,7 @@
 ## Deployments
 
 ### App
+[Quadratic Lenster](https://qf-lenster-web.vercel.app/)
 
 ### Backend
 
