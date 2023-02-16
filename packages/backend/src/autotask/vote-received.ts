@@ -28,7 +28,7 @@ const getProjectsMetaPtrQuery = `
 export async function handler(event: AutotaskEvent) {
   // Or if you know what type of sentinel you'll be using
   if (!event.request) {
-    return "❌ No request found";
+    throw new Error("❌ No request found");
   }
 
   const {
@@ -48,13 +48,13 @@ export async function handler(event: AutotaskEvent) {
   const params = (matchReasons[0] as any).params as Record<string, string | undefined>
   const {roundAddress, projectId: accountId, token: voteToken} = params;
   if (!roundAddress) {
-    return "❌ Could not determine round address";
+    throw new Error("❌ Could not determine round address");
   }
   if (!accountId) {
-    return "❌ Could not determine lens account id";
+    throw new Error("❌ Could not determine lens account id");
   }
   if (!voteToken) {
-    return "❌ Could not determine vote token";
+    throw new Error("❌ Could not determine vote token");
   }
   console.log("ℹ️ Round address", roundAddress);
   console.log("ℹ️ Owner ID", accountId);
@@ -69,12 +69,12 @@ export async function handler(event: AutotaskEvent) {
 
   const roundToken = await roundContract.token();
   if (!roundToken) {
-    return "❌ Could not determine round token";
+    throw new Error("❌ Could not determine round token");
   }
   console.log("ℹ️ Round token", roundToken);
 
   if (roundToken.toLowerCase() !== voteToken.toLowerCase()) {
-    return "❌ Vote cast in wrong token";
+    throw new Error("❌ Vote cast in wrong token");
   }
 
   let currentProjectsMeta: ProjectMetaEntry[] = [];
