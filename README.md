@@ -41,8 +41,8 @@ Hosted on OZ Defender with setup instructions in [README](./packages//backend//R
 
 ### Grants
 
-- Vercel: https://grants-round.vercel.app
-- Contract deployments: https://github.com/bitbeckers/grants-round/tree/main/packages/contracts/scripts/config
+- [App](https://grants-round.vercel.app)
+- [Contracts](https://github.com/bitbeckers/grants-round/tree/main/packages/contracts/scripts/config)
 
 ### Graph
 
