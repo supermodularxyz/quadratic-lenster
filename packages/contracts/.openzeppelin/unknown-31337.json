@@ -38,7 +38,7 @@
             "label": "_tokenData",
             "offset": 0,
             "slot": "2",
-            "type": "t_mapping(t_uint256,t_struct(TokenData)6939_storage)",
+            "type": "t_mapping(t_uint256,t_struct(TokenData)7023_storage)",
             "contract": "ERC721Time",
             "src": "contracts/mocks/ERC721Time.sol:35"
           },
@@ -118,7 +118,7 @@
             "label": "_state",
             "offset": 0,
             "slot": "12",
-            "type": "t_enum(ProtocolState)3556",
+            "type": "t_enum(ProtocolState)3640",
             "contract": "LensMultiState",
             "src": "contracts/mocks/LensMultiState.sol:18"
           },
@@ -174,7 +174,7 @@
             "label": "_profileById",
             "offset": 0,
             "slot": "19",
-            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)3583_storage)",
+            "type": "t_mapping(t_uint256,t_struct(ProfileStruct)3667_storage)",
             "contract": "LensHubStorage",
             "src": "contracts/mocks/LensHubStorage.sol:52"
           },
@@ -182,7 +182,7 @@
             "label": "_pubByIdByProfile",
             "offset": 0,
             "slot": "20",
-            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)3596_storage))",
+            "type": "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)3680_storage))",
             "contract": "LensHubStorage",
             "src": "contracts/mocks/LensHubStorage.sol:53"
           },
@@ -236,7 +236,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(ProtocolState)3556": {
+          "t_enum(ProtocolState)3640": {
             "label": "enum DataTypes.ProtocolState",
             "members": [
               "Unpaused",
@@ -269,19 +269,19 @@
             "label": "mapping(uint256 => address)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)3596_storage))": {
+          "t_mapping(t_uint256,t_mapping(t_uint256,t_struct(PublicationStruct)3680_storage))": {
             "label": "mapping(uint256 => mapping(uint256 => struct DataTypes.PublicationStruct))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(ProfileStruct)3583_storage)": {
+          "t_mapping(t_uint256,t_struct(ProfileStruct)3667_storage)": {
             "label": "mapping(uint256 => struct DataTypes.ProfileStruct)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(PublicationStruct)3596_storage)": {
+          "t_mapping(t_uint256,t_struct(PublicationStruct)3680_storage)": {
             "label": "mapping(uint256 => struct DataTypes.PublicationStruct)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(TokenData)6939_storage)": {
+          "t_mapping(t_uint256,t_struct(TokenData)7023_storage)": {
             "label": "mapping(uint256 => struct IERC721Time.TokenData)",
             "numberOfBytes": "32"
           },
@@ -293,7 +293,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(ProfileStruct)3583_storage": {
+          "t_struct(ProfileStruct)3667_storage": {
             "label": "struct DataTypes.ProfileStruct",
             "members": [
               {
@@ -335,7 +335,7 @@
             ],
             "numberOfBytes": "192"
           },
-          "t_struct(PublicationStruct)3596_storage": {
+          "t_struct(PublicationStruct)3680_storage": {
             "label": "struct DataTypes.PublicationStruct",
             "members": [
               {
@@ -377,7 +377,7 @@
             ],
             "numberOfBytes": "192"
           },
-          "t_struct(TokenData)6939_storage": {
+          "t_struct(TokenData)7023_storage": {
             "label": "struct IERC721Time.TokenData",
             "members": [
               {
