@@ -1,0 +1,24 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: QuadraticVoteCollectModule
+    network: mumbai
+    source:
+      address: "0xfA54ddC48E78C9C222b20605CB3FA56f5d4ab994"
+      abi: QuadraticVoteCollectModule
+      startBlock: 32101617
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CollectWithVote
+      abis:
+        - name: QuadraticVoteCollectModule
+          file: QuadraticVoteCollectModule/abis/QuadraticVoteCollectModule.json
+      eventHandlers:
+        - event: CollectWithVote(uint256,uint256,address,address,uint256)
+          handler: handleCollectWithVote
+      file: QuadraticVoteCollectModule/QuadraticVoteCollectModule.wasm
