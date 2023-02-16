@@ -2,7 +2,6 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { ethers } from "hardhat";
 
-// import wethAbi from "../../importedABI/WETH.json";
 import { ERC20 } from "../../types/contracts/mocks/ERC20";
 import { MerklePayoutStrategy } from "../../types/contracts/mocks/MerklePayoutStrategy";
 import { QuadraticFundingRelayStrategyImplementation } from "../../types/contracts/mocks/QuadraticFundingRelayStrategyImplementation";

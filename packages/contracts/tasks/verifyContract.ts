@@ -1,19 +1,17 @@
 import { task } from "hardhat/config";
 
 import * as addresses from "../deployments/deployments-polygon-mumbai.json";
-import { lensMumbaiAddresses, lensPolygonAddresses } from "../test/utils/constants";
+import { lensPolygonAddresses, lensSandboxAddresses } from "../test/utils/constants";
 
-type Contracts = "QuadraticFundingCurator" | "QuadraticVoteCollectModule";
+type Contracts = "QuadraticVoteCollectModule";
 
 task("verifyContract", "verify")
-  .addOptionalParam("grantsRound", "The address of the active Grants Round")
   .addOptionalParam("lensHub", "The address of the LensHub")
   .addOptionalParam("moduleGlobals", "The address of ModuleGlobals")
-  .setAction(async ({ grantsRound, lensHub, moduleGlobals }, { ethers }) => {
+  .setAction(async ({ lensHub, moduleGlobals }, { ethers }) => {
     const [admin] = await ethers.getSigners();
 
     const contracts: Record<Contracts, string> = {
-      QuadraticFundingCurator: addresses.QuadraticFundingCurator,
       QuadraticVoteCollectModule: addresses.QuadraticVoteCollectModule,
     };
 
@@ -21,17 +19,14 @@ task("verifyContract", "verify")
 
     if (hre.network.name == "polygon-mainnet") {
       constructorAddresses = lensPolygonAddresses;
-    } else if (hre.network.name == "polygon-mumbai") {
-      constructorAddresses = lensMumbaiAddresses;
+    } else if (hre.network.name == "sandbox-mumbai") {
+      constructorAddresses = lensSandboxAddresses;
     } else {
-      constructorAddresses = lensPolygonAddresses;
+      console.error("Unsupported network");
+      throw Error("Unsupported network");
     }
 
     const constructorArguments: Record<Contracts, string[]> = {
-      QuadraticFundingCurator: [
-        grantsRound ? grantsRound : "0xCb964E66dD4868e7C71191D3A1353529Ad1ED2F5",
-        admin.address,
-      ],
       QuadraticVoteCollectModule: [
         lensHub ? lensHub : constructorAddresses.LensHubProxy,
         moduleGlobals ? moduleGlobals : constructorAddresses.moduleGlobals,

@@ -24,4 +24,6 @@ interface IRoundImplementation {
      * @param _encodedVotes encoded votes
      */
     function vote(bytes[] calldata _encodedVotes) external;
+
+    function roundEndTime() external returns (uint256);
 }

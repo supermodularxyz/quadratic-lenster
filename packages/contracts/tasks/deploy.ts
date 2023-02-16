@@ -2,12 +2,11 @@ import { ContractFactory } from "ethers";
 import * as fs from "fs";
 import { task } from "hardhat/config";
 
-import GRANTS_MUMBAI from "../deployments/grants-polygon-mumbai.json";
 import LENS_MUMBAI from "../deployments/lens-polygon-mumbai.json";
 import LENS_POLYGON from "../deployments/lens-polygon.json";
 import SANDBOX_MUMBAI from "../deployments/lens-sandbox-polygon-mumbai.json";
 
-type Contracts = "QuadraticFundingCurator" | "QuadraticVoteCollectModule";
+type Contracts = "QuadraticVoteCollectModule";
 
 task("deploy", "Deploy contracts and verify").setAction(async (_, { ethers }) => {
   const [admin] = await ethers.getSigners();
@@ -24,17 +23,14 @@ task("deploy", "Deploy contracts and verify").setAction(async (_, { ethers }) =>
   }
 
   const contracts: Record<Contracts, ContractFactory> = {
-    QuadraticFundingCurator: await ethers.getContractFactory("QuadraticFundingCurator"),
     QuadraticVoteCollectModule: await ethers.getContractFactory("QuadraticVoteCollectModule"),
   };
 
   const deployments: Record<Contracts, string> = {
-    QuadraticFundingCurator: "",
     QuadraticVoteCollectModule: "",
   };
 
   const constructorArguments: Record<Contracts, string[]> = {
-    QuadraticFundingCurator: [GRANTS_MUMBAI.GrantsRound, admin.address],
     QuadraticVoteCollectModule: [addresses.LensHubProxy, addresses.moduleGlobals],
   };
 
