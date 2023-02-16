@@ -17,11 +17,15 @@
 
 ### Setting up a round
 
+- [Setup OpenZeppelin Relay and add address as operator](https://defender.openzeppelin.com/#/relay)
+
 ### Creating a post in Quadratic Lenster
 
 ### Voting
 
-- Get [WMATIC](https://mumbai.polygonscan.com/address/0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889#writeContract). For example by wrapping MATIC from the [Faucet](https://faucet.polygon.technology/) and depositting it in the wrapper contract.
+- Get [WMATIC](https://mumbai.polygonscan.com/address/0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889#writeContract). For
+  example by wrapping MATIC from the [Faucet](https://faucet.polygon.technology/) and depositting it in the wrapper
+  contract.
 
 ## Deployments
 
@@ -36,7 +40,7 @@ Hosted on OZ Defender with setup instructions in [README](./packages//backend//R
 ### Contracts
 
 | Network | Address                                                                                                                         |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+|---------|---------------------------------------------------------------------------------------------------------------------------------|
 | Mumbai  | [0xfA54ddC48E78C9C222b20605CB3FA56f5d4ab994](https://mumbai.polygonscan.com/address/0xfA54ddC48E78C9C222b20605CB3FA56f5d4ab994) |
 
 ### Grants
