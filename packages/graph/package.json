@@ -1,5 +1,6 @@
 {
   "name": "vote-collect-dev",
+  "version": "1.0.0",
   "license": "UNLICENSED",
   "packageManager": "yarn@3.2.1",
   "scripts": {
