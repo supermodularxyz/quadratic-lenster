@@ -51,7 +51,7 @@ const setup = async () => {
   await createSentinel({
     name,
     address: ROUND_IMPLEMENTATION_ADDRESS,
-    functionConditions: [{functionSignature: 'vote(bytes[])'}],
+    eventConditions: [{eventSignature: 'Voted(address,uint256,address,address,bytes32,address)'}],
     autotaskID: autoTaskOnAllowlistCreated.autotaskId,
   });
 }

@@ -10,7 +10,7 @@ import {ethers} from "ethers";
 import axios from 'axios';
 import roundImplementationAbi from "../../abi/RoundImplementation.json" assert {type: "json"};
 import {RelayerParams} from "defender-relay-client";
-
+import ERC721 from "../../abi/ERC721.json" assert {type: "json"};
 
 const getProjectsMetaPtrQuery = `
   query GetProjectsMetaPtr($roundId: String) {
@@ -28,9 +28,9 @@ const getProjectsMetaPtrQuery = `
 export async function handler(event: AutotaskEvent) {
   // Or if you know what type of sentinel you'll be using
   if (!event.request) {
-    console.error("No request found");
-    return;
+    return "❌ No request found";
   }
+
   const {
     GRAPGHQL_ENDPOINT,
     PINATA_JWT,
@@ -40,25 +40,21 @@ export async function handler(event: AutotaskEvent) {
   const contractPayload = event.request.body as BlockTriggerEvent;
   const {transaction, matchReasons} = contractPayload;
 
-  console.log("ℹ Transaction: ", transaction);
-  console.log("ℹ matchReasons: ", matchReasons);
+  // debug logs
+  // console.log("ℹ️ Transaction: ", transaction);
+  // console.log("ℹ️ matchReasons: ", matchReasons);
 
 
-  // @ts-ignore
-  const decodedVotes = matchReasons[0].params.encodedVotes.map(x => ethers.utils.defaultAbiCoder.decode(["address", "address", "uint256"], x) as [string, string, string]);
-  const creatorAddresses = decodedVotes.map((vote: any) => vote[1] as string);
-  console.log("ℹ Creator addresses", creatorAddresses);
-  // @ts-ignore
-  const contractAddress = contractPayload.matchReasons[0].address as string;
-
-  console.log('ℹ Decoded votes', decodedVotes);
-
-  const provider = new DefenderRelayProvider(event as RelayerParams);
-  const signer = new DefenderRelaySigner(event as RelayerParams, provider, {
-    speed: "fast",
-  });
-
-  const forwarder = new ethers.Contract(contractAddress!, roundImplementationAbi, signer);
+  const params = (matchReasons[0] as any).params as Record<string, string | undefined>
+  const {roundAddress, projectId: accountId} = params;
+  if (!roundAddress) {
+    return "❌ Could not determine round address";
+  }
+  if (!accountId) {
+    return "❌ Could not determine lens account id";
+  }
+  console.log("ℹ️ Round address", roundAddress);
+  console.log("ℹ️ Owner ID", accountId);
 
 
   let currentProjectsMeta: ProjectMetaEntry[] = [];
@@ -76,7 +72,7 @@ export async function handler(event: AutotaskEvent) {
       }
     }>(
       GRAPGHQL_ENDPOINT!,
-      {query: getProjectsMetaPtrQuery, variables: {roundId: contractAddress}}
+      {query: getProjectsMetaPtrQuery, variables: {roundId: roundAddress.toLowerCase()}}
     ).then(async (response) => {
       return response.data.data.round;
     });
@@ -84,51 +80,66 @@ export async function handler(event: AutotaskEvent) {
       currentProjectsMeta = await fetchFromIPFS<ProjectMetaEntry[]>(currentProjectsMetaPtr.projectsMetaPtr.pointer);
     }
   } catch (error) {
-    console.log(error);
-    return;
+    return error;
   }
 
-  console.log("ℹ Current projects meta:", currentProjectsMeta);
+  console.log("ℹ️ Current projects meta:", currentProjectsMeta);
   const newProjectsMeta = [...currentProjectsMeta];
 
-  creatorAddresses.forEach((creatorAddress: string) => {
-    const currentUserInProjects = newProjectsMeta.map(project => project.payoutAddress).includes(creatorAddress);
-    if (currentUserInProjects) {
-      console.log("💡 User already added to ptr, does not have to be added to metadata");
-      return;
-    }
-    newProjectsMeta.push({
-      payoutAddress: creatorAddress,
-      id: `${contractAddress}-${creatorAddress}`,
-      status: "APPROVED"
-    })
-  })
-
-  console.log("ℹ New projects meta", newProjectsMeta);
-
-  if (currentProjectsMeta.length === newProjectsMeta.length) {
-    console.log("💡 No new applicants, no need to update projectsMetaPtr");
-    return;
+  // Check if user has already been added to applicants metadata
+  const currentUserInProjects = newProjectsMeta.map(project => project.id).includes(accountId);
+  if (currentUserInProjects) {
+    return "💡 User already added to ptr, does not have to be added to metadata";
   }
 
+  // Setup relay signer
+  const provider = new DefenderRelayProvider(event as RelayerParams);
+  const signer = new DefenderRelaySigner(event as RelayerParams, provider, {
+    speed: "fast",
+  });
+
+  // User needs to be added to applicants, fetch payout address using account id
+  const lensHubProxyAddress = transaction.to;
+  console.log("ℹ️ Lens Hub Proxy Address", lensHubProxyAddress);
+  const erc721Contract = new ethers.Contract(
+    lensHubProxyAddress,
+    ERC721,
+    signer
+  );
+
+  const creatorAddress = await erc721Contract.ownerOf(accountId);
+  console.log("ℹ️ Creator Address", creatorAddress);
+  newProjectsMeta.push({
+    payoutAddress: creatorAddress,
+    id: accountId,
+    status: "APPROVED"
+  })
+
+  // Create new applicants metadata
+  console.log("ℹ️ New projects meta", newProjectsMeta);
+
+  // Pin new metadata to IPFS
   const newPtr = await pinToIPFS({content: newProjectsMeta}, PINATA_JWT!);
   console.log('✅ Pinned new projects meta to ipfs', newPtr);
 
+  // Update round meta pointer
   const cid = newPtr.IpfsHash;
-
   const newRoundMetaPr = {
     protocol: 1,
     pointer: cid,
   };
+  const forwarder = new ethers.Contract(roundAddress, roundImplementationAbi, signer);
+  const sentTx = await forwarder.updateProjectsMetaPtr(newRoundMetaPr);
 
-  const tx = await forwarder.updateProjectsMetaPtr(newRoundMetaPr);
-  console.log(`✅ Sent tx: ${tx.hash}`);
-  return {txHash: tx.hash};
+  // Complete
+  console.log(`✅ Sent tx: ${sentTx.hash}`);
+  return `✅ Updated projectsMetaPtr in transaction ${sentTx.hash}`;
 }
 
 
 export const fetchFromIPFS = <T = unknown>(cid: string) => {
   return axios.get(
+    // TODO: Use Pinata gateway
     `https://ipfs.io/ipfs/${cid}`
   ).then((resp) => {
     return resp.data as Promise<T>;
@@ -163,3 +174,4 @@ export const pinToIPFS = (obj: any, pinataJWT: string) => {
 };
 
 export type ProjectMetaEntry = { id: string; payoutAddress: string; status: string };
+const abi = `[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"token","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":true,"internalType":"address","name":"voter","type":"address"},{"indexed":false,"internalType":"address","name":"grantAddress","type":"address"},{"indexed":true,"internalType":"bytes32","name":"projectId","type":"bytes32"},{"indexed":true,"internalType":"address","name":"roundAddress","type":"address"}],"name":"Voted","type":"event"},{"inputs":[],"name":"VERSION","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"init","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"roundAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes[]","name":"encodedVotes","type":"bytes[]"},{"internalType":"address","name":"relayerAddress","type":"address"}],"name":"vote","outputs":[],"stateMutability":"payable","type":"function"}]`
