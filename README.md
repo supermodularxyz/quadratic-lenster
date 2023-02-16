@@ -11,6 +11,17 @@
 ## Getting started
 
 1. Use Node version`>=18.0.0`
+2. `yarn install`
+
+### Setting up a round
+
+
+### Creating a post in Quadratic Lenster
+
+
+### Voting 
+
+* Get [WMATIC](https://mumbai.polygonscan.com/address/0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889#writeContract). For example by wrapping MATIC from the [Faucet](https://faucet.polygon.technology/) and depositting it in the wrapper contract.
 
 ## Deployments
 
