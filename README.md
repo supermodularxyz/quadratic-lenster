@@ -1,5 +1,7 @@
 # Quadratic Lenster
 
+:warning: This application is under development and only supports Lens Sandbox :warning:
+
 ## Packages
 
 - `app`: Submodule with a Lenster fork
@@ -15,20 +17,21 @@
 
 ### Setting up a round
 
-
 ### Creating a post in Quadratic Lenster
 
+### Voting
 
-### Voting 
-
-* Get [WMATIC](https://mumbai.polygonscan.com/address/0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889#writeContract). For example by wrapping MATIC from the [Faucet](https://faucet.polygon.technology/) and depositting it in the wrapper contract.
+- Get [WMATIC](https://mumbai.polygonscan.com/address/0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889#writeContract). For example by wrapping MATIC from the [Faucet](https://faucet.polygon.technology/) and depositting it in the wrapper contract.
 
 ## Deployments
 
 ### App
+
 [Quadratic Lenster](https://qf-lenster-web.vercel.app/)
 
 ### Backend
+
+Hosted on OZ Defender with setup instructions in [README](./packages//backend//README.md)
 
 ### Contracts
 
