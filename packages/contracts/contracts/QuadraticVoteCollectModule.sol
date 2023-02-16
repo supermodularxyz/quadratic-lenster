@@ -13,15 +13,21 @@ import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 /**
+ * @title QuadraticVotingCollectModule
+ * @author mr_deadce11, bitbeckers
+ * @notice Collect module for collecting posts and participating in Grants rounds
+ */
+
+/**
  * @notice A struct containing the necessary data to execute collect actions on a publication.
- *
  * @param currency The currency associated with this publication.
  * @param referralFee The referral fee associated with this publication.
  * @param grantsRoundAddress True if only followers of publisher may collect the post.
- * @param endTimestamp The end timestamp after which collecting is impossible. 0 for no expiry.
+ * @param endTimestamp The round end timestamp after which voting is blocked.
  */
 struct ProfilePublicationData {
     address currency;
+    address recipient;
     uint16 referralFee;
     address grantsRoundAddress;
     uint256 endTimestamp;
@@ -33,24 +39,40 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
     mapping(uint256 => mapping(uint256 => ProfilePublicationData)) internal _dataByPublicationByProfile;
 
     /**
-     * @dev Mapping of valid vote signature digests
+     * @notice Event emmitted when the vote is processed succesfully.
+     * @param profileId The profile associated with this publication.
+     * @param pubId The ID of the publication to be collected.
+     * @param collector The address of the collector/voter.
+     * @param currency The token address of the currency used for voting. Needs to be whitelisted in Lens
+     * @param amount The original voting amount, before treasury or reference fees
      */
-    mapping(bytes32 => bool) internal _validVotes;
+    event CollectWithVote(uint256 profileId, uint256 pubId, address collector, address currency, uint256 amount);
 
     //solhint-disable-next-line no-empty-blocks
     constructor(address _lensHub, address _moduleGlobals) FeeModuleBase(_moduleGlobals) ModuleBase(_lensHub) {}
 
+    /**
+     * @notice Init method for the Quadratic Voting Collect Module.
+     * @param profileId The profile associated with this publication.
+     * @param pubId The ID of the publication to be collected.
+     * @param data The encoded data used for voting.
+     * @dev Data contains:
+     * @dev 1) address: voting token
+     * @dev 2) uint256: referral fee in wei
+     * @dev 3) address: grants round
+     */
     function initializePublicationCollectModule(
         uint256 profileId,
         uint256 pubId,
         bytes calldata data
     ) external returns (bytes memory) {
-        (address currency, uint16 referralFee, address grantsRoundAddress, uint256 endTimestamp) = abi.decode(
+        (address currency, uint16 referralFee, address grantsRoundAddress) = abi.decode(
             data,
-            (address, uint16, address, uint256)
+            (address, uint16, address)
         );
 
         if (!_currencyWhitelisted(currency) || referralFee > BPS_MAX) revert Errors.InitParamsInvalid();
+        uint256 endTimestamp = IRoundImplementation(grantsRoundAddress).roundEndTime();
 
         _dataByPublicationByProfile[profileId][pubId].currency = currency;
         _dataByPublicationByProfile[profileId][pubId].referralFee = referralFee;
@@ -60,6 +82,17 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         return data;
     }
 
+    /**
+     * @notice Method for collecting the post and voting on the profile in the Grants round
+     * @param referrerProfileId The post referrer.
+     * @param collector The address of the collector.
+     * @param profileId The ID of the publication to be collected.
+     * @param pubId The ID of the publication to be collected.
+     * @param data The encoded data used for voting.
+     * @dev Data contains:
+     * @dev 1) address: voting token
+     * @dev 2) uint256: voting amount in wei
+     */
     function processCollect(
         uint256 referrerProfileId,
         address collector,
@@ -74,31 +107,60 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
     }
 
+    /**
+     * @notice Process a collect-vote without referral fee.
+     * @notice If the round has expired, the funds are sent to the owner of the profileId.
+     * @param collector The address of the collector.
+     * @param profileId The ID of the publication to be collected.
+     * @param pubId The ID of the publication to be collected.
+     * @param data The encoded data used for voting.
+     * @dev Data contains:
+     * @dev 1) address: voting token
+     * @dev 2) uint256: voting amount in wei
+     */
     function _processCollect(address collector, uint256 profileId, uint256 pubId, bytes calldata data) internal {
         (address _currency, uint256 _amount) = abi.decode(data, (address, uint256));
+        uint256 endTimestamp = _dataByPublicationByProfile[profileId][pubId].endTimestamp;
 
         _validateDataIsExpected(data, _currency, _amount);
 
         address treasury;
         uint256 treasuryAmount;
+        uint256 adjustedAmount;
 
         // Avoids stack too deep
         {
             uint16 treasuryFee;
             (treasury, treasuryFee) = _treasuryData();
             treasuryAmount = (_amount * treasuryFee) / BPS_MAX;
+            adjustedAmount = _amount - treasuryAmount;
         }
-
-        uint256 adjustedAmount = _amount - treasuryAmount;
 
         if (treasuryAmount > 0) {
             IERC20(_currency).safeTransferFrom(collector, treasury, treasuryAmount);
         }
 
-        //cast vote
-        _vote(collector, profileId, pubId, adjustedAmount, _currency);
+        //cast vote or transfer funds
+        if (block.timestamp < endTimestamp) {
+            _vote(collector, profileId, pubId, adjustedAmount, _currency);
+        } else {
+            IERC20(_currency).safeTransferFrom(collector, IERC721(HUB).ownerOf(profileId), adjustedAmount);
+        }
+
+        emit CollectWithVote(profileId, pubId, collector, _currency, adjustedAmount);
     }
 
+    /**
+     * @notice Process a collect-vote with referral fee.
+     * @notice If the round has expired, the funds are sent to the owner of the profileId.
+     * @param collector The address of the collector.
+     * @param profileId The ID of the publication to be collected.
+     * @param pubId The ID of the publication to be collected.
+     * @param data The encoded data used for voting.
+     * @dev Data contains:
+     * @dev 1) address: voting token
+     * @dev 2) uint256: voting amount in wei
+     */
     function _processCollectWithReferral(
         uint256 referrerProfileId,
         address collector,
@@ -109,6 +171,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         (address _currency, uint256 _amount) = abi.decode(data, (address, uint256));
 
         uint256 referralFee = _dataByPublicationByProfile[profileId][pubId].referralFee;
+
         _validateDataIsExpected(data, _currency, _amount);
 
         address treasury;
@@ -123,16 +186,16 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         if (referralFee != 0) {
+            // The reason we levy the referral fee on the adjusted amount is so that referral fees
+            // don't bypass the treasury fee, in essence referrals pay their fair share to the treasury.
             // Avoids stack too deep
-            {
-                uint256 referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
-                adjustedAmount = _amount - treasuryAmount - referralAmount;
+            uint256 referralAmount = (adjustedAmount * referralFee) / BPS_MAX;
+            adjustedAmount = _amount - treasuryAmount - referralAmount;
 
-                address referralRecipient = IERC721(HUB).ownerOf(referrerProfileId);
+            address referralRecipient = IERC721(HUB).ownerOf(referrerProfileId);
 
-                // Send referral fee in normal ERC20 tokens
-                IERC20(_currency).safeTransferFrom(collector, referralRecipient, referralAmount);
-            }
+            // Send referral fee in normal ERC20 tokens
+            IERC20(_currency).safeTransferFrom(collector, referralRecipient, referralAmount);
         }
 
         if (treasuryAmount != 0) {
@@ -140,12 +203,27 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         }
 
         //cast vote
-        _vote(collector, profileId, pubId, adjustedAmount, _currency);
+        if (block.timestamp < _dataByPublicationByProfile[profileId][pubId].endTimestamp) {
+            _vote(collector, profileId, pubId, adjustedAmount, _currency);
+        } else {
+            {
+                IERC20(_currency).safeTransferFrom(collector, IERC721(HUB).ownerOf(profileId), adjustedAmount);
+            }
+        }
+
+        emit CollectWithVote(profileId, pubId, collector, _currency, adjustedAmount);
     }
 
+    /**
+     * @notice Submit a vote to the selected grants round.
+     * @param voter The address of the collector.
+     * @param profileId The ID of the publication to be collected.
+     * @param pubId The ID of the publication to be collected.
+     * @param amount The encoded data used for voting.
+     * @param currency The encoded data used for voting.
+     */
     function _vote(address voter, uint256 profileId, uint256 pubId, uint256 amount, address currency) internal {
         address grantsRoundAddress = _dataByPublicationByProfile[profileId][pubId].grantsRoundAddress;
-        uint256 endTimestamp = _dataByPublicationByProfile[profileId][pubId].endTimestamp;
         // encode vote
         bytes memory vote = abi.encode(voter, currency, amount, grantsRoundAddress, profileId);
 
@@ -156,10 +234,7 @@ contract QuadraticVoteCollectModule is FeeModuleBase, ModuleBase, ICollectModule
         votes[0] = vote;
 
         /// vote
-        // TODO how to handle voting after round ends
-        if (block.timestamp < endTimestamp) {
-            IRoundImplementation(grantsRoundAddress).vote(votes);
-        }
+        IRoundImplementation(grantsRoundAddress).vote(votes);
     }
 
     function getPublicationData(

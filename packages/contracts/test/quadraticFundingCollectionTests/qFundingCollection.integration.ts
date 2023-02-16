@@ -88,6 +88,8 @@ export function shouldBehaveLikeQFCollectionModule() {
 
     const _collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WMATIC.address, voteAmount]);
 
-    await expect(_lensHub.connect(collector.account).collect(1, 1, _collectData)).to.emit(_votingStrategy, "Voted");
+    await expect(_lensHub.connect(collector.account).collect(1, 1, _collectData))
+      .to.emit(_qVoteCollectModule, "CollectWithVote")
+      .withArgs(1, 1, collector.account.address, _WMATIC.address, voteAmount);
   });
 }

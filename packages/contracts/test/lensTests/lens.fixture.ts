@@ -135,7 +135,7 @@ export async function deployLensFixture() {
 
   //set mocked contracts to return data needed for tests
   await _mockModuleGlobals.mock.isCurrencyWhitelisted.returns(true);
-  await _mockModuleGlobals.mock.getTreasuryData.returns(treasury.address, 1);
+  await _mockModuleGlobals.mock.getTreasuryData.returns(treasury.address, 0);
 
   // Profiles
 

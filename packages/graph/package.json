@@ -1,0 +1,22 @@
+{
+  "name": "vote-collect-dev",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "packageManager": "yarn@3.2.1",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ bitbeckers/vote-collect-dev",
+    "create-local": "graph create --node http://localhost:8020/ bitbeckers/vote-collect-dev",
+    "remove-local": "graph remove --node http://localhost:8020/ bitbeckers/vote-collect-dev",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bitbeckers/vote-collect-dev",
+    "test": "graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.40.0",
+    "@graphprotocol/graph-ts": "0.29.3"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.5.1"
+  }
+}

@@ -1,0 +1,11 @@
+type CollectWithVote @entity(immutable: true) {
+  id: String!
+  profileId: BigInt! # uint256
+  pubId: BigInt! # uint256
+  collector: Bytes! # address
+  currency: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

@@ -40,9 +40,8 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
 
   describe("QuadraticVoteCollectModule unit tests", () => {
     it("Should initialize the QVCM with ERC20", async () => {
-      const _deadline = await _roundImplementation.roundEndTime();
-      const _initData = [_WETH.address, 0, _roundImplementation.address, _deadline];
-      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "uint256"], _initData);
+      const _initData = [_WETH.address, 0, _roundImplementation.address];
+      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address"], _initData);
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, initQFCollect)).to.not.be.reverted;
     });
@@ -50,10 +49,9 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
     it("Should execute processCollect and vote", async () => {
       const { user2 } = _signers;
       const { collector } = _profiles;
-      const _deadline = await _roundImplementation.roundEndTime();
 
-      const _initData = [_WETH.address, 0, _roundImplementation.address, _deadline];
-      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "uint256"], _initData);
+      const _initData = [_WETH.address, 0, _roundImplementation.address];
+      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address"], _initData);
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, initQFCollect)).to.not.be.reverted;
 
@@ -69,18 +67,16 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
       //encode collect call data
       const collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WETH.address, DEFAULT_VOTE]);
 
-      await expect(
-        _qVoteCollectModule.connect(collector.account).processCollect(1, user2.address, 1, 1, collectData),
-      ).to.emit(_votingStrategy, "Voted");
+      await expect(_qVoteCollectModule.connect(collector.account).processCollect(1, user2.address, 1, 1, collectData))
+        .to.emit(_qVoteCollectModule, "CollectWithVote")
+        .withArgs(1, 1, collector.account.address, _WETH.address, DEFAULT_VOTE);
     });
 
     it("Should execute processCollect with referral and vote", async () => {
       const { collector } = _profiles;
 
-      const _deadline = await _roundImplementation.roundEndTime();
-
-      const _initData = [_WETH.address, 0, _roundImplementation.address, _deadline];
-      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address", "uint256"], _initData);
+      const _initData = [_WETH.address, 0, _roundImplementation.address];
+      const initQFCollect = ethers.utils.defaultAbiCoder.encode(["address", "uint16", "address"], _initData);
 
       await expect(_qVoteCollectModule.initializePublicationCollectModule(1, 1, initQFCollect)).to.not.be.reverted;
 
@@ -92,7 +88,9 @@ export const shouldBehaveLikeQuadraticVoteModule = () => {
       const collectData = ethers.utils.defaultAbiCoder.encode(["address", "uint256"], [_WETH.address, DEFAULT_VOTE]);
       await expect(
         _qVoteCollectModule.connect(collector.account).processCollect(22, collector.account.address, 1, 1, collectData),
-      ).to.emit(_votingStrategy, "Voted");
+      )
+        .to.emit(_qVoteCollectModule, "CollectWithVote")
+        .withArgs(1, 1, collector.account.address, _WETH.address, DEFAULT_VOTE);
     });
   });
 };
