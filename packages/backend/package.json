@@ -8,15 +8,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build:autotask": "rollup -c",
-    "create:autotask": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-autotask.ts",
-    "create:notifications": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-notifications.ts",
-    "create:relayer": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-relayer.ts",
-    "create:sentinel": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-sentinel.ts",
-    "list:autotasks": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-autotasks.ts",
-    "list:notifications": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-notifications.ts",
-    "list:relayers": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-relays.ts",
-    "list:sentinels": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/list-sentinels.ts"
+    "build:autotask": "webpack",
+    "defender:upload": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node src/index.ts",
+    "deploy": "yarn build:autotask && yarn defender:upload",
+    "create:relayer": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' npx ts-node ./src/create-relayer.ts"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.1.0",
@@ -30,12 +25,18 @@
     "defender-relay-client": "^1.38.0",
     "inquirer": "^9.1.4",
     "rollup": "^3.11.0",
+    "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "webpack-cli": "^5.0.1"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^1.3.2",
     "defender-sentinel-client": "^1.38.0",
     "dotenv": "^16.0.3",
-    "ethers": "^5.7.2"
+    "ethers": "^5.7.2",
+    "node-fetch": "^3.3.0",
+    "webpack": "^5.75.0"
   }
 }
