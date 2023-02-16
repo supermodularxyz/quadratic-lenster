@@ -9,7 +9,6 @@ import SANDBOX_MUMBAI from "../deployments/lens-sandbox-polygon-mumbai.json";
 type Contracts = "QuadraticVoteCollectModule";
 
 task("deploy", "Deploy contracts and verify").setAction(async (_, { ethers }) => {
-  const [admin] = await ethers.getSigners();
   let addresses;
 
   if (hre.network.name == "polygon-mainnet") {

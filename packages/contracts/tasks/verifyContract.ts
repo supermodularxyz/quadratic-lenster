@@ -9,8 +9,6 @@ task("verifyContract", "verify")
   .addOptionalParam("lensHub", "The address of the LensHub")
   .addOptionalParam("moduleGlobals", "The address of ModuleGlobals")
   .setAction(async ({ lensHub, moduleGlobals }, { ethers }) => {
-    const [admin] = await ethers.getSigners();
-
     const contracts: Record<Contracts, string> = {
       QuadraticVoteCollectModule: addresses.QuadraticVoteCollectModule,
     };
