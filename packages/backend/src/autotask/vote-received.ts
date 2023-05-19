@@ -6,7 +6,7 @@ import {
   DefenderRelaySigner,
   DefenderRelayProvider,
 } from "defender-relay-client/lib/ethers";
-import {ethers} from "ethers";
+import {BytesLike, ethers} from "ethers";
 import axios from 'axios';
 import roundImplementationAbi from "../../abi/RoundImplementation.json" assert {type: "json"};
 import {RelayerParams} from "defender-relay-client";
@@ -34,11 +34,12 @@ export async function handler(event: AutotaskEvent) {
   const {
     GRAPGHQL_ENDPOINT,
     PINATA_JWT,
+    LENS_HUB_PROXY_ADDRESS,
   } = event.secrets || {} as Record<string, string | undefined>;
 
   // Contract Sentinel
   const contractPayload = event.request.body as BlockTriggerEvent;
-  const {transaction, matchReasons} = contractPayload;
+  const {matchReasons} = contractPayload;
 
   // debug logs
   // console.log("ℹ️ Transaction: ", transaction);
@@ -46,7 +47,8 @@ export async function handler(event: AutotaskEvent) {
 
 
   const params = (matchReasons[0] as any).params as Record<string, string | undefined>
-  const {roundAddress, projectId: accountId, token: voteToken} = params;
+  const {roundAddress, projectId, token: voteToken} = params;
+  const accountId = ethers.utils.parseBytes32String(projectId as BytesLike);
   if (!roundAddress) {
     throw new Error("❌ Could not determine round address");
   }
@@ -56,6 +58,7 @@ export async function handler(event: AutotaskEvent) {
   if (!voteToken) {
     throw new Error("❌ Could not determine vote token");
   }
+  console.log("ℹ️ Project ID", projectId);
   console.log("ℹ️ Round address", roundAddress);
   console.log("ℹ️ Owner ID", accountId);
   console.log("ℹ️ Vote token", voteToken);
@@ -78,46 +81,43 @@ export async function handler(event: AutotaskEvent) {
   }
 
   let currentProjectsMeta: ProjectMetaEntry[] = [];
-  try {
-    const currentProjectsMetaPtr = await axios.post<{
-      data: {
-        round: {
+  const currentProjectsMetaPtr = await axios.post<{
+    data: {
+      round: {
+        id: string;
+        projectsMetaPtr: {
           id: string;
-          projectsMetaPtr: {
-            id: string;
-            protocol: string;
-            pointer: string;
-          }
+          protocol: string;
+          pointer: string;
         }
       }
-    }>(
-      GRAPGHQL_ENDPOINT!,
-      {query: getProjectsMetaPtrQuery, variables: {roundId: roundAddress.toLowerCase()}}
-    ).then(async (response) => {
-      return response.data.data.round;
-    });
-    if (currentProjectsMetaPtr) {
-      currentProjectsMeta = await fetchFromIPFS<ProjectMetaEntry[]>(currentProjectsMetaPtr.projectsMetaPtr.pointer);
     }
-  } catch (error) {
-    return error;
+  }>(
+    GRAPGHQL_ENDPOINT!,
+    {query: getProjectsMetaPtrQuery, variables: {roundId: roundAddress.toLowerCase()}}
+  ).then(async (response) => {
+    return response.data.data.round;
+  });
+  if (currentProjectsMetaPtr?.projectsMetaPtr?.pointer) {
+    const projectMetaOnIPfs = await fetchFromIPFS<ProjectMetaEntry[]>(currentProjectsMetaPtr.projectsMetaPtr.pointer);
+    console.log('ℹ️ Project meta on IPFS', projectMetaOnIPfs);
+    currentProjectsMeta = projectMetaOnIPfs;
   }
 
   console.log("ℹ️ Current projects meta:", currentProjectsMeta);
   const newProjectsMeta = [...currentProjectsMeta];
 
   // Check if user has already been added to applicants metadata
-  const currentUserInProjects = newProjectsMeta.map(project => project.id).includes(accountId);
+  const currentUserInProjects = newProjectsMeta.map(project => project.id).includes(accountId.toString());
   if (currentUserInProjects) {
     return "💡 User already added to ptr, does not have to be added to metadata";
   }
 
 
   // User needs to be added to applicants, fetch payout address using account id
-  const lensHubProxyAddress = transaction.to;
-  console.log("ℹ️ Lens Hub Proxy Address", lensHubProxyAddress);
+  console.log("ℹ️ Lens Hub Proxy Address", LENS_HUB_PROXY_ADDRESS!);
   const erc721Contract = new ethers.Contract(
-    lensHubProxyAddress,
+    LENS_HUB_PROXY_ADDRESS!,
     ERC721,
     signer
   );
@@ -126,7 +126,7 @@ export async function handler(event: AutotaskEvent) {
   console.log("ℹ️ Creator Address", creatorAddress);
   newProjectsMeta.push({
     payoutAddress: creatorAddress,
-    id: accountId,
+    id: accountId.toString(),
     status: "APPROVED"
   })
 
